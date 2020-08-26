@@ -1,0 +1,96 @@
+---
+title: "Read Me"
+output:
+  html_document:
+    df_print: paged
+---
+
+This project uses secondary data to construt a measure of economic resources for areas in Colorado.  The layer created is intended to highlight areas that are eligible for a reduced match via the Colorado State Forest service grants for wildfire risk mitigation. 
+
+```{r,echo=FALSE,include=FALSE}
+knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+library(dplyr)
+library(leaflet)
+library(purrr)
+library(sf)
+load('./Build/Index/SVI.RData')
+load('./Build/Data/state_08.rdata')
+delist<-function(geog){
+  geog%>%
+    rename(census_block_group=geoid)%>%
+  dplyr::left_join(.,SVI)
+}
+SVI_layer<-st_out%>%
+  map_dfr(.,delist)%>%
+  na.omit()
+rm(SVI,st_out)
+pal<-colorQuantile("Blues",na.omit(SVI_layer$overall_rank))
+```
+
+## Introduction to Index
+We adapt the index introduced by Flanagan et al in their 2011 paper, "A Social Vulnerability Index(SVI) for Disaster Management", to be more appropriate to a mitigation project.  This index was created in response to Hurricane Katrina.  It acknowledges that those who are socially vulnerable are more likely to experience loss and less likely to recover.  Its original intent was to help state and federal level disaster responders identify the most affected areas post-event.  The authors also recognize its potential for use in other stages of the disaster cycle such as recovery.
+The projects funded by this grant fall into the mitigation and preparedness portions of the disaster cycle, but it is important to consider many of the same things.  The SVI addresses four main categories what it refers to as socioeconomic status, household composition/ disability, minority status/ language, and housing/transportation.  These things are important during all phases of the disaster cycle, especially mitigation.  Those with little purchasing power, high burden of care, or who experience difficulty interacting with the community for cultural or physical reasons will be less able to participate in mitigation activity.  Communities who have high overall levels of these traits will require additional assistance if any mitigation is to occur.  
+
+Census Block Groups(CBGs) where the SVI is lower(better) may have pockets of high need.  This can arise if areas of high resources obscure areas of extremely low resources.  Arbitrary geographical units can lead to the mixing of these groups within the data where they may appear to have medium resources on average. This could result in diminished assistance from agencies, like the forest service, exacerbating inequities.  We add two GINI coefficients to the index.  GINI coefficients capture concentrations of different assets.  Using the example of income, if everyone had the same income the index would be 0.  Conversely, if 1 household collected all of the income in a CBG and the rest of the community received none, the index would be 1.  
+
+## Methodology
+
+We calculate the augmented SVI using the methodology in the original paper.  Lower augmented SVI scores indicate lower vulnerability with 0 being the least vulnerable.  The Index is bounded between 0 and 1.  First, we percent rank the variables independently accross all CBGs in the area of interest, in this case Colorado.  Second, we add the scores together and percent rank them again.  This percent rank is the augmented SVI score.  We retain the percent scores for each of the variables for reference.  We make a few minor changes to the original index variables to reflect modern ideas on measures of central tendency as well as data limitations. 
+
+We collect all the raw data for the index from the 2016 American Community Survey(5-year average).  We calculate the augmented SVI using R scripts that are available for examination.  The data for the orginal SVI was taken largely from the 1990 Census.  Here we have updated it to more closely reflect the Colorado communities we see today.  The original SVI was calculated at the tract level.  We calculate it at the CBG level to better identify community demographics.   
+### Variables
+#### Socioeconomic Status Variables
+
+1.  Percent of individuals below the poverty line
+2.  Percent of the Civilian labor force which is unemployed 
+3.  Median household income
+4.  Percent of adults over 25 without a High School Diploma
+
+#### Household Composition/Disability
+
+5.  Percent of people over the age of 65
+6.  Percent of people under the age of 18 (The original index included those over 5, but this data is not included in the ACS)
+7.  Percent of the poverty status determined population above 18 with a disability
+8.  Percent of households with a male or female householder, no spouse present, with children under 18
+
+#### Minority Status/Language
+
+9.  Percent of the population that are of minority status (Non-white or Hispanic)
+10. Percent of the population that speaks English less than "well"
+
+
+#### Housing/Transportation
+11. Percent of housing structures that have 10 or more units
+12. Percent of housing units that are mobile homes
+13. Percent of households that live in a housing unit with more people than rooms
+14. Percent of households with no vehicle
+15. Percent of people who live in group housing such as nursing homes
+
+#### New Equity Variables
+16. Income GINI
+17. Years of schooling/ Education GINI
+
+
+
+```{r CO, echo=FALSE,include=TRUE}
+
+map<-leaflet(SVI_layer)%>%
+  addTiles()%>%
+  addPolygons(color = "#444444",weight = 1, smoothFactor = 0.5,
+    opacity = 1.0, fillOpacity = 0.8,fillColor = ~pal(overall_rank),
+    highlightOptions = highlightOptions(color = "white", weight = 2,
+      bringToFront = TRUE)) %>%
+    addLegend(position="bottomright",
+              pal=pal, 
+            values = ~overall_rank,
+    title = "SVI",
+    opacity=.8)
+
+map
+```
+
+
+
+
+
+
