@@ -5,6 +5,9 @@ SVI<-SVI_data%>%
   mutate(across(!census_block_group,percent_rank))%>%
   mutate(overall_sum=rowSums(.[2:16]),
          overall_rank=percent_rank(overall_sum))
+if(!dir.exists("./Build/Index/")){
+  dir.create("./Build/Index/")
+}     
 save(SVI,file='./Build/Index/SVI.RData')
 rm(SVI_data,SVI)
          

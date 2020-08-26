@@ -2,3 +2,8 @@
 .Rhistory
 .RData
 .Ruserdata
+/Build/Cache/
+/Build/Data/
+/*.sqlite
+/*.html
+/*.RData
