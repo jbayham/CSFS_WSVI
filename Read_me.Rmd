@@ -1,11 +1,17 @@
 ---
-title: "Read Me"
+title: "Preliminary Draft: Defining and Providing Fewer Economic Resources"
 output:
   html_document:
     df_print: paged
 ---
 
-This project uses secondary data to construt a measure of economic resources for areas in Colorado.  The layer created is intended to highlight areas that are eligible for a reduced match via the Colorado State Forest service grants for wildfire risk mitigation. 
+## Problem statement 
+
+The Colorado State Forest Service (CSFS) encourages wildfire mitigation through the Forest Restoration & Wildfire Risk Mitigation (FRWRM) Grant Program.  The legislation authorizing funding for the program seeks to encourage funding to areas with “fewer economic resources”.  The CSFS needs to define “fewer economic resources”, and provide this information to applicants, preferably through the existing Colorado Forest Atlas.  
+
+## Methods
+
+The objective of this project is to construct a measure of *fewer economic resources* for the WUI in Colorado.  The layer created is intended to highlight areas that are eligible for a reduced match via the Colorado State Forest service grants for wildfire risk mitigation.
 
 ```{r,echo=FALSE,include=FALSE}
 knitr::opts_chunk$set(warning=FALSE, message=FALSE)
@@ -28,17 +34,26 @@ pal<-colorQuantile("Blues",na.omit(SVI_layer$overall_rank))
 ```
 
 ## Introduction to Index
-We adapt the index introduced by Flanagan et al in their 2011 paper, "A Social Vulnerability Index(SVI) for Disaster Management", to be more appropriate to a mitigation project.  This index was created in response to Hurricane Katrina.  It acknowledges that those who are socially vulnerable are more likely to experience loss and less likely to recover.  Its original intent was to help state and federal level disaster responders identify the most affected areas post-event.  The authors also recognize its potential for use in other stages of the disaster cycle such as recovery.
-The projects funded by this grant fall into the mitigation and preparedness portions of the disaster cycle, but it is important to consider many of the same things.  The SVI addresses four main categories what it refers to as socioeconomic status, household composition/ disability, minority status/ language, and housing/transportation.  These things are important during all phases of the disaster cycle, especially mitigation.  Those with little purchasing power, high burden of care, or who experience difficulty interacting with the community for cultural or physical reasons will be less able to participate in mitigation activity.  Communities who have high overall levels of these traits will require additional assistance if any mitigation is to occur.  
 
-Census Block Groups(CBGs) where the SVI is lower(better) may have pockets of high need.  This can arise if areas of high resources obscure areas of extremely low resources.  Arbitrary geographical units can lead to the mixing of these groups within the data where they may appear to have medium resources on average. This could result in diminished assistance from agencies, like the forest service, exacerbating inequities.  We add two GINI coefficients to the index.  GINI coefficients capture concentrations of different assets.  Using the example of income, if everyone had the same income the index would be 0.  Conversely, if 1 household collected all of the income in a CBG and the rest of the community received none, the index would be 1.  
+We adapt the Social Vulnerability Index (SVI) (Flanagan et al., 2011) to the wildland fire context in Colorado.  The SVI was created in response to Hurricane Katrina.  The SVI ranges from 0 (not vulnerable) to 100 (highly vulnerable), and acknowledges that those who are socially vulnerable are more likely to experience loss and less likely to recover.  Its original intent was to help state and federal level disaster responders identify the most affected areas post-event.  The authors also recognize its potential for use in other stages of the disaster cycle, such as recovery.
 
-## Methodology
+The projects funded by FRWRM fall into the mitigation and preparedness portions of the disaster cycle, but many of the post-event considerations apply to mitigation and preparedness.  The SVI addresses four main categories of vulnerability: socioeconomic status, household composition/ disability, minority status/ language, and housing/transportation.  These characteristics are important during all phases of the disaster cycle, especially mitigation.  Those with little purchasing power, high burden of care, or who experience difficulty interacting with the community for cultural or physical reasons will be less able to participate in mitigation activity.  Communities who have high overall levels of vulnerability may require additional assistance to complete migitation activities.  
 
-We calculate the augmented SVI using the methodology in the original paper.  Lower augmented SVI scores indicate lower vulnerability with 0 being the least vulnerable.  The Index is bounded between 0 and 1.  First, we percent rank the variables independently accross all CBGs in the area of interest, in this case Colorado.  Second, we add the scores together and percent rank them again.  This percent rank is the augmented SVI score.  We retain the percent scores for each of the variables for reference.  We make a few minor changes to the original index variables to reflect modern ideas on measures of central tendency as well as data limitations. 
+Average measures within a community may obscure the variation in vulnerability within the community.  For example, a census defined geography may contain households that qualify as highly vulnerable and households that qualify as minimally vulnerable.  Average characteristics reported in this community may indicate moderate vulnerability.  We account for these heterogeneities by adding two measures to the SVI: income GINI coefficient, and an education GINI coefficient.  The GINI coefficient is commonly used to measure inequality, another measure of heterogeneity. Using the example of income, if everyone had the same income, the income GINI would equal zero.  Conversely, if one household collected all of the income in a CBG and the rest of the community received none, the income GINI would equal one.  
 
-We collect all the raw data for the index from the 2016 American Community Survey(5-year average).  We calculate the augmented SVI using R scripts that are available for examination.  The data for the orginal SVI was taken largely from the 1990 Census.  Here we have updated it to more closely reflect the Colorado communities we see today.  The original SVI was calculated at the tract level.  We calculate it at the CBG level to better identify community demographics.   
+We calculate the augmented SVI using the methodology in the original paper.  Lower augmented SVI scores indicate lower vulnerability with 0 being the least vulnerable.  The Index is bounded between 0 and 1.  First, we percent rank the variables independently accross all CBGs in the area of interest, in this case Colorado.  Second, we add the scores together and percent rank them again.  This percent rank is the augmented SVI score.  We make a few minor changes to the original index variables to reflect modern ideas on measures of central tendency as well as data limitations. 
+
+## Data
+
+The orginal SVI was based on data from the 1990 Census.  Here we have updated it to more closely reflect the Colorado communities we see today.  We construct the Colorado SVI using data from the 2016 American Community Survey (5-year average).  While the original SVI was calculated at the census tract, we calculate it at the census block group level (smaller geographic unit) to better identify community demographics.  We then crop the spatial layers to the boundary of the WUI as defined by ???. 
+
+All data analysis and geoprocessing is conducted in R Statistical Computing Language.  All steps are documented and the code is made available on GitHub.
+
+
 ### Variables
+
+We describe the variables used to construct the index below.
+
 #### Socioeconomic Status Variables
 
 1.  Percent of individuals below the poverty line
