@@ -19,18 +19,22 @@ library(dplyr)
 library(leaflet)
 library(purrr)
 library(sf)
-load('./Build/Index/SVI.RData')
+library(mapview)
+load('./Build/Index/SVI_comp.RData')
+load('./Build/Index/SVI_comp_crowd.RData')
 load('./Build/Data/state_08.rdata')
 delist<-function(geog){
   geog%>%
     rename(census_block_group=geoid)%>%
-  dplyr::left_join(.,SVI)
+  dplyr::left_join(.,SVI_comp)
 }
 SVI_layer<-st_out%>%
   map_dfr(.,delist)%>%
-  na.omit()
+  na.omit()%>%
+  left_join(SVI_comp_crowd)
 rm(SVI,st_out)
-pal<-colorQuantile("Blues",na.omit(SVI_layer$overall_rank))
+pal<-colorQuantile("Reds",na.omit(SVI_layer$overall_rank))
+pal_binary<-colorFactor(palette=c('purple','steelblue','red'), domain=c(-1,0,1))
 ```
 
 ## Introduction to Index
@@ -92,14 +96,49 @@ We describe the variables used to construct the index below.
 map<-leaflet(SVI_layer)%>%
   addTiles()%>%
   addPolygons(color = "#444444",weight = 1, smoothFactor = 0.5,
-    opacity = 1.0, fillOpacity = 0.8,fillColor = ~pal(overall_rank),
+    opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(qualify_state),
+     group="Augmented SVI",
+    #title="Augmented SVI",
     highlightOptions = highlightOptions(color = "white", weight = 2,
       bringToFront = TRUE)) %>%
     addLegend(position="bottomright",
-              pal=pal, 
-            values = ~overall_rank,
+              pal=pal_binary, 
+            values = ~qualify_state,
     title = "SVI",
-    opacity=.8)
+    opacity=.6)%>%
+  addPolygons(color = "#444444",weight = 1, smoothFactor = 0.5,
+    opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(qualify_wui),
+     group="Augmented SVI WUI",
+    #title="Augmented SVI",
+    highlightOptions = highlightOptions(color = "white", weight = 2,
+      bringToFront = TRUE)) %>%
+  addPolygons(color = "#444444",weight = 1, smoothFactor = 0.5,
+    opacity = 1.0, fillOpacity = 0,
+     group="WUI",
+    #title="Augmented SVI",
+    highlightOptions = highlightOptions(color = "white", weight = 2,
+      bringToFront = TRUE))%>%
+  addPolygons(color = "#444444",weight = 1, smoothFactor = 0.5,
+    opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(flip),
+     group="WUI flip",
+    #title="Augmented SVI",
+    highlightOptions = highlightOptions(color = "white", weight = 2,
+      bringToFront = TRUE)) %>%
+    addPolygons(color = "#444444",weight = 1, smoothFactor = 0.5,
+    opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(flip_crowd),
+     group="WUI flip crowd",
+    #title="Augmented SVI",
+    highlightOptions = highlightOptions(color = "white", weight = 2,
+      bringToFront = TRUE)) %>%
+    addLegend(position="bottomright",
+              pal=pal_binary, 
+            values = ~flip_crowd,
+    title = "flip",
+    opacity=.6)%>%
+  addLayersControl(
+    overlayGroups = c("Augmented SVI","Augmented SVI WUI","WUI flip","WUI flip crowd","WUI"),
+    options = layersControlOptions(collapsed = FALSE))%>%
+      hideGroup(c("Augmented SVI","Augmented SVI WUI","WUI flip","WUI flip crowd","WUI"))
 
 map
 ```
