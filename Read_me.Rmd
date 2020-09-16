@@ -20,19 +20,30 @@ library(leaflet)
 library(purrr)
 library(sf)
 library(mapview)
+load('./Build/Index/SVI.RData')
 load('./Build/Index/SVI_comp.RData')
+SVI_comp<-SVI_comp%>%
+  dplyr::select(census_block_group,qualify_wui,flip,overall_rank_wui,qualify_state)
 load('./Build/Index/SVI_comp_crowd.RData')
+SVI_comp_crowd<-SVI_comp_crowd%>%
+  dplyr::select(census_block_group,qualify_no_crowd,flip_crowd)
 load('./Build/Data/state_08.rdata')
+WUI<-read_sf('./Build/Data/2017_wui/2017_wui.shp')%>%
+  st_set_crs(.,5070) %>%
+  #st_transform(5070)%>%
+  st_transform( "+proj=longlat +datum=WGS84") 
 delist<-function(geog){
   geog%>%
     rename(census_block_group=geoid)%>%
-  dplyr::left_join(.,SVI_comp)
+  dplyr::left_join(.,SVI) 
 }
 SVI_layer<-st_out%>%
   map_dfr(.,delist)%>%
+  st_transform( "+proj=longlat +datum=WGS84") %>%
   na.omit()%>%
-  left_join(SVI_comp_crowd)
-rm(SVI,st_out)
+  left_join(.,SVI_comp)%>%
+  left_join(.,SVI_comp_crowd)
+rm(SVI,st_out,SVI_comp,SVI_comp_crowd)
 pal<-colorQuantile("Reds",na.omit(SVI_layer$overall_rank))
 pal_binary<-colorFactor(palette=c('purple','steelblue','red'), domain=c(-1,0,1))
 ```
@@ -49,7 +60,7 @@ We calculate the augmented SVI using the methodology in the original paper.  Low
 
 ## Data
 
-The orginal SVI was based on data from the 1990 Census.  Here we have updated it to more closely reflect the Colorado communities we see today.  We construct the Colorado SVI using data from the 2016 American Community Survey (5-year average).  While the original SVI was calculated at the census tract, we calculate it at the census block group level (smaller geographic unit) to better identify community demographics.  We then crop the spatial layers to the boundary of the WUI as defined by ???. 
+The orginal SVI was based on data from the 1990 Census.  Here we have updated it to more closely reflect the Colorado communities we see today.  We construct the Colorado SVI using data from the 2016 American Community Survey (5-year average).  While the original SVI was calculated at the census tract, we calculate it at the census block group level (smaller geographic unit) to better identify community demographics.  We then crop the spatial layers to the boundary of the WUI as defined by the boundaries used in the grant process.. 
 
 All data analysis and geoprocessing is conducted in R Statistical Computing Language.  All steps are documented and the code is made available on GitHub.
 
@@ -59,24 +70,20 @@ All data analysis and geoprocessing is conducted in R Statistical Computing Lang
 We describe the variables used to construct the index below.
 
 #### Socioeconomic Status Variables
-
 1.  Percent of individuals below the poverty line
 2.  Percent of the Civilian labor force which is unemployed 
 3.  Median household income
 4.  Percent of adults over 25 without a High School Diploma
 
 #### Household Composition/Disability
-
 5.  Percent of people over the age of 65
-6.  Percent of people under the age of 18 (The original index included those over 5, but this data is not included in the ACS)
-7.  Percent of the poverty status determined population above 18 with a disability
+6.  Percent of people under the age of 18 
+7.  Percent of the poverty status determined population above 18 with a disability(The original index included those over 5, but this data is not included in the ACS)
 8.  Percent of households with a male or female householder, no spouse present, with children under 18
 
 #### Minority Status/Language
-
 9.  Percent of the population that are of minority status (Non-white or Hispanic)
 10. Percent of the population that speaks English less than "well"
-
 
 #### Housing/Transportation
 11. Percent of housing structures that have 10 or more units
@@ -89,11 +96,87 @@ We describe the variables used to construct the index below.
 16. Income GINI
 17. Years of schooling/ Education GINI
 
-
-
-```{r CO, echo=FALSE,include=TRUE}
-
+```{r CO Index, echo=FALSE,include=TRUE}
 map<-leaflet(SVI_layer)%>%
+  addTiles()%>%
+  addPolygons(color = "#444444",weight = 1, smoothFactor = 0.5,
+    opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(qualify_state),
+     group="Augmented SVI",
+   popup = paste("Rank", round(SVI_layer$overall_rank_wui,digits=2), "<br>",
+                 "Percent of individuals below the poverty line",SVI_layer$poverty_percent_below_1, "<br>",
+                 "Percent of the Civilian labor force which is unemployed",SVI_layer$civ_labor_force_unemployed_percent_2,"<br>",
+                 "Median household income",SVI_layer$median_hh_income_3,"<br>",
+                 "Percent of adults over 25 without a High School Diploma",SVI_layer$no_hs_degree_percent_4,"<br>",
+                 "Percent of people over the age of 65",SVI_layer$over_65_percent_5,"<br>",
+                 "Percent of people under the age of 18",SVI_layer$under_18_percent_6,"<br>",
+                 "Percent of the population above 18 with a disability",SVI_layer$isabled_adult_percent_7,"<br>",
+                 "Percent Single Parent HH",SVI_layer$single_householder_percent_8,"<br>",
+                 "Percent of the population that are of minority status",SVI_layer$percent_minority_9,"<br>",
+                 "Percent of the population that speak English < well",SVI_layer$do_not_speak_english_well_percent_10,"<br>",
+                 "Percent of housing structures that have 10 or more units",SVI_layer$units_over_10_percent_11,"<br>",
+                 "Percent of housing units that are mobile homes",SVI_layer$units_mobile_percent_12,"<br>",
+                 "Percent of households with more people than rooms",SVI_layer$over_1_person_room_percent_13,"<br>",
+                 "Percent of households with no vehicle",SVI_layer$no_vehicle_percent_14,"<br>",
+                 "Percent of people who live in group housing",SVI_layer$roup_quarters_percent_15,"<br>",
+                 "Income GINI",SVI_layer$gini_income,"<br>",
+                 "Education GINI",SVI_layer$gini_education),
+    highlightOptions = highlightOptions(color = "white", weight = 2,
+      bringToFront = TRUE)) %>%
+  addLegend(position="bottomright",
+              colors=c('steelblue','red'),
+            labels=c('does not qualify','does qualify'),
+            values = ~qualify_state.x,
+    title = "SVI",
+    opacity=.6)%>%
+  addLayersControl(
+    overlayGroups = c("Augmented SVI"),
+    options = layersControlOptions(collapsed = FALSE))%>%
+      hideGroup(c("Augmented SVI"))
+map
+```
+
+### Geographic exploration
+
+When condsidering an index that will function well fro a specific issue and place there it is advantagous to adapt the general index to reflect its context.  In this project we are addressing wildfire preparedness in the WUI.  This means that urban areas and the concerns that arise from them are less important than they would be in a hurricane or a flood senario.  For this reason we have limited the scope of the comparitive analysis to only CBGs that contain WUI.  Additionally we are limiting the importance of some of the variables listed above that pertain to urban crowding. This importance ranking will be accomplished by assigning weights to the variables used above. These weights will bounded between (0,1). 
+
+It is importnt not to try to gerrymander the weights in order to exclude certian areas from qualifying for additional assistance if they should not qualify due to their urban nature.  We have limited the extent of comparison to only CBGs that have WUI within them to reduce the affect of the urban area.  This resulted in a number of CBGs that previously did not qualify for the increased match do when urban areas are not considered.  No CBGs of interest lost status as a result of the cutting.
+```{r WUI recut, echo=FALSE,include=TRUE}
+leaflet()%>%
+  addTiles()%>%
+  addPolygons(data=WUI,color = "#444444",weight = 1, smoothFactor = 0.5,
+    opacity = 1.0, fillOpacity = 0,
+    group="WUI",
+    highlightOptions = highlightOptions(color = "white", weight = 2,
+      bringToFront = TRUE))%>%
+  addPolygons(data=SVI_layer,color = "#444444",weight = 1, smoothFactor = 0.5,
+    opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(qualify_wui),
+     group="Augmented SVI WUI",
+    highlightOptions = highlightOptions(color = "white", weight = 2,
+      bringToFront = TRUE))%>%
+  addPolygons(data=SVI_layer,color = "#444444",weight = 1, smoothFactor = 0.5,
+    opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(flip),
+     group="WUI flip",
+    highlightOptions = highlightOptions(color = "white", weight = 2,
+      bringToFront = TRUE)) %>%
+  addLegend(position="bottomright",
+              colors=c('purple','steelblue','red'),
+    title = "flip",
+    labels = c("gained","same","lost"),
+    opacity=.6)%>%
+  addLegend(position="bottomright",
+              colors=c('steelblue','red'),
+            labels=c('does not qualify','does qualify'),
+    title = "SVI",
+    opacity=.6)%>%
+  addLayersControl(
+    overlayGroups = c("Augmented SVI WUI","WUI flip","WUI"),
+    options = layersControlOptions(collapsed = FALSE))%>%
+      hideGroup(c("Augmented SVI WUI","WUI flip","WUI"))
+```
+
+Currently we are expirimenting with setting some of the housing/transportation variables down.  The map below shows how setting the weight on variable 11 to 0 changes the allocations of vulnerable and not vulnerable. When we change the weights on the variables there is a 1-1 relationship between qualification flips.  The reduction in number of CBGs made it possible to have unbalanced qualification changes.  As a result of this change we saw 53 CBGs flip qualifications.  I propose that we set the wieghts for 11 to be zero.  Other potential weight reductions could includegroup housing, crowding?, 
+```{r expirimental SVI, echo=FALSE,include=TRUE}
+map_trial<-leaflet(SVI_layer)%>%
   addTiles()%>%
   addPolygons(color = "#444444",weight = 1, smoothFactor = 0.5,
     opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(qualify_state),
@@ -101,50 +184,27 @@ map<-leaflet(SVI_layer)%>%
     #title="Augmented SVI",
     highlightOptions = highlightOptions(color = "white", weight = 2,
       bringToFront = TRUE)) %>%
-    addLegend(position="bottomright",
-              pal=pal_binary, 
-            values = ~qualify_state,
+  addLegend(position="bottomright",
+              colors=c('steelblue','red'),
+            labels=c('does not qualify','does qualify'),
     title = "SVI",
-    opacity=.6)%>%
+    opacity=.6) %>%
   addPolygons(color = "#444444",weight = 1, smoothFactor = 0.5,
-    opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(qualify_wui),
-     group="Augmented SVI WUI",
-    #title="Augmented SVI",
-    highlightOptions = highlightOptions(color = "white", weight = 2,
-      bringToFront = TRUE)) %>%
-  addPolygons(color = "#444444",weight = 1, smoothFactor = 0.5,
-    opacity = 1.0, fillOpacity = 0,
-     group="WUI",
-    #title="Augmented SVI",
-    highlightOptions = highlightOptions(color = "white", weight = 2,
-      bringToFront = TRUE))%>%
-  addPolygons(color = "#444444",weight = 1, smoothFactor = 0.5,
-    opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(flip),
-     group="WUI flip",
-    #title="Augmented SVI",
-    highlightOptions = highlightOptions(color = "white", weight = 2,
-      bringToFront = TRUE)) %>%
-    addPolygons(color = "#444444",weight = 1, smoothFactor = 0.5,
     opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(flip_crowd),
      group="WUI flip crowd",
-    #title="Augmented SVI",
     highlightOptions = highlightOptions(color = "white", weight = 2,
       bringToFront = TRUE)) %>%
-    addLegend(position="bottomright",
-              pal=pal_binary, 
-            values = ~flip_crowd,
+  addLegend(position="bottomright",
+              colors=c('purple','steelblue','red'),
     title = "flip",
+    labels = c("gained","same","lost"),
     opacity=.6)%>%
   addLayersControl(
-    overlayGroups = c("Augmented SVI","Augmented SVI WUI","WUI flip","WUI flip crowd","WUI"),
+    overlayGroups = c("Augmented SVI","WUI flip crowd"),
     options = layersControlOptions(collapsed = FALSE))%>%
-      hideGroup(c("Augmented SVI","Augmented SVI WUI","WUI flip","WUI flip crowd","WUI"))
+      hideGroup(c("Augmented SVI","WUI flip crowd"))
 
-map
+map_trial
 ```
-
-
-
-
 
 
