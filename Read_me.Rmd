@@ -14,38 +14,46 @@ The Colorado State Forest Service (CSFS) encourages wildfire mitigation through 
 The objective of this project is to construct a measure of *fewer economic resources* for the WUI in Colorado.  The layer created is intended to highlight areas that are eligible for a reduced match via the Colorado State Forest service grants for wildfire risk mitigation.
 
 ```{r,echo=FALSE,include=FALSE}
-knitr::opts_chunk$set(warning=FALSE, message=FALSE)
+knitr::opts_chunk$set(warning=FALSE, message=FALSE,fig.width=12, fig.height=8)
 library(dplyr)
 library(leaflet)
 library(purrr)
 library(sf)
 library(mapview)
-load('./Build/Index/SVI.RData')
-load('./Build/Index/SVI_comp.RData')
-SVI_comp<-SVI_comp%>%
-  dplyr::select(census_block_group,qualify_wui,flip,overall_rank_wui,qualify_state)
-load('./Build/Index/SVI_comp_crowd.RData')
-SVI_comp_crowd<-SVI_comp_crowd%>%
-  dplyr::select(census_block_group,qualify_no_crowd,flip_crowd)
-load('./Build/Data/state_08.rdata')
-WUI<-read_sf('./Build/Data/2017_wui/2017_wui.shp')%>%
-  st_set_crs(.,5070) %>%
-  #st_transform(5070)%>%
-  st_transform( "+proj=longlat +datum=WGS84") 
-delist<-function(geog){
-  geog%>%
-    rename(census_block_group=geoid)%>%
-  dplyr::left_join(.,SVI) 
-}
-SVI_layer<-st_out%>%
-  map_dfr(.,delist)%>%
-  st_transform( "+proj=longlat +datum=WGS84") %>%
-  na.omit()%>%
-  left_join(.,SVI_comp)%>%
-  left_join(.,SVI_comp_crowd)
-rm(SVI,st_out,SVI_comp,SVI_comp_crowd)
+library(raster)
+library(geojsonio)
+library(stars)
+#load('./Build/Index/SVI.RData')
+#load('./Build/Index/SVI_comp.RData')
+#SVI_comp<-SVI_comp%>%
+#  dplyr::select(census_block_group,qualify_wui,flip,overall_rank_wui,qualify_state)
+#load('./Build/Index/SVI_comp_crowd.RData')
+#SVI_comp_crowd<-SVI_comp_crowd%>%
+#  dplyr::select(census_block_group,qualify_no_crowd,flip_crowd)
+#load('./Build/Data/state_08.rdata')
+#load('./Build/Cache/WUI_1.RData')
+#load('./Build/Cache/WUI_2.RData')
+
+#delist<-function(geog){
+#  geog%>%
+#    rename(census_block_group=geoid)%>%
+#  dplyr::left_join(.,SVI) 
+#}
+#SVI_layer<-st_out%>%
+#  map_dfr(.,delist)%>%
+#  st_transform( "+proj=longlat +datum=WGS84") %>%
+#  na.omit()%>%
+#  left_join(.,SVI_comp)%>%
+#  left_join(.,SVI_comp_crowd)
+#rm(SVI,st_out,SVI_comp,SVI_comp_crowd)
+load('./Build/Cache/SVI_layer.RData')
+load('./Build/Cache/WUI_1.RData')
+load('./Build/Cache/WUI_2.RData')
+WUI<-rbind(WUI_1,WUI_2)
+rm(WUI_1,WUI_2)
 pal<-colorQuantile("Reds",na.omit(SVI_layer$overall_rank))
 pal_binary<-colorFactor(palette=c('purple','steelblue','red'), domain=c(-1,0,1))
+plot(WUI)
 ```
 
 ## Introduction to Index
@@ -103,23 +111,38 @@ map<-leaflet(SVI_layer)%>%
     opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(qualify_state),
      group="Augmented SVI",
    popup = paste("Rank", round(SVI_layer$overall_rank_wui,digits=2), "<br>",
-                 "Percent of individuals below the poverty line",SVI_layer$poverty_percent_below_1, "<br>",
-                 "Percent of the Civilian labor force which is unemployed",SVI_layer$civ_labor_force_unemployed_percent_2,"<br>",
-                 "Median household income",SVI_layer$median_hh_income_3,"<br>",
-                 "Percent of adults over 25 without a High School Diploma",SVI_layer$no_hs_degree_percent_4,"<br>",
-                 "Percent of people over the age of 65",SVI_layer$over_65_percent_5,"<br>",
-                 "Percent of people under the age of 18",SVI_layer$under_18_percent_6,"<br>",
-                 "Percent of the population above 18 with a disability",SVI_layer$isabled_adult_percent_7,"<br>",
-                 "Percent Single Parent HH",SVI_layer$single_householder_percent_8,"<br>",
-                 "Percent of the population that are of minority status",SVI_layer$percent_minority_9,"<br>",
-                 "Percent of the population that speak English < well",SVI_layer$do_not_speak_english_well_percent_10,"<br>",
-                 "Percent of housing structures that have 10 or more units",SVI_layer$units_over_10_percent_11,"<br>",
-                 "Percent of housing units that are mobile homes",SVI_layer$units_mobile_percent_12,"<br>",
-                 "Percent of households with more people than rooms",SVI_layer$over_1_person_room_percent_13,"<br>",
-                 "Percent of households with no vehicle",SVI_layer$no_vehicle_percent_14,"<br>",
-                 "Percent of people who live in group housing",SVI_layer$roup_quarters_percent_15,"<br>",
-                 "Income GINI",SVI_layer$gini_income,"<br>",
-                 "Education GINI",SVI_layer$gini_education),
+                 "Percent of individuals below the poverty line",
+                 round(SVI_layer$poverty_percent_below_1,digits=2),"%", "<br>",
+                 "Percent of the Civilian labor force which is unemployed",
+                 round(SVI_layer$civ_labor_force_unemployed_percent_2,digits=2),"%", "<br>",
+                 "Median household income",
+                 round(SVI_layer$median_hh_income_3,digits=2),"<br>",
+                 "Percent of adults over 25 without a High School Diploma",
+                 round(SVI_layer$no_hs_degree_percent_4,digits=2),"%", "<br>",
+                 "Percent of people over the age of 65",
+                 round(SVI_layer$over_65_percent_5,digits=2),"%", "<br>",
+                 "Percent of people under the age of 18",
+                 round(SVI_layer$under_18_percent_6,digits=2),"%", "<br>",
+                 "Percent of the population above 18 with a disability",
+                 round(SVI_layer$disabled_adult_percent_7,digits=2),"%", "<br>",
+                 "Percent Single Parent HH",
+                 round(SVI_layer$single_householder_percent_8,digits=2),"%", "<br>",
+                 "Percent of the population that are of minority status",
+                 round(SVI_layer$percent_minority_9,digits=2),"%", "<br>",
+                 "Percent of the population that speak English < well",
+                 round(SVI_layer$do_not_speak_english_well_percent_10,digits=2),"%", "<br>",
+                 "Percent of housing structures that have 10 or more units",
+                 round(SVI_layer$units_over_10_percent_11,digits=2),"%", "<br>",
+                 "Percent of housing units that are mobile homes",
+                 round(SVI_layer$units_mobile_percent_12,digits=2),"%", "<br>",
+                 "Percent of households with more people than rooms",
+                 round(SVI_layer$over_1_person_room_percent_13,digits=2),"%", "<br>",
+                 "Percent of households with no vehicle",
+                 round(SVI_layer$no_vehicle_percent_14,digits=2),"%", "<br>",
+                 "Percent of people who live in group housing",
+                 round(SVI_layer$group_quarters_percent_15,digits=2),"%", "<br>",
+                 "Income GINI",round(SVI_layer$gini_income,digits=2),"<br>",
+                 "Education GINI",round(SVI_layer$gini_education,digits=2)),
     highlightOptions = highlightOptions(color = "white", weight = 2,
       bringToFront = TRUE)) %>%
   addLegend(position="bottomright",
@@ -133,6 +156,7 @@ map<-leaflet(SVI_layer)%>%
     options = layersControlOptions(collapsed = FALSE))%>%
       hideGroup(c("Augmented SVI"))
 map
+#rm(SVI_layer)
 ```
 
 ### Geographic exploration
@@ -143,12 +167,13 @@ It is importnt not to try to gerrymander the weights in order to exclude certian
 ```{r WUI recut, echo=FALSE,include=TRUE}
 leaflet()%>%
   addTiles()%>%
+  addGEOJSON()
   addPolygons(data=WUI,color = "#444444",weight = 1, smoothFactor = 0.5,
     opacity = 1.0, fillOpacity = 0,
     group="WUI",
     highlightOptions = highlightOptions(color = "white", weight = 2,
       bringToFront = TRUE))%>%
-  addPolygons(data=SVI_layer,color = "#444444",weight = 1, smoothFactor = 0.5,
+  addPolygons(data=WUI,color = "#444444",weight = 1, smoothFactor = 0.5,
     opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(qualify_wui),
      group="Augmented SVI WUI",
     highlightOptions = highlightOptions(color = "white", weight = 2,
