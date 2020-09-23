@@ -248,7 +248,7 @@ var_16_data<-tbl(ACS_persons,"attributes_b19")%>%
 var_16<-data.frame(1:nrow(var_16_data),1:nrow(var_16_data))%>%
   rename(census_block_group=X1.nrow.var_16_data.,
          gini_income=X1.nrow.var_16_data..1)
-for( i in 1:nrow(var_16_data) ){
+for(i in 1:nrow(var_16_data) ){
   var_16[i,1]<-var_16_data[i,1]%>%as.character()
   var_16[i,2]<-Gini(c(0,10,15,20,25,30,35,40,45,50,60,75,100,125,150,200),n=var_16_data[i,3:18])
 }
@@ -315,5 +315,7 @@ SVI_data<-var_1%>%
 if(!dir.exists("./Build/Cache/")){
   dir.create("./Build/Cache/")
 }     
+
+### Removing non WUI CBGs
 save(SVI_data,file='./Build/Cache/SVI_data.RData')
 rm(var_1,var_2,var_3,var_4,var_5,var_6,var_7,var_8,var_9,var_10,var_11,var_12,var_13,var_14,var_15,var_16,var_17,var_16_data,var_17_data,ed_weights,attributes_b25,SVI_data,i)

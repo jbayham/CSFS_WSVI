@@ -1,11 +1,13 @@
-#### This script tests the sensitivity of certain non-key varaibles for fire and checks for sensitivity in CBG flip.
+## This script takes the raw data and ranks it all creating the final index
 load('./Build/Cache/SVI_dat.RData')
-load('./Build/Index/SVI.RData')
-SVI_before<-SVI_dat%>%
+
+SVI<-SVI_dat%>%
+  filter(WUI==1)%>%
+  dplyr::select(-WUI)%>%
   rename_with( .fn = ~paste0(., '_rank'),.cols=as.character(names(SVI_dat[,2:18])))%>%
   mutate(directional_median_hh_income_3_rank=-1*median_hh_income_3_rank,.keep="unused")%>%
   mutate(across(!census_block_group,percent_rank))%>%
-  mutate(overall_sum_before=1*poverty_percent_below_1_rank+##Socioeconomic
+  mutate(overall_sum=1*poverty_percent_below_1_rank+##Socioeconomic
            1*civ_labor_force_unemployed_percent_2_rank+
            1*directional_median_hh_income_3_rank+
            1*no_hs_degree_percent_4_rank+
@@ -22,17 +24,14 @@ SVI_before<-SVI_dat%>%
            0*group_quarters_percent_15_rank+
            1*gini_income_rank+                      ## Inequality measures
            1*gini_education_rank,
-         overall_rank_before=percent_rank(overall_sum_before))
-SVI_comp<-SVI%>%
-  dplyr::select(census_block_group,overall_sum,overall_rank)%>%
-  left_join(.,SVI_before)%>%
-  mutate(qualify=ifelse(overall_rank>=.75,1,0),
-         qualify_before=ifelse(overall_rank_before>=.75,1,0),
-         flip_before=qualify-qualify_before)
-### Seeing the number of counties that flipped
-table(SVI_comp$flip_before)
+         overall_rank=percent_rank(overall_sum))%>%
+  right_join(.,SVI_dat,by="census_block_group")%>%
+  mutate(qualify=ifelse(overall_rank>=.75,1,0))%>%
+  mutate_at(vars(qualify,overall_rank,overall_sum), ~replace(., is.na(.), 0))
+
 if(!dir.exists("./Build/Index/")){
   dir.create("./Build/Index/")
 }     
-save(SVI_comp,file='./Build/Index/SVI_comp.RData')
-rm(SVI_dat,SVI,SVI_comp,SVI_before)
+save(SVI,file='./Build/Index/SVI.RData')
+rm(SVI_dat,SVI)
+         
