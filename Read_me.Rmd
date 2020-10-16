@@ -7,7 +7,25 @@ output:
 
 ## Problem statement 
 
-The Colorado State Forest Service (CSFS) encourages wildfire mitigation through the Forest Restoration & Wildfire Risk Mitigation (FRWRM) Grant Program.  The legislation authorizing funding for the program seeks to encourage funding to areas with “fewer economic resources”.  The CSFS needs to define “fewer economic resources”, and provide this information to applicants, preferably through the existing Colorado Forest Atlas.  
+The Colorado State Forest Service (CSFS) encourages wildfire mitigation through the Forest Restoration & Wildfire Risk Mitigation (FRWRM) Grant Program.  The legislation authorizing funding for the program seeks to encourage funding to areas with “fewer economic resources”.  The CSFS needs to define “fewer economic resources”, and provide this information to applicants, preferably through the existing Colorado Forest Atlas.
+
+Defining what constitutes "fewer economic resources"is not straight forward.  In this work we will draw from the literature regarding what non-landscape related risk factors make individuals more vulnerable to natural disasters such as fire.  We will then adapt the general factors to be specific to the characteristics of the WUI within Colorado and Fire context.  
+
+## Introduction to Social Vulnerability, a broad definition of "fewer economic resources"
+
+Forest fires in the western United States are growing in frequency and intensity. As this continues to occur fire suppression costs also rise.  The federal government's average budget for 2015-2019 was 159% of the previous 5-year average(National Interagency Fire Center).  The cost of suppression is only a small part of the full cost, however, as many individuals lost property, suffered injury, and experienced poor health as a result of the fire and its smoke. Mitigation is an important tool for decreasing the overall effect of wildfire on communities and on federal budgets.  
+
+Mitigation efforts fall into two categories, landscape mitigation and community mitigation.  The FRWRM grant program focuses on the latter.  A large number of communtiy mitigation projects are focused solely on physical risk factors, but we know from the literature that social factors such as poverty, minority status, and percent female are associated with worse outcomes following a natural disaster.  These sorts of disparities are often recognizable on the local level, but are often overlooked when mitigation funding is being considered.  The first large scale implementation of this concept was realized in 2011 by Flanagan et al after hurricane Katrina. It was used in the HAZUS-MH software provided by the Federal Emergency Management system to assess danger from floods, hurricanes, and earthquakes.  Fire has been notably absent from these plans, but that does not mean Social Vulnerablity has not played a roll in fire related affects. 
+
+
+
+
+
+
+-Illustrate how different variables play in 
+   -An explanantion of the variables outlined in the SVI can be found in Flanagan et al
+-discuss why the literature suggests that equity may be important 
+
 
 ## Methods
 
@@ -23,37 +41,40 @@ library(mapview)
 library(raster)
 library(geojsonio)
 library(stars)
-#load('./Build/Index/SVI.RData')
-#load('./Build/Index/SVI_comp.RData')
-#SVI_comp<-SVI_comp%>%
-#  dplyr::select(census_block_group,qualify_wui,flip,overall_rank_wui,qualify_state)
-#load('./Build/Index/SVI_comp_crowd.RData')
-#SVI_comp_crowd<-SVI_comp_crowd%>%
-#  dplyr::select(census_block_group,qualify_no_crowd,flip_crowd)
-#load('./Build/Data/state_08.rdata')
-#load('./Build/Cache/WUI_1.RData')
-#load('./Build/Cache/WUI_2.RData')
+library(stringr)
+library(leafpop)
+load('./Build/Index/SVI.RData')
+load('./Build/Index/SVI_comp.RData')
+SVI_comp<-SVI_comp%>%
+  dplyr::select(census_block_group,qualify_before,flip_before,qualify)
+load('./Build/Data/state_08.rdata')
 
-#delist<-function(geog){
-#  geog%>%
-#    rename(census_block_group=geoid)%>%
-#  dplyr::left_join(.,SVI) 
-#}
-#SVI_layer<-st_out%>%
-#  map_dfr(.,delist)%>%
-#  st_transform( "+proj=longlat +datum=WGS84") %>%
-#  na.omit()%>%
-#  left_join(.,SVI_comp)%>%
-#  left_join(.,SVI_comp_crowd)
-#rm(SVI,st_out,SVI_comp,SVI_comp_crowd)
-load('./Build/Cache/SVI_layer.RData')
-load('./Build/Cache/WUI_1.RData')
-load('./Build/Cache/WUI_2.RData')
-WUI<-rbind(WUI_1,WUI_2)
-rm(WUI_1,WUI_2)
+
+delist<-function(geog){
+  geog%>%
+    rename(census_block_group=geoid)%>%
+  dplyr::left_join(.,SVI_comp) 
+}
+SVI_layer<-st_out%>%
+  map_dfr(.,delist)%>%
+  st_set_crs(4269)%>%
+  #st_transform("+proj=longlat +datum=WGS84")%>%
+  na.omit()%>%
+  left_join(SVI)
+rm(SVI,st_out,SVI_comp)
 pal<-colorQuantile("Reds",na.omit(SVI_layer$overall_rank))
 pal_binary<-colorFactor(palette=c('purple','steelblue','red'), domain=c(-1,0,1))
-plot(WUI)
+load('./Build/Cache/SVI_dat.RData')
+weight<- c(1.25,.75,1.25,.75,.5,.5,.5,.5,1.25,1,0,1,0,.25,0,1.25,1.25)
+weights<-data.frame(c(names(SVI_dat%>%dplyr::select(-census_block_group,-WUI))),
+                    c('socioeconomic','socioeconomic','socioeconomic','socioeconomic'
+                      ,'Household Composition/Disability','Household Composition/Disability','Household Composition/Disability','Household Composition/Disability'
+                      ,'Minority Status/Language','Minority Status/Language'
+                      ,'Housing/Transportation','Housing/Transportation','Housing/Transportation','Housing/Transportation','Housing/Transportation'
+                      ,'Equity','Equity'),
+                    weight/sum(weight))
+names(weights)<-c('variable','category','weight')
+rm(SVI_dat)
 ```
 
 ## Introduction to Index
@@ -108,45 +129,45 @@ We describe the variables used to construct the index below.
 map<-leaflet(SVI_layer)%>%
   addTiles()%>%
   addPolygons(color = "#444444",weight = 1, smoothFactor = 0.5,
-    opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(qualify_state),
+    opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(qualify),
      group="Augmented SVI",
-   popup = paste("Rank", round(SVI_layer$overall_rank_wui,digits=2), "<br>",
+   popup = paste("Rank", round(SVI_layer$overall_rank,digits=2), "<br>",
                  "Percent of individuals below the poverty line",
-                 round(SVI_layer$poverty_percent_below_1,digits=2),"%", "<br>",
+                 round(100*SVI_layer$poverty_percent_below_1,digits=2),"%", "<br>",
                  "Percent of the Civilian labor force which is unemployed",
-                 round(SVI_layer$civ_labor_force_unemployed_percent_2,digits=2),"%", "<br>",
+                 round(100*SVI_layer$civ_labor_force_unemployed_percent_2,digits=2),"%", "<br>",
                  "Median household income",
                  round(SVI_layer$median_hh_income_3,digits=2),"<br>",
                  "Percent of adults over 25 without a High School Diploma",
-                 round(SVI_layer$no_hs_degree_percent_4,digits=2),"%", "<br>",
+                 round(100*SVI_layer$no_hs_degree_percent_4,digits=2),"%", "<br>",
                  "Percent of people over the age of 65",
-                 round(SVI_layer$over_65_percent_5,digits=2),"%", "<br>",
+                 round(100*SVI_layer$over_65_percent_5,digits=2),"%", "<br>",
                  "Percent of people under the age of 18",
-                 round(SVI_layer$under_18_percent_6,digits=2),"%", "<br>",
+                 round(100*SVI_layer$under_18_percent_6,digits=2),"%", "<br>",
                  "Percent of the population above 18 with a disability",
-                 round(SVI_layer$disabled_adult_percent_7,digits=2),"%", "<br>",
+                 round(100*SVI_layer$disabled_adult_percent_7,digits=2),"%", "<br>",
                  "Percent Single Parent HH",
-                 round(SVI_layer$single_householder_percent_8,digits=2),"%", "<br>",
+                 round(100*SVI_layer$single_householder_percent_8,digits=2),"%", "<br>",
                  "Percent of the population that are of minority status",
-                 round(SVI_layer$percent_minority_9,digits=2),"%", "<br>",
+                 round(100*SVI_layer$percent_minority_9,digits=2),"%", "<br>",
                  "Percent of the population that speak English < well",
-                 round(SVI_layer$do_not_speak_english_well_percent_10,digits=2),"%", "<br>",
+                 round(100*SVI_layer$do_not_speak_english_well_percent_10,digits=2),"%", "<br>",
                  "Percent of housing structures that have 10 or more units",
-                 round(SVI_layer$units_over_10_percent_11,digits=2),"%", "<br>",
+                 round(100*SVI_layer$units_over_10_percent_11,digits=2),"%", "<br>",
                  "Percent of housing units that are mobile homes",
-                 round(SVI_layer$units_mobile_percent_12,digits=2),"%", "<br>",
+                 round(100*SVI_layer$units_mobile_percent_12,digits=2),"%", "<br>",
                  "Percent of households with more people than rooms",
-                 round(SVI_layer$over_1_person_room_percent_13,digits=2),"%", "<br>",
+                 round(100*SVI_layer$over_1_person_room_percent_13,digits=2),"%", "<br>",
                  "Percent of households with no vehicle",
-                 round(SVI_layer$no_vehicle_percent_14,digits=2),"%", "<br>",
+                 round(100*SVI_layer$no_vehicle_percent_14,digits=2),"%", "<br>",
                  "Percent of people who live in group housing",
-                 round(SVI_layer$group_quarters_percent_15,digits=2),"%", "<br>",
+                 round(100*SVI_layer$group_quarters_percent_15,digits=2),"%", "<br>",
                  "Income GINI",round(SVI_layer$gini_income,digits=2),"<br>",
                  "Education GINI",round(SVI_layer$gini_education,digits=2)),
     highlightOptions = highlightOptions(color = "white", weight = 2,
       bringToFront = TRUE)) %>%
   addLegend(position="bottomright",
-              colors=c('steelblue','red'),
+             colors=c('steelblue','red'),
             labels=c('does not qualify','does qualify'),
             values = ~qualify_state.x,
     title = "SVI",
@@ -156,7 +177,6 @@ map<-leaflet(SVI_layer)%>%
     options = layersControlOptions(collapsed = FALSE))%>%
       hideGroup(c("Augmented SVI"))
 map
-#rm(SVI_layer)
 ```
 
 ### Geographic exploration
@@ -165,71 +185,67 @@ When condsidering an index that will function well fro a specific issue and plac
 
 It is importnt not to try to gerrymander the weights in order to exclude certian areas from qualifying for additional assistance if they should not qualify due to their urban nature.  We have limited the extent of comparison to only CBGs that have WUI within them to reduce the affect of the urban area.  This resulted in a number of CBGs that previously did not qualify for the increased match do when urban areas are not considered.  No CBGs of interest lost status as a result of the cutting.
 ```{r WUI recut, echo=FALSE,include=TRUE}
-leaflet()%>%
+variables<-weights%>%
+  dplyr::filter(weight!=0)%>%
+  dplyr::select(variable)
+SVI_pop<-SVI_layer%>%
+  dplyr::select(overall_rank,variables$variable)%>%
+  mutate(across(is.numeric,round,3))%>%
+  mutate(across(is.numeric,~100*.x))%>%
+  mutate(across(is.numeric & !median_hh_income_3 & !gini_education & !gini_income & !overall_rank,paste,"%"),.keep="all")%>%
+  mutate(across(overall_rank,str_replace,'^0$',"Non-WUI"),.keep="unused")%>%
+  mutate(across(median_hh_income_3,~.x/100),.keep="unused")%>%
+  mutate(across(median_hh_income_3,paste,'USD'),.keep="unused")%>%
+  rename('SVI Rank'=overall_rank,
+         'Below Poverty Line'=poverty_percent_below_1,
+         'Labor Force Unemployed'=civ_labor_force_unemployed_percent_2,
+         'Median Household Income'=median_hh_income_3,
+         'Adults without HS Diploma'=no_hs_degree_percent_4,
+         'Income GINI'=gini_income,
+         'Education GINI'=gini_education,
+         'Disabled Adults'=disabled_adult_percent_7,
+         'Single Parent Households'=single_householder_percent_8,
+         'Minority status'=percent_minority_9,
+         'Do not speak English well'=do_not_speak_english_well_percent_10,
+         'Homes that are mobile homes'=units_mobile_percent_12,
+         'Over 65'=over_65_percent_5,
+         'Under 18'=under_18_percent_6,
+         'Households without vehicle'=no_vehicle_percent_14,
+         #'Percent housing units that are apartments'=units_over_10_percent_11,
+        # 'Percent housing units that are crowded'=over_1_person_room_percent_13
+         )
+  
+map<-leaflet(SVI_layer)%>%
   addTiles()%>%
-  addGEOJSON()
-  addPolygons(data=WUI,color = "#444444",weight = 1, smoothFactor = 0.5,
-    opacity = 1.0, fillOpacity = 0,
-    group="WUI",
-    highlightOptions = highlightOptions(color = "white", weight = 2,
-      bringToFront = TRUE))%>%
-  addPolygons(data=WUI,color = "#444444",weight = 1, smoothFactor = 0.5,
-    opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(qualify_wui),
-     group="Augmented SVI WUI",
-    highlightOptions = highlightOptions(color = "white", weight = 2,
-      bringToFront = TRUE))%>%
-  addPolygons(data=SVI_layer,color = "#444444",weight = 1, smoothFactor = 0.5,
-    opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(flip),
-     group="WUI flip",
+  addPolygons(color = "#444444",weight = 1, smoothFactor = 0.5,
+    opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(qualify),
+     group="Augmented SVI",
+   popup = popupTable(SVI_pop,zcol=c("SVI Rank","Below Poverty Line","Labor Force Unemployed","Median Household Income","Adults without HS Diploma","Over 65","Under 18","Disabled Adults","Single Parent Households","Minority status" ,"Do not speak English well","Homes that are mobile homes","Households without vehicle","Income GINI"   ,"Education GINI"),row.numbers=FALSE,feature.id = FALSE),
+   popupOptions = popupOptions(width=300,height=400, keepInView = TRUE,closeOnClick = TRUE),
     highlightOptions = highlightOptions(color = "white", weight = 2,
       bringToFront = TRUE)) %>%
   addLegend(position="bottomright",
-              colors=c('purple','steelblue','red'),
-    title = "flip",
-    labels = c("gained","same","lost"),
-    opacity=.6)%>%
-  addLegend(position="bottomright",
-              colors=c('steelblue','red'),
+             colors=c('steelblue','red'),
             labels=c('does not qualify','does qualify'),
+            values = ~qualify_state.x,
     title = "SVI",
     opacity=.6)%>%
   addLayersControl(
-    overlayGroups = c("Augmented SVI WUI","WUI flip","WUI"),
+    overlayGroups = c("Augmented SVI"),
     options = layersControlOptions(collapsed = FALSE))%>%
-      hideGroup(c("Augmented SVI WUI","WUI flip","WUI"))
+      hideGroup(c("Augmented SVI"))
+map
 ```
 
 Currently we are expirimenting with setting some of the housing/transportation variables down.  The map below shows how setting the weight on variable 11 to 0 changes the allocations of vulnerable and not vulnerable. When we change the weights on the variables there is a 1-1 relationship between qualification flips.  The reduction in number of CBGs made it possible to have unbalanced qualification changes.  As a result of this change we saw 53 CBGs flip qualifications.  I propose that we set the wieghts for 11 to be zero.  Other potential weight reductions could includegroup housing, crowding?, 
-```{r expirimental SVI, echo=FALSE,include=TRUE}
-map_trial<-leaflet(SVI_layer)%>%
-  addTiles()%>%
-  addPolygons(color = "#444444",weight = 1, smoothFactor = 0.5,
-    opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(qualify_state),
-     group="Augmented SVI",
-    #title="Augmented SVI",
-    highlightOptions = highlightOptions(color = "white", weight = 2,
-      bringToFront = TRUE)) %>%
-  addLegend(position="bottomright",
-              colors=c('steelblue','red'),
-            labels=c('does not qualify','does qualify'),
-    title = "SVI",
-    opacity=.6) %>%
-  addPolygons(color = "#444444",weight = 1, smoothFactor = 0.5,
-    opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(flip_crowd),
-     group="WUI flip crowd",
-    highlightOptions = highlightOptions(color = "white", weight = 2,
-      bringToFront = TRUE)) %>%
-  addLegend(position="bottomright",
-              colors=c('purple','steelblue','red'),
-    title = "flip",
-    labels = c("gained","same","lost"),
-    opacity=.6)%>%
-  addLayersControl(
-    overlayGroups = c("Augmented SVI","WUI flip crowd"),
-    options = layersControlOptions(collapsed = FALSE))%>%
-      hideGroup(c("Augmented SVI","WUI flip crowd"))
 
-map_trial
+
+In considering if a variable needs weighting adjustment it is sometimes useful to consult variable summary statistics:
+```{r stats}
+SVI_layer%>%
+  dplyr::select(poverty_percent_below_1:gini_education)%>%
+  st_set_geometry(NULL)%>%
+  summary()
+
 ```
-
 
