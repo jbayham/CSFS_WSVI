@@ -11,25 +11,24 @@ The Colorado State Forest Service (CSFS) encourages wildfire mitigation through 
 
 Defining what constitutes "fewer economic resources"is not straight forward.  In this work we will draw from the literature regarding what non-landscape related risk factors make individuals more vulnerable to natural disasters such as fire.  We will then adapt the general factors to be specific to the characteristics of the WUI within Colorado and Fire context.  
 
-## Introduction to Social Vulnerability, a broad definition of "fewer economic resources"
+[//]: # (Introduction to Social Vulnerability, a broad definition of "fewer economic resources"
 
-Forest fires in the western United States are growing in frequency and intensity. As this continues to occur fire suppression costs also rise.  The federal government's average budget for 2015-2019 was 159% of the previous 5-year average(National Interagency Fire Center).  The cost of suppression is only a small part of the full cost, however, as many individuals lost property, suffered injury, and experienced poor health as a result of the fire and its smoke. Mitigation is an important tool for decreasing the overall effect of wildfire on communities and on federal budgets.  
+[//]: # (Forest fires in the western United States are growing in frequency and intensity. As this continues to occur fire suppression costs also rise.  The federal government's average budget for 2015-2019 was 159% of the previous 5-year average(National Interagency Fire Center).  The cost of suppression is only a small part of the full cost, however, as many individuals lost property, suffered injury, and experienced poor health as a result of the fire and its smoke. Mitigation is an important tool for decreasing the overall effect of wildfire on communities and on federal budgets.)
 
-Mitigation efforts fall into two categories, landscape mitigation and community mitigation.  The FRWRM grant program focuses on the latter.  A large number of communtiy mitigation projects are focused solely on physical risk factors, but we know from the literature that social factors such as poverty, minority status, and percent female are associated with worse outcomes following a natural disaster.  These sorts of disparities are often recognizable on the local level, but are often overlooked when mitigation funding is being considered.  The first large scale implementation of this concept was realized in 2011 by Flanagan et al after hurricane Katrina. It was used in the HAZUS-MH software provided by the Federal Emergency Management system to assess danger from floods, hurricanes, and earthquakes.  Fire has been notably absent from these plans, but that does not mean Social Vulnerablity has not played a roll in fire related affects. 
+[//]: # (Mitigation efforts fall into two categories, landscape mitigation and community mitigation.  The FRWRM grant program focuses on the latter.  A large number of communtiy mitigation projects are focused solely on physical risk factors, but we know from the literature that social factors such as poverty, minority status, and percent female are associated with worse outcomes following a natural disaster.  These sorts of disparities are often recognizable on the local level, but are often overlooked when mitigation funding is being considered.  The first large scale implementation of this concept was realized in 2011 by Flanagan et al after hurricane Katrina. It was used in the HAZUS-MH software provided by the Federal Emergency Management system to assess danger from floods, hurricanes, and earthquakes.  Fire has been notably absent from these plans, but that does not mean Social Vulnerablity has not played a roll in fire related affects.) 
 
+#### Fewer Economic Resources and Social Vulnerability
 
+The FRWRM grant recognizes the importance of mitigation as a method of fire suppression.  At a household level, mitigation is usually undertaken privately or with the help of grants, such as FRWRM.  In either case, the majority of the burden of mitigation falls on the homeowner.  One might expect the widespread adoption of risk-reducing practices as they reduce the risk of potentially catastrophic events.  In reality, Gaither et al. found that 40 % of households in the South reported taking no such action.  One reason that households might choose not to mitigate is that they lack the resources to do so.  These households may have a lack of financial, educational, and time resources to reduce their risk from wildfire.  The inability to reduce risk is correlated with factors that would exacerbate the effect of wildfire should it occur.  The combination of a lack of resources and high risk from natural disasters is called Social Vulnerability. 
 
+Socially vulnerable communities are exposed disproportionally to fire and less covered by government mitigation programs.  Gaither et al. (2011) find that, in the South, areas of high fire risk and high social vulnerability were less likely to participate in mitigation programs such as Firewise or Community Wildfire Protection Program (CWPP).  Palaiologou et al. (2019) found that "Although high social vulnerability block groups covered small areas, they had high population and structure density and were disproportionately exposed per area burned by fire."
 
-
-
--Illustrate how different variables play in 
-   -An explanantion of the variables outlined in the SVI can be found in Flanagan et al
--discuss why the literature suggests that equity may be important 
+Measuring social vulnerability can be difficult, but it is related to the resources available to a household.  These resources can come from the community or the household level.   
 
 
 ## Methods
 
-The objective of this project is to construct a measure of *fewer economic resources* for the WUI in Colorado.  The layer created is intended to highlight areas that are eligible for a reduced match via the Colorado State Forest service grants for wildfire risk mitigation.
+The objective of this project is to construct a measure of *fewer economic resources* for the WUI in Colorado.  The layer created is intended to highlight areas that are eligible for a reduced match via the Colorado State Forest service grants for wildfire risk mitigation. The Index is calculated only for areas that contain WUI, but the information is gathered across the state. On the map, areas without an SVI ranking due to their non-WUI status are marked Non-WUI, but the information is available. 
 
 ```{r,echo=FALSE,include=FALSE}
 knitr::opts_chunk$set(warning=FALSE, message=FALSE,fig.width=12, fig.height=8)
@@ -65,127 +64,62 @@ rm(SVI,st_out,SVI_comp)
 pal<-colorQuantile("Reds",na.omit(SVI_layer$overall_rank))
 pal_binary<-colorFactor(palette=c('purple','steelblue','red'), domain=c(-1,0,1))
 load('./Build/Cache/SVI_dat.RData')
-weight<- c(1.25,.75,1.25,.75,.5,.5,.5,.5,1.25,1,0,1,0,.25,0,1.25,1.25)
-weights<-data.frame(c(names(SVI_dat%>%dplyr::select(-census_block_group,-WUI))),
-                    c('socioeconomic','socioeconomic','socioeconomic','socioeconomic'
-                      ,'Household Composition/Disability','Household Composition/Disability','Household Composition/Disability','Household Composition/Disability'
-                      ,'Minority Status/Language','Minority Status/Language'
-                      ,'Housing/Transportation','Housing/Transportation','Housing/Transportation','Housing/Transportation','Housing/Transportation'
-                      ,'Equity','Equity'),
-                    weight/sum(weight))
-names(weights)<-c('variable','category','weight')
+load('./Build/Index/weights.RData')
 rm(SVI_dat)
 ```
 
-## Introduction to Index
+### Introduction to Index
 
-We adapt the Social Vulnerability Index (SVI) (Flanagan et al., 2011) to the wildland fire context in Colorado.  The SVI was created in response to Hurricane Katrina.  The SVI ranges from 0 (not vulnerable) to 100 (highly vulnerable), and acknowledges that those who are socially vulnerable are more likely to experience loss and less likely to recover.  Its original intent was to help state and federal level disaster responders identify the most affected areas post-event.  The authors also recognize its potential for use in other stages of the disaster cycle, such as recovery.
+We adapt the Social Vulnerability Index (SVI) (Flanagan et al., 2011) to the wildland fire context in Colorado.  The SVI was created in response to Hurricane Katrina.  The SVI ranges from 0 (not vulnerable) to 100 (highly vulnerable).  It acknowledges that those who are socially vulnerable are more likely to experience loss and less likely to recover.  Its original intent was to help state and federal level disaster responders identify the most affected areas post-event.  The authors also recognize its potential for use in other stages of the disaster cycle, such as recovery.
 
-The projects funded by FRWRM fall into the mitigation and preparedness portions of the disaster cycle, but many of the post-event considerations apply to mitigation and preparedness.  The SVI addresses four main categories of vulnerability: socioeconomic status, household composition/ disability, minority status/ language, and housing/transportation.  These characteristics are important during all phases of the disaster cycle, especially mitigation.  Those with little purchasing power, high burden of care, or who experience difficulty interacting with the community for cultural or physical reasons will be less able to participate in mitigation activity.  Communities who have high overall levels of vulnerability may require additional assistance to complete migitation activities.  
+The projects funded by FRWRM fall into the mitigation and preparedness portions of the disaster cycle, but many of the post-event considerations apply to mitigation and preparedness.  The SVI addresses four main categories of vulnerability: socioeconomic status, household composition/ disability, minority status/ language, and housing/transportation.  These characteristics are important during all phases of the disaster cycle but especially mitigation.  Those with little purchasing power, high burden of care, or who experience difficulty interacting with the community for cultural or physical reasons will be less able to participate in mitigation activity.  Communities who have high overall levels of vulnerability may require additional assistance to complete migitation activities.  
 
-Average measures within a community may obscure the variation in vulnerability within the community.  For example, a census defined geography may contain households that qualify as highly vulnerable and households that qualify as minimally vulnerable.  Average characteristics reported in this community may indicate moderate vulnerability.  We account for these heterogeneities by adding two measures to the SVI: income GINI coefficient, and an education GINI coefficient.  The GINI coefficient is commonly used to measure inequality, another measure of heterogeneity. Using the example of income, if everyone had the same income, the income GINI would equal zero.  Conversely, if one household collected all of the income in a CBG and the rest of the community received none, the income GINI would equal one.  
+Average measures within a community may obscure the variation in vulnerability within the community.  For example, a census defined geography may contain households that qualify as highly vulnerable and households that qualify as minimally vulnerable.  Average characteristics reported in this community may indicate moderate vulnerability.  We account for these heterogeneities by adding two measures to the SVI: income GINI and an education GINI.  The GINI coefficient measures inequality, another measure of heterogeneity. Using the example of income, if everyone had the same income, the income GINI would equal zero.  Conversely, if one household collected all the income in a CBG and the rest of the community received none, the income GINI would equal one.  
 
-We calculate the augmented SVI using the methodology in the original paper.  Lower augmented SVI scores indicate lower vulnerability with 0 being the least vulnerable.  The Index is bounded between 0 and 1.  First, we percent rank the variables independently accross all CBGs in the area of interest, in this case Colorado.  Second, we add the scores together and percent rank them again.  This percent rank is the augmented SVI score.  We make a few minor changes to the original index variables to reflect modern ideas on measures of central tendency as well as data limitations. 
+We calculate the augmented SVI using the methodology in the original paper.  Lower augmented SVI scores indicate lower vulnerability with 0 being the least vulnerable.  The Index is bounded between 0 and 1.  First, we percent rank the variables independently across all CBGs in the area of interest, in this case, Colorado.  Second, we weight the scores, add them together, and percent rank them again.  This weighting is done to tailor the Index to Colorado and emphasize variables that are more important for a fire context.  This percent rank is the augmented SVI score.  We make a few minor changes to the original index variables to reflect modern ideas on measures of central tendency as well as data limitations. 
 
 ## Data
 
-The orginal SVI was based on data from the 1990 Census.  Here we have updated it to more closely reflect the Colorado communities we see today.  We construct the Colorado SVI using data from the 2016 American Community Survey (5-year average).  While the original SVI was calculated at the census tract, we calculate it at the census block group level (smaller geographic unit) to better identify community demographics.  We then crop the spatial layers to the boundary of the WUI as defined by the boundaries used in the grant process.. 
+The original SVI is based on data from the 1990 Census.  Here we have updated it to reflect current Colorado communities.  We construct the Colorado SVI using data from the 2016 American Community Survey (5-year average).  The original SVI was calculated at the census tract, but we look at the census block group level (smaller geographic unit) to better identify community demographics.  We then crop the spatial layers to the boundary of the WUI as defined by the boundaries used in the grant process. 
 
-All data analysis and geoprocessing is conducted in R Statistical Computing Language.  All steps are documented and the code is made available on GitHub.
+We conduct all data analysis and geoprocessing in the R Statistical Computing Language.  The code is made available on GitHub.
 
 
 ### Variables
 
-We describe the variables used to construct the index below.
+We describe the variables used to construct the Index below. We express the relative importance of the variables in the percentages in parenthesis.  The percentages represent the relative weight of the variable in the SVI ranking.  The individual variable weights can be summed to represent the relative weight of the categories.  The category weights are shown for reference. 
 
-#### Socioeconomic Status Variables
-1.  Percent of individuals below the poverty line
-2.  Percent of the Civilian labor force which is unemployed 
-3.  Median household income
-4.  Percent of adults over 25 without a High School Diploma
+#### Socioeconomic Status Variables (39 %)
+1.  Percent of individuals below the poverty line (12.20 %)
+2.  Percent of the Civilian labor force which is unemployed (7.31 %)
+3.  Median household income (12.20 %)
+4.  Percent of adults over 25 without a High School Diploma(7.31 %)
 
-#### Household Composition/Disability
-5.  Percent of people over the age of 65
-6.  Percent of people under the age of 18 
-7.  Percent of the poverty status determined population above 18 with a disability(The original index included those over 5, but this data is not included in the ACS)
-8.  Percent of households with a male or female householder, no spouse present, with children under 18
+#### Household Composition/Disability (12.2 %)
+5.  Percent of people over the age of 65 (2.44 %)
+6.  Percent of people under the age of 18 (2.44 %)
+7.  Percent of the poverty status determined population above 18 with a disability (2.44 %)
+(The original index included those over 5, but this data is not included in the ACS)
+8.  Percent of households with a male or female householder, no spouse present, with children under 18 (2.44 %)
 
-#### Minority Status/Language
-9.  Percent of the population that are of minority status (Non-white or Hispanic)
-10. Percent of the population that speaks English less than "well"
+#### Minority Status/Language (17.1 %)
+9.  Percent of the population that are of minority status (Non-white or Hispanic) (12.20 %)
+10. Percent of the population that speaks English less than "well" (4.88 %)
 
-#### Housing/Transportation
-11. Percent of housing structures that have 10 or more units
-12. Percent of housing units that are mobile homes
-13. Percent of households that live in a housing unit with more people than rooms
-14. Percent of households with no vehicle
-15. Percent of people who live in group housing such as nursing homes
+#### Housing/Transportation (7.32 %)
+11. Percent of housing structures that have 10 or more units (0%)
+12. Percent of housing units that are mobile homes (4.88 %)
+13. Percent of households that live in a housing unit with more people than rooms (0%)
+14. Percent of households with no vehicle (2.44%)
+15. Percent of people who live in group housing such as nursing homes (0%)
 
-#### New Equity Variables
-16. Income GINI
-17. Years of schooling/ Education GINI
+#### New Equity Variables (24.4 %)
+16. Income GINI (12.20 %)
+17. Years of schooling/ Education GINI (12.20 %)
 
-```{r CO Index, echo=FALSE,include=TRUE}
-map<-leaflet(SVI_layer)%>%
-  addTiles()%>%
-  addPolygons(color = "#444444",weight = 1, smoothFactor = 0.5,
-    opacity = 1.0, fillOpacity = 0.6,fillColor = ~pal_binary(qualify),
-     group="Augmented SVI",
-   popup = paste("Rank", round(SVI_layer$overall_rank,digits=2), "<br>",
-                 "Percent of individuals below the poverty line",
-                 round(100*SVI_layer$poverty_percent_below_1,digits=2),"%", "<br>",
-                 "Percent of the Civilian labor force which is unemployed",
-                 round(100*SVI_layer$civ_labor_force_unemployed_percent_2,digits=2),"%", "<br>",
-                 "Median household income",
-                 round(SVI_layer$median_hh_income_3,digits=2),"<br>",
-                 "Percent of adults over 25 without a High School Diploma",
-                 round(100*SVI_layer$no_hs_degree_percent_4,digits=2),"%", "<br>",
-                 "Percent of people over the age of 65",
-                 round(100*SVI_layer$over_65_percent_5,digits=2),"%", "<br>",
-                 "Percent of people under the age of 18",
-                 round(100*SVI_layer$under_18_percent_6,digits=2),"%", "<br>",
-                 "Percent of the population above 18 with a disability",
-                 round(100*SVI_layer$disabled_adult_percent_7,digits=2),"%", "<br>",
-                 "Percent Single Parent HH",
-                 round(100*SVI_layer$single_householder_percent_8,digits=2),"%", "<br>",
-                 "Percent of the population that are of minority status",
-                 round(100*SVI_layer$percent_minority_9,digits=2),"%", "<br>",
-                 "Percent of the population that speak English < well",
-                 round(100*SVI_layer$do_not_speak_english_well_percent_10,digits=2),"%", "<br>",
-                 "Percent of housing structures that have 10 or more units",
-                 round(100*SVI_layer$units_over_10_percent_11,digits=2),"%", "<br>",
-                 "Percent of housing units that are mobile homes",
-                 round(100*SVI_layer$units_mobile_percent_12,digits=2),"%", "<br>",
-                 "Percent of households with more people than rooms",
-                 round(100*SVI_layer$over_1_person_room_percent_13,digits=2),"%", "<br>",
-                 "Percent of households with no vehicle",
-                 round(100*SVI_layer$no_vehicle_percent_14,digits=2),"%", "<br>",
-                 "Percent of people who live in group housing",
-                 round(100*SVI_layer$group_quarters_percent_15,digits=2),"%", "<br>",
-                 "Income GINI",round(SVI_layer$gini_income,digits=2),"<br>",
-                 "Education GINI",round(SVI_layer$gini_education,digits=2)),
-    highlightOptions = highlightOptions(color = "white", weight = 2,
-      bringToFront = TRUE)) %>%
-  addLegend(position="bottomright",
-             colors=c('steelblue','red'),
-            labels=c('does not qualify','does qualify'),
-            values = ~qualify_state.x,
-    title = "SVI",
-    opacity=.6)%>%
-  addLayersControl(
-    overlayGroups = c("Augmented SVI"),
-    options = layersControlOptions(collapsed = FALSE))%>%
-      hideGroup(c("Augmented SVI"))
-map
-```
-
-### Geographic exploration
-
-When condsidering an index that will function well fro a specific issue and place there it is advantagous to adapt the general index to reflect its context.  In this project we are addressing wildfire preparedness in the WUI.  This means that urban areas and the concerns that arise from them are less important than they would be in a hurricane or a flood senario.  For this reason we have limited the scope of the comparitive analysis to only CBGs that contain WUI.  Additionally we are limiting the importance of some of the variables listed above that pertain to urban crowding. This importance ranking will be accomplished by assigning weights to the variables used above. These weights will bounded between (0,1). 
-
-It is importnt not to try to gerrymander the weights in order to exclude certian areas from qualifying for additional assistance if they should not qualify due to their urban nature.  We have limited the extent of comparison to only CBGs that have WUI within them to reduce the affect of the urban area.  This resulted in a number of CBGs that previously did not qualify for the increased match do when urban areas are not considered.  No CBGs of interest lost status as a result of the cutting.
-```{r WUI recut, echo=FALSE,include=TRUE}
+```{r SVI, echo=FALSE,include=TRUE}
 variables<-weights%>%
+  rename(variable=category)%>%
   dplyr::filter(weight!=0)%>%
   dplyr::select(variable)
 SVI_pop<-SVI_layer%>%
@@ -237,15 +171,11 @@ map<-leaflet(SVI_layer)%>%
 map
 ```
 
-Currently we are expirimenting with setting some of the housing/transportation variables down.  The map below shows how setting the weight on variable 11 to 0 changes the allocations of vulnerable and not vulnerable. When we change the weights on the variables there is a 1-1 relationship between qualification flips.  The reduction in number of CBGs made it possible to have unbalanced qualification changes.  As a result of this change we saw 53 CBGs flip qualifications.  I propose that we set the wieghts for 11 to be zero.  Other potential weight reductions could includegroup housing, crowding?, 
 
+## References
+Flanagan, Barry E., Edward W. Gregory, Elaine J Hallisey, Janet L. Heitgerd, and Brian Lewis. 2011. “A Social Vulnerability Index for Disaster Management.” Journal of Homeland Security and Emergency Management 8 (1). https://doi.org/10.2202/1547-7355.1792.
 
-In considering if a variable needs weighting adjustment it is sometimes useful to consult variable summary statistics:
-```{r stats}
-SVI_layer%>%
-  dplyr::select(poverty_percent_below_1:gini_education)%>%
-  st_set_geometry(NULL)%>%
-  summary()
+Gaither, Cassandra Johnson, Neelam C. Poudyal, Scott Goodrick, J. M. Bowker, Sparkle Malone, and Jianbang Gan. 2011. “Wildland Fire Risk and Social Vulnerability in the Southeastern United States: An Exploratory Spatial Data Analysis Approach.” Forest Policy and Economics 13 (1): 24–36. https://doi.org/10.1016/j.forpol.2010.07.009.
 
-```
+Palaiologou, Palaiologos, Alan A. Ager, Max Nielsen-Pincus, Cody R. Evers, and Michelle A. Day. 2019. “Social Vulnerability to Large Wildfires in the Western USA.” Landscape and Urban Planning 189 (September): 99–116. https://doi.org/10.1016/j.landurbplan.2019.04.006.
 
