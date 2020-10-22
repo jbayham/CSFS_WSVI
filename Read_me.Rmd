@@ -1,34 +1,10 @@
 ---
-title: "Preliminary Draft: Defining and Providing Fewer Economic Resources"
+title: "Defining and Providing Fewer Economic Resources"
 output:
   html_document:
     df_print: paged
 ---
 
-## Problem statement 
-
-The Colorado State Forest Service (CSFS) encourages wildfire mitigation through the Forest Restoration & Wildfire Risk Mitigation (FRWRM) Grant Program.  The legislation authorizing funding for the program seeks to encourage funding to areas with “fewer economic resources”.  The CSFS needs to define “fewer economic resources”, and provide this information to applicants, preferably through the existing Colorado Forest Atlas.
-
-Defining what constitutes "fewer economic resources"is not straight forward.  In this work we will draw from the literature regarding what non-landscape related risk factors make individuals more vulnerable to natural disasters such as fire.  We will then adapt the general factors to be specific to the characteristics of the WUI within Colorado and Fire context.  
-
-[//]: # (Introduction to Social Vulnerability, a broad definition of "fewer economic resources"
-
-[//]: # (Forest fires in the western United States are growing in frequency and intensity. As this continues to occur fire suppression costs also rise.  The federal government's average budget for 2015-2019 was 159% of the previous 5-year average(National Interagency Fire Center).  The cost of suppression is only a small part of the full cost, however, as many individuals lost property, suffered injury, and experienced poor health as a result of the fire and its smoke. Mitigation is an important tool for decreasing the overall effect of wildfire on communities and on federal budgets.)
-
-[//]: # (Mitigation efforts fall into two categories, landscape mitigation and community mitigation.  The FRWRM grant program focuses on the latter.  A large number of communtiy mitigation projects are focused solely on physical risk factors, but we know from the literature that social factors such as poverty, minority status, and percent female are associated with worse outcomes following a natural disaster.  These sorts of disparities are often recognizable on the local level, but are often overlooked when mitigation funding is being considered.  The first large scale implementation of this concept was realized in 2011 by Flanagan et al after hurricane Katrina. It was used in the HAZUS-MH software provided by the Federal Emergency Management system to assess danger from floods, hurricanes, and earthquakes.  Fire has been notably absent from these plans, but that does not mean Social Vulnerablity has not played a roll in fire related affects.) 
-
-#### Fewer Economic Resources and Social Vulnerability
-
-The FRWRM grant recognizes the importance of mitigation as a method of fire suppression.  At a household level, mitigation is usually undertaken privately or with the help of grants, such as FRWRM.  In either case, the majority of the burden of mitigation falls on the homeowner.  One might expect the widespread adoption of risk-reducing practices as they reduce the risk of potentially catastrophic events.  In reality, Gaither et al. found that 40 % of households in the South reported taking no such action.  One reason that households might choose not to mitigate is that they lack the resources to do so.  These households may have a lack of financial, educational, and time resources to reduce their risk from wildfire.  The inability to reduce risk is correlated with factors that would exacerbate the effect of wildfire should it occur.  The combination of a lack of resources and high risk from natural disasters is called Social Vulnerability. 
-
-Socially vulnerable communities are exposed disproportionally to fire and less covered by government mitigation programs.  Gaither et al. (2011) find that, in the South, areas of high fire risk and high social vulnerability were less likely to participate in mitigation programs such as Firewise or Community Wildfire Protection Program (CWPP).  Palaiologou et al. (2019) found that "Although high social vulnerability block groups covered small areas, they had high population and structure density and were disproportionately exposed per area burned by fire."
-
-Measuring social vulnerability can be difficult, but it is related to the resources available to a household.  These resources can come from the community or the household level.   
-
-
-## Methods
-
-The objective of this project is to construct a measure of *fewer economic resources* for the WUI in Colorado.  The layer created is intended to highlight areas that are eligible for a reduced match via the Colorado State Forest service grants for wildfire risk mitigation. The Index is calculated only for areas that contain WUI, but the information is gathered across the state. On the map, areas without an SVI ranking due to their non-WUI status are marked Non-WUI, but the information is available. 
 
 ```{r,echo=FALSE,include=FALSE}
 knitr::opts_chunk$set(warning=FALSE, message=FALSE,fig.width=12, fig.height=8)
@@ -68,54 +44,25 @@ load('./Build/Index/weights.RData')
 rm(SVI_dat)
 ```
 
-### Introduction to Index
+## Problem statement 
 
-We adapt the Social Vulnerability Index (SVI) (Flanagan et al., 2011) to the wildland fire context in Colorado.  The SVI was created in response to Hurricane Katrina.  The SVI ranges from 0 (not vulnerable) to 100 (highly vulnerable).  It acknowledges that those who are socially vulnerable are more likely to experience loss and less likely to recover.  Its original intent was to help state and federal level disaster responders identify the most affected areas post-event.  The authors also recognize its potential for use in other stages of the disaster cycle, such as recovery.
+The Colorado State Forest Service (CSFS) encourages wildfire mitigation through the Forest Restoration & Wildfire Risk Mitigation (FRWRM) Grant Program.  The legislation authorizing funding for the program seeks to encourage funding to areas with “fewer economic resources”.  The CSFS needs to define “fewer economic resources”, and provide this information to applicants, preferably through the existing Colorado Forest Atlas.
 
-The projects funded by FRWRM fall into the mitigation and preparedness portions of the disaster cycle, but many of the post-event considerations apply to mitigation and preparedness.  The SVI addresses four main categories of vulnerability: socioeconomic status, household composition/ disability, minority status/ language, and housing/transportation.  These characteristics are important during all phases of the disaster cycle but especially mitigation.  Those with little purchasing power, high burden of care, or who experience difficulty interacting with the community for cultural or physical reasons will be less able to participate in mitigation activity.  Communities who have high overall levels of vulnerability may require additional assistance to complete migitation activities.  
-
-Average measures within a community may obscure the variation in vulnerability within the community.  For example, a census defined geography may contain households that qualify as highly vulnerable and households that qualify as minimally vulnerable.  Average characteristics reported in this community may indicate moderate vulnerability.  We account for these heterogeneities by adding two measures to the SVI: income GINI and an education GINI.  The GINI coefficient measures inequality, another measure of heterogeneity. Using the example of income, if everyone had the same income, the income GINI would equal zero.  Conversely, if one household collected all the income in a CBG and the rest of the community received none, the income GINI would equal one.  
-
-We calculate the augmented SVI using the methodology in the original paper.  Lower augmented SVI scores indicate lower vulnerability with 0 being the least vulnerable.  The Index is bounded between 0 and 1.  First, we percent rank the variables independently across all CBGs in the area of interest, in this case, Colorado.  Second, we weight the scores, add them together, and percent rank them again.  This weighting is done to tailor the Index to Colorado and emphasize variables that are more important for a fire context.  This percent rank is the augmented SVI score.  We make a few minor changes to the original index variables to reflect modern ideas on measures of central tendency as well as data limitations. 
-
-## Data
-
-The original SVI is based on data from the 1990 Census.  Here we have updated it to reflect current Colorado communities.  We construct the Colorado SVI using data from the 2016 American Community Survey (5-year average).  The original SVI was calculated at the census tract, but we look at the census block group level (smaller geographic unit) to better identify community demographics.  We then crop the spatial layers to the boundary of the WUI as defined by the boundaries used in the grant process. 
-
-We conduct all data analysis and geoprocessing in the R Statistical Computing Language.  The code is made available on GitHub.
+Defining "fewer economic resources" is challenging because resources refer to everything at a community’s disposal.  In this work, we will draw from the literature to define an index that captures populations’ vulnerability to natural disasters such as wildland fire.  We tailor the index, the Wildland Fire Social Vulnerability Index (WFSVI),  to the wildland urban interface (WUI) in Colorado.  The WFSVI allows us to identify the areas of the state that are the most vulnerable.  We assign the top quartile as eligible for increased match as part of the FRWRM program. 
 
 
-### Variables
+#### Fewer Economic Resources and Social Vulnerability
 
-We describe the variables used to construct the Index below. We express the relative importance of the variables in the percentages in parenthesis.  The percentages represent the relative weight of the variable in the SVI ranking.  The individual variable weights can be summed to represent the relative weight of the categories.  The category weights are shown for reference. 
+The FRWRM grant recognizes the importance of mitigation to reduce the risk to homeowners in the WUI.  At a household level, mitigation is usually undertaken privately or with the help of grants, such as FRWRM.  In either case, the majority of the burden of mitigation falls on the homeowner.  One might expect the widespread adoption of risk-reducing practices as they reduce the risk of potentially catastrophic events.  However, Gaither et al. (2011) found that 40% of households in the South reported taking no such action.  One reason that households might choose not to mitigate is that they lack the resources to do so.  These households may lack financial, educational, and time resources to reduce their risk from wildfire.  The inability to reduce risk is correlated with factors that would exacerbate the effect of wildfire should it occur.  The combination of a lack of resources and high risk from natural disasters is called Social Vulnerability. 
 
-#### Socioeconomic Status Variables (39 %)
-1.  Percent of individuals below the poverty line (12.20 %)
-2.  Percent of the Civilian labor force which is unemployed (7.31 %)
-3.  Median household income (12.20 %)
-4.  Percent of adults over 25 without a High School Diploma(7.31 %)
+Socially vulnerable communities are exposed disproportionally to fire and less covered by government mitigation programs.  Gaither et al. (2011) find that, in the South, areas of high fire risk and high social vulnerability were less likely to participate in mitigation programs such as Firewise or Community Wildfire Protection Program (CWPP).  Palaiologou et al. (2019) found that "Although high social vulnerability block groups covered small areas, they had high population and structure density and were disproportionately exposed per area burned by fire."
 
-#### Household Composition/Disability (12.2 %)
-5.  Percent of people over the age of 65 (2.44 %)
-6.  Percent of people under the age of 18 (2.44 %)
-7.  Percent of the poverty status determined population above 18 with a disability (2.44 %)
-(The original index included those over 5, but this data is not included in the ACS)
-8.  Percent of households with a male or female householder, no spouse present, with children under 18 (2.44 %)
 
-#### Minority Status/Language (17.1 %)
-9.  Percent of the population that are of minority status (Non-white or Hispanic) (12.20 %)
-10. Percent of the population that speaks English less than "well" (4.88 %)
+## Methods
 
-#### Housing/Transportation (7.32 %)
-11. Percent of housing structures that have 10 or more units (0%)
-12. Percent of housing units that are mobile homes (4.88 %)
-13. Percent of households that live in a housing unit with more people than rooms (0%)
-14. Percent of households with no vehicle (2.44%)
-15. Percent of people who live in group housing such as nursing homes (0%)
+The objective of this project is to construct a measure of *fewer economic resources* for the WUI in Colorado.  The layer is intended to highlight areas that are eligible for a reduced match via the Colorado State Forest service grants for wildfire risk mitigation. The Index is calculated only for areas that contain WUI. On the map, areas without an WFSVI ranking due to their non-WUI status are marked Non-WUI, but the information is available.
 
-#### New Equity Variables (24.4 %)
-16. Income GINI (12.20 %)
-17. Years of schooling/ Education GINI (12.20 %)
+
 
 ```{r SVI, echo=FALSE,include=TRUE}
 variables<-weights%>%
@@ -170,6 +117,64 @@ map<-leaflet(SVI_layer)%>%
       hideGroup(c("Augmented SVI"))
 map
 ```
+
+### Introduction to Index
+
+We adapt the Social Vulnerability Index (SVI) (Flanagan et al., 2011) to the wildland fire context in Colorado.  The SVI was created in response to Hurricane Katrina to capture the social (rather than biophysical) features of a community that make it vulnerable.  The SVI ranges from 0 (not vulnerable) to 100 (highly vulnerable).  It acknowledges that those who are socially vulnerable are more likely to experience loss and less likely to recover.  Its original intent was to help state and federal level disaster responders identify the most affected areas post-event.  The authors also recognize its potential for use in other stages of the disaster cycle, such as mitigation.  Allocating funding for mitigation activities represents a forward-looking approach to equitable planning for wildfire incidents.
+
+The projects funded by FRWRM fall into the mitigation and preparedness portions of the disaster cycle, but many of the post-event considerations apply to mitigation and preparedness.  The SVI addresses four main categories of vulnerability: socioeconomic status, household composition/ disability, minority status/ language, and housing/transportation.  These characteristics are important during all phases of the disaster cycle but especially mitigation.  Those with little purchasing power, high burden of care, or who experience difficulty interacting with the community for cultural or physical reasons will be less able to participate in mitigation activity.  Communities who have high overall levels of vulnerability may require additional assistance to complete migitation activities.  
+
+Average measures within a community may obscure the variation in vulnerability within the community.  For example, a census defined geography may contain households that qualify as highly vulnerable and households that qualify as minimally vulnerable.  Average characteristics reported in this community may indicate moderate vulnerability.  We account for these heterogeneities by adding two measures to the WFSVI: income GINI and an education GINI.  The GINI coefficient measures inequality, another measure of heterogeneity. Using the example of income, if everyone had the same income, the income GINI would equal zero.  Conversely, if one household earned all the income in a CBG and the rest of the community received none, the income GINI would equal one.  
+
+We construct the WFSVI based on Flanagan et al (2011).  The SVI and WFSVI are bounded between 0 and 1 with 0 being the least vulnerable.  The following steps outline the construction of the WFSVI. We make a few minor changes to the original index variables to reflect modern ideas on measures of central tendency as well as data limitations.  These changes are italicized.
+
+1. We percent rank the variables independently across all Census Block Groups (CBGs) in Colorado. *We add the GINI variables to account for mixing of high and low levels of resources.*
+2. *We set weights of non-wildland fire pertinent variables such variable 13 in the list below.  We also reweight other variables to emphasize resources that limit the ability to engage in mitigation.  The reweights used are given below as percent contributions to the overall WFSVI.*
+
+3. Finally we add them together, and percent rank them again.  We place more weight on income and housing characteristics that are more relevant to wildfire risk.  This percent rank is the  WFSVI score.
+
+4. We can now assing the status of "fewer economic resources" with the WFSVI.  *We assign qualifying status to any CBG with a rank above .75.  CBGs that rank in the top quartile in the WFSVI are eligible for an increased match.*
+
+
+
+## Data
+
+We construct the Colorado SVI using data from the 2016 American Community Survey (5-year average).  The original SVI was calculated at the census tract, but the data are now available at the census block group (smaller geographic unit) to better identify community demographics.  We then crop the spatial layers to the boundary of the WUI as defined by the boundaries used in the grant process. 
+
+We conduct all data analysis and geoprocessing in the R Statistical Computing Language.  The code is made available on GitHub.
+
+
+### Variables
+
+We describe the variables used to construct the Index below. We express the relative importance of the variables in the percentages in parentheses.  The percentages represent the relative weight of the variable in the SVI ranking.  The individual variable weights can be summed to represent the relative weight of the categories.  The category weights are shown for reference. 
+
+#### Socioeconomic Status Variables (39 %)
+1.  Percent of individuals below the poverty line (12.20 %)
+2.  Percent of the Civilian labor force which is unemployed (7.31 %)
+3.  Median household income (12.20 %)
+4.  Percent of adults over 25 without a High School Diploma(7.31 %)
+
+#### Household Composition/Disability (12.2 %)
+5.  Percent of people over the age of 65 (2.44 %)
+6.  Percent of people under the age of 18 (2.44 %)
+7.  Percent of the poverty status determined population above 18 with a disability (2.44 %)
+(The original index included those over 5, but this data is not included in the ACS)
+8.  Percent of households with a male or female householder, no spouse present, with children under 18 (2.44 %)
+
+#### Minority Status/Language (17.1 %)
+9.  Percent of the population that are of minority status (Non-white or Hispanic) (12.20 %)
+10. Percent of the population that speaks English less than "well" (4.88 %)
+
+#### Housing/Transportation (7.32 %)
+11. Percent of housing structures that have 10 or more units (0%)
+12. Percent of housing units that are mobile homes (4.88 %)
+13. Percent of households that live in a housing unit with more people than rooms (0%)
+14. Percent of households with no vehicle (2.44%)
+15. Percent of people who live in group housing such as nursing homes (0%)
+
+#### New Equity Variables (24.4 %)
+16. Income GINI (12.20 %)
+17. Years of schooling/ Education GINI (12.20 %)
 
 
 ## References

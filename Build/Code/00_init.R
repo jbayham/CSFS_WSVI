@@ -1,5 +1,6 @@
-#This is the preamble script for the Fire Weather project.  
+#This is the preamble script for the CSFS project.  It loads in packages that will be used to create the WFSVI
 #It should be run once each time a user begins a new R session to work on the project.
+
 
 #########################
 #Loading and installing packages

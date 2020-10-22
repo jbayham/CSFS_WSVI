@@ -1,4 +1,5 @@
-##This script adds the WUI indicator
+##This script adds the WUI indicator from step 3 to the data.  This adds the last variable needed before 
+## Calculating the WFSVI
 load('./Build/Cache/SVI_data.RData')
 load('./Build/Cache/WUI_cbg.RData')
 
