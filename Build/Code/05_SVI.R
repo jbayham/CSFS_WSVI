@@ -13,6 +13,28 @@ weights<-data.frame(c(names(SVI_dat%>%dplyr::select(-census_block_group,-WUI))),
                     weight/sum(weight))
 names(weights)<-c('category','categoty','weight')
 SVI<-SVI_dat%>%
+  rename_with( .fn = ~paste0(., '_rank'),.cols=as.character(names(SVI_dat[,2:18])))%>%
+  mutate(directional_median_hh_income_3_rank=-1*median_hh_income_3_rank,.keep="unused")%>%
+  mutate(across(!census_block_group,percent_rank))%>%
+  mutate(svi=percent_rank(poverty_percent_below_1_rank+
+                          civ_labor_force_unemployed_percent_2_rank+
+                          directional_median_hh_income_3_rank+
+                          no_hs_degree_percent_4_rank+
+                          over_65_percent_5_rank+
+                          under_18_percent_6_rank+
+                          disabled_adult_percent_7_rank+
+                          single_householder_percent_8_rank+
+                          percent_minority_9_rank+               ## Minority status
+                          do_not_speak_english_well_percent_10_rank+
+                          units_over_10_percent_11_rank+         ## Housing/Transpotation
+                          units_mobile_percent_12_rank+
+                          over_1_person_room_percent_13_rank+
+                          no_vehicle_percent_14_rank+
+                          group_quarters_percent_15_rank+
+                          gini_income_rank+                      ## Inequality measures
+                          gini_education_rank))%>%
+  dplyr::select(svi,census_block_group)
+SVI<-SVI_dat%>%
   dplyr::filter(WUI==1)%>%
   dplyr::select(-WUI)%>%
   rename_with( .fn = ~paste0(., '_rank'),.cols=as.character(names(SVI_dat[,2:18])))%>%
@@ -36,10 +58,14 @@ SVI<-SVI_dat%>%
            weights$weight[15]*group_quarters_percent_15_rank+
            weights$weight[16]*gini_income_rank+                      ## Inequality measures
            weights$weight[17]*gini_education_rank,
-         overall_rank=percent_rank(overall_sum))%>%
+         wfsvi=percent_rank(overall_sum))%>%
+  dplyr::select(!contains('_rank'))%>%
   right_join(.,SVI_dat,by="census_block_group")%>%
-  mutate(qualify=ifelse(overall_rank>=.75,1,0))%>%
-  mutate_at(vars(qualify,overall_rank,overall_sum), ~replace(., is.na(.), 0))
+  mutate(qualify=ifelse(wfsvi>=.75,1,0))%>%
+  right_join(.,SVI)%>%
+  mutate_at(vars(qualify,overall_sum,wfsvi,svi), ~replace(., is.na(.), 0))%>%
+  dplyr::select(!overall_sum)
+
 
 if(!dir.exists("./Build/Index/")){
   dir.create("./Build/Index/")

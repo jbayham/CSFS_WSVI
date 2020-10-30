@@ -1,7 +1,7 @@
 ## This script pulls variables of interesrt in making the final variables used in this analysis.
 ## opening connection to all variables
 ACS_persons <- DBI::dbConnect(SQLite(), dbname='ACS_persons.sqlite')
-### Percent of poverty status checked individuals who are below povert line.   Income is reported as ratio of line (numbers referenced here is percent of line)
+### Percent of poverty status checked individuals who are below poverty line.   Income is reported as ratio of line (numbers referenced here is percent of line)
 var_1<-tbl(ACS_persons,"attributes_c17")%>%
   dplyr::select(census_block_group,starts_with('C17002e'))%>%
   collect()%>%
@@ -25,7 +25,8 @@ var_3<-tbl(ACS_persons,"attributes_b19")%>%
   dplyr::select(census_block_group,B19013e1)%>%
   collect()%>%
   dplyr::filter(str_detect(census_block_group,"^08"))%>%
-  rename(median_hh_income_3=B19013e1)
+  rename(median_hh_income_3=B19013e1)%>%
+  na_mean()
   
 ### Percent no HS diploma, this is only measured for those over 25 years old.  I am including a GED as HS diploma
 var_4<-tbl(ACS_persons,"attributes_b15")%>%
@@ -134,7 +135,7 @@ var_9<-tbl(ACS_persons,"attributes_b03")%>%
   mutate(percent_minority_9=(pop-white+white_hsp)/pop)%>%
   dplyr::select(census_block_group,percent_minority_9)
 rm(var_9_race)
-#### Percent of people who spead Englist less than "well"
+#### Percent of people who spead English less than "well"
 var_10<-tbl(ACS_persons,"attributes_c16")%>%
   dplyr::select(census_block_group,starts_with('B16004e'))%>%
   collect()%>%

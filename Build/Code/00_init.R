@@ -37,7 +37,8 @@ init.pacs(c("tidyverse",      #shortcut to many useful packages (eg, dplyr, ggpl
             "sf",
             "DescTools",
             "MCDA",
-            "tigris"
+            "tigris",
+            "imputeTS"
 ))
 
 
