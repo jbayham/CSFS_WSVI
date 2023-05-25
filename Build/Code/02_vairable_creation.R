@@ -302,15 +302,15 @@ SVI_data<-var_1%>%
   left_join(.,var_4)%>%
   left_join(.,var_5)%>%
   left_join(.,var_6)%>%
-  left_join(.,var_7)%>%
+  #left_join(.,var_7)%>%
   left_join(.,var_8)%>%
   left_join(.,var_9)%>%
-  left_join(.,var_10)%>%
+  #left_join(.,var_10)%>%
   left_join(.,var_11)%>%
   left_join(.,var_12)%>%
   left_join(.,var_13)%>%
   left_join(.,var_14)%>%
-  left_join(.,var_15)%>%
+  #left_join(.,var_15)%>%
   left_join(.,var_16)%>%
   left_join(.,var_17)
 if(!dir.exists("./Build/Cache/")){
