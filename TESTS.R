@@ -22,7 +22,6 @@ co <- read_sf('build/data/2017_wui/2017_wui.shp')
 ggplot()+
   geom_sf(data=state_08)
 
-
 state_081 <- state_08
 st_write(state_081, "Build/data/CO_geometries/state_08.shp")
 
