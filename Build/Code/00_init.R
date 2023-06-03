@@ -39,7 +39,8 @@ init.pacs(c("tidyverse",      #shortcut to many useful packages (eg, dplyr, ggpl
             "MCDA",
             "tigris",
             "imputeTS",
-            "Tidycensus"
+            "Tidycensus",
+            "ineq"
 ))
 
 
