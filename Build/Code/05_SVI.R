@@ -4,6 +4,32 @@
 ## Index folder. 
 load('./Build/Cache/SVI_dat.RData')
 weight<- c(1.25,.75,1.25,.75,.25,.25,.5,.25,1.25,.5,0,.5,0,.25,0,1.25,1.25)
+
+
+###############
+#Innocent new codes. 
+
+columns <- c(names(SVI_dat%>%
+                     dplyr::select(-GEOID, -WUI, -geometry)))
+
+categoty <- c('socioeconomic','socioeconomic','socioeconomic','socioeconomic'
+              ,'Household Composition/Disability','Household Composition/Disability','Household Composition/Disability','Household Composition/Disability'
+              ,'Minority Status/Language','Minority Status/Language'
+              ,'Housing/Transportation','Housing/Transportation','Housing/Transportation','Housing/Transportation','Housing/Transportation'
+              ,'Equity','Equity')
+
+weights_percent <- weight/sum(weight)
+
+weights <- data.frame(c(columns, categoty, weights_percent))
+names(weights)<-c('category','categoty','weight')
+
+
+
+
+###########################
+original code
+############################
+
 weights<-data.frame(c(names(SVI_dat%>%dplyr::select(-census_block_group,-WUI))),
                     c('socioeconomic','socioeconomic','socioeconomic','socioeconomic'
                       ,'Household Composition/Disability','Household Composition/Disability','Household Composition/Disability','Household Composition/Disability'

@@ -3,6 +3,10 @@
 load('./Build/Cache/SVI_data.RData')
 load('./Build/Cache/WUI_cbg.RData')
 
+WUI_new <-WUI%>%
+  as.data.frame()
+
+
 SVI_dat<-SVI_data%>%
   as.data.frame()%>%
   left_join(.,WUI)%>%
@@ -12,4 +16,22 @@ if(!dir.exists("./Build/ICache/")){
 }     
 save(SVI_dat,file='./Build/Cache/SVI_dat.RData')
 rm(SVI_data,SVI_dat,WUI)
+
+
+##########
+
+#try this new code
+#only add i column which indicates if the GEOID (block group) is inside  or intersect the WUI
+WUI_new <- WUI%>%
+  select(GEOID)
+WUI_new$WUI <- 1
+
+
+SVI_dat<-SVI_data%>%
+  as.data.frame()%>%
+  left_join(.,WUI_new)%>%
+  mutate_at(vars(all_of(names(WUI_new))), ~replace(., is.na(.), 0))
+
+save(SVI_dat,file='./Build/Cache/SVI_dat.RData')  
+rm(SVI_data,SVI_dat,WUI,WUI_new)
 
