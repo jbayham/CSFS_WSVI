@@ -1,7 +1,7 @@
 #This script gets data from Census ACS using tidycensus and organizes the variables for the next scripts 
 #Variable in the ACS database names are preserved. 
-#variable codes and description can be found by running the command: tidyselect::load_variables(year, "acs5")
-
+#variable codes and description can be found by running the command: tidycensus::load_variables(year, "acs5")
+#vars <- tidycensus::load_variables(2021, "acs5")
 
 #Set parameters
 request_geo <- "block group"
@@ -28,7 +28,8 @@ var_2 <- tidycensus::get_acs(geography = request_geo, variables = c("B23025_003"
 var_3 <-  tidycensus::get_acs(geography = request_geo, variables = c("B19013_001") , state = "08", year = request_year)%>% 
   dplyr::select(GEOID, variable, estimate)%>%
   pivot_wider(names_from = variable, values_from = estimate)%>%
-  rename(median_hh_income_3=B19013_001)
+  rename(median_hh_income_3 = B19013_001)
+  
 
 ### Percent no HS diploma, this is only measured for those over 25 years old.  I am including a GED as HS diploma
 ### variables below show percentage who didn't attain from nursery to grade 12
@@ -182,7 +183,7 @@ for (i in 1:nrow(var_17_data)) {
 }
 rm(var_17_data, incomes, frequencies, ed_weights, var_download)
 
-SVI_data<-var_1%>%
+SVI_var<-var_1%>%
   left_join(.,var_2)%>%
   left_join(.,var_3)%>%
   left_join(.,var_4)%>%
@@ -199,12 +200,13 @@ SVI_data<-var_1%>%
   left_join(.,var_15)%>%
   left_join(.,var_16)%>%
   left_join(.,var_17)
+
 if(!dir.exists("./Build/Cache/")){
   dir.create("./Build/Cache/")
 }     
 
 ### Removing non WUI CBGs
-save(SVI_data,file='./Build/Cache/SVI_data.RData')
+save(SVI_var,file='./Build/Cache/SVI_var.RData')
 rm(var_1,var_2,var_3,var_4,var_5,var_6,var_7,var_8,var_9,var_10,var_11,var_12,var_13,var_14,var_15,var_16,var_17,var_16_data,var_17_data,ed_weights,SVI_data,i)
 rm(request_geo, request_year)
 

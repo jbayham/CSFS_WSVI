@@ -26,7 +26,6 @@ WUI_new <- WUI%>%
   select(GEOID)
 WUI_new$WUI <- 1
 
-
 SVI_dat<-SVI_data%>%
   as.data.frame()%>%
   left_join(.,WUI_new)%>%

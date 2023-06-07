@@ -1,6 +1,6 @@
 ### This script marks CBGs that contain at least some WUI.  Only these CBGs will be ranked in the WFSVI
 ## Load CO wide data set
-load('./Build/Cache/SVI_data.RData')
+load('./Build/Cache/SVI.RData')
 
 ##add in geometry for the census block groups from ACS.
 ##download shape file from: https://www.census.gov/cgi-bin/geo/shapefiles/index.php. 
