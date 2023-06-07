@@ -2,13 +2,19 @@
 
 
 
-#github access token - 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
+
+
+j40 <- read_sf("C:/Users/Vomitadyo/OneDrive - Colostate/Desktop/j4o/usa.shp")%>%
+  filter(SF=='Colorado')%>%
+  st_make_valid()
+
+
+ggplot()+
+  geom_sf(data = j40)
 
 
 
-
-
-
-
-
-
+library(ggplot2)
+library(sf)
+library(dplyr)
+library(tidyverse)
