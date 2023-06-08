@@ -7,8 +7,9 @@ load('./Build/Cache/SVI.RData')
 cbg_geo <- read_sf("Build/data/geometry_08/tl_2022_08_bg.shp")%>%
   dplyr::select(GEOID)
 
-SVI_data <- SVI_data%>%
+SVI_data <- SVI%>%
   dplyr::left_join(.,cbg_geo)%>%
+  st_as_sf()%>%
   st_transform(4269)%>%
   st_make_valid()
 save(SVI_data, file = './Build/Cache/SVI_data.RData')
