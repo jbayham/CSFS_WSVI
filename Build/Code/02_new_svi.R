@@ -25,15 +25,14 @@ SVI <- SVI_var%>%
            (weights[13]*over_1_person_room_percent_13)+
            (weights[14]*no_vehicle_percent_14)+
            (weights[15]*group_quarters_percent_15)+
-           (weights[16]*gini_income)+
-           (weights[17]*gini_education)))%>%
+           (weights[16]*Gini_income)+
+           (weights[17]*Gini_education)))%>%
   mutate(wfsvi = percent_rank(overall_sum_SVI))%>%
   mutate(qualify=ifelse(wfsvi>=0.75,1,0))
 
 if(!dir.exists("./Build/Cache/")){
   dir.create("./Build/Cache/")
 }     
-
 
 save(SVI,file='./Build/Cache/SVI.RData')
 save(weights,file='./Build/Cache/weights.RData')

@@ -9,4 +9,5 @@ source("Build/Code/01_get_data.R")
 # 3. Run script 02_new_svi which takes the raw data and ranks it all creating the final index.  
 source("Build/Code/02_new_svi.R")
 
-#
+# 4. filter CBGs that qualify and plot
+source("Build\Code\03_wfsvi.R")

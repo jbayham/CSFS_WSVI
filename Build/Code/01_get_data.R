@@ -149,17 +149,16 @@ var_16_data <- tidycensus::get_acs(geography = request_geo, variables = var_down
   dplyr::select(GEOID, variable, estimate)%>%
   pivot_wider(names_from = variable, values_from = estimate)
 
-var_16<-data.frame(1:nrow(var_16_data),1:nrow(var_16_data))%>%
-  rename(GEOID=X1.nrow.var_16_data.,
-         gini_income=X1.nrow.var_16_data..1)
 #calculate GINI coefficient
+var_16 <- select(var_16_data, GEOID)# Create an empty vector to store the Gini coefficients
+gini_coefficients <- numeric(nrow(var_16_data))
+
+# Loop through each row/area.
 for (i in 1:nrow(var_16_data)) {
-  var_16[i, 1] <- as.character(var_16_data[i, 1])
-  incomes <- c(0, 10, 15, 20, 25, 30, 35, 40, 45, 50, 60, 75, 100, 125, 150, 200)
-  frequencies <- as.numeric(var_16_data[i, 3:18])
-  var_16[i, 2] <- ineq::Gini(incomes, frequencies)
+  gini_coefficients[i] <- Gini(as.vector(unlist(var_16_data[i, -1])))
 }
-rm(var_16_data,var_download, incomes, frequencies)
+var_16$Gini_income <- gini_coefficients# Add the Gini coefficients as a new column
+rm(var_16_data,var_download, gini_coefficients, i)
 
   
 #### GINI for education
@@ -171,17 +170,15 @@ var_17_data <- tidycensus::get_acs(geography = request_geo, variables = var_down
   dplyr::select(GEOID, variable, estimate)%>%
   pivot_wider(names_from = variable, values_from = estimate)
 
-var_17<-data.frame(1:nrow(var_17_data),1:nrow(var_17_data))%>%
-  rename(GEOID=X1.nrow.var_17_data.,
-         gini_education=X1.nrow.var_17_data..1)
-###calculate GINI coefficient
+var_17 <- select(var_17_data, GEOID)# Create an empty vector to store the Gini coefficients
+gini_coefficients <- numeric(nrow(var_17_data))
+
+# Loop through each row/area.
 for (i in 1:nrow(var_17_data)) {
-  var_17[i, 1] <- as.character(var_17_data[i, 1])
-  ed_weights <- c(0,.5,1,2,3,4,5,6,7,8,9,10,11,12,13,13,13,13.5,14,14,16,18,20,20)
-  frequencies <- as.numeric(var_17_data[i, 3:26])
-  var_17[i, 2] <- ineq::Gini(ed_weights, frequencies)
+  gini_coefficients[i] <- Gini(as.vector(unlist(var_17_data[i, -1])))
 }
-rm(var_17_data, incomes, frequencies, ed_weights, var_download)
+var_17$Gini_education <- gini_coefficients# Add the Gini coefficients as a new column
+rm(var_17_data, i, var_download, gini_coefficients)
 
 SVI_var<-var_1%>%
   left_join(.,var_2)%>%
@@ -207,20 +204,8 @@ if(!dir.exists("./Build/Cache/")){
 
 ### Removing non WUI CBGs
 save(SVI_var,file='./Build/Cache/SVI_var.RData')
-rm(var_1,var_2,var_3,var_4,var_5,var_6,var_7,var_8,var_9,var_10,var_11,var_12,var_13,var_14,var_15,var_16,var_17,var_16_data,var_17_data,ed_weights,SVI_data,i)
+rm(var_1,var_2,var_3,var_4,var_5,var_6,var_7,var_8,var_9,var_10,var_11,var_12,var_13,var_14,var_15,var_16,var_17,SVI_var)
 rm(request_geo, request_year)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+print("COMPLETE")
