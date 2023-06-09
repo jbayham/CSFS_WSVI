@@ -8,16 +8,5 @@ if (!require(pacman)) {
 }
 
 # List of packages needed
-packages <- c("tidyverse",      #shortcut to many useful packages (eg, dplyr, ggplot)
-              "data.table",     #for more efficient utilities
-              "furrr",          #facilitates simple implementation of parallel processing
-              "conflicted",     #resolves function conflict across packages
-              "lubridate",      #working with dates
-              "units",
-              "sf",
-              "Tidycensus",
-              "ineq")
-
-# load or install packages
-p_load(packages)
+p_load("tidyverse", "data.table", "furrr", "conflicted",  "lubridate", "units",  "sf", "tidycensus", "ineq")
 

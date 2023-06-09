@@ -1,5 +1,6 @@
 #This is the master script which can load and all the other scripts in the prefered order
 
+
 # 1. run script 00_init.R to load packages
 source("Build/Code/00_init.R")
 
@@ -10,4 +11,9 @@ source("Build/Code/01_get_data.R")
 source("Build/Code/02_new_svi.R")
 
 # 4. filter CBGs that qualify and plot
-source("Build\Code\03_wfsvi.R")
+source("Build/Code/03_wfsvi.R")
+
+# 5. Plot the final qualifying CBGs
+ggplot()+
+  geom_sf(data = wfsvi_cbg, fill = 'red', color = 'NA', alpha = 0.5)
+
