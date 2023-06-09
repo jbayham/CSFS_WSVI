@@ -2,7 +2,7 @@
 ## have been assigned to the variables and rescale them so that they sum to 1. Then it carries out the 
 ## percent ranking as discussed in the data section of the readme.  It saves the Final index rankings in the
 ## Index folder. 
-load('./Build/Cache/SVI_var.RData')
+SVI_var <- readRDS('Build/Cache/SVI_var.rds')
 weights<- c(1.25,.75,1.25,.75,.25,.25,.5,.25,1.25,.5,0,.5,0,.25,0,1.25,1.25)
 
 ###############
@@ -30,10 +30,7 @@ SVI <- SVI_var%>%
   mutate(wfsvi = percent_rank(overall_sum_SVI))%>%
   mutate(qualify=ifelse(wfsvi>=0.75,1,0))
 
-if(!dir.exists("./Build/Cache/")){
-  dir.create("./Build/Cache/")
-}     
 
-save(SVI,file='./Build/Cache/SVI.RData')
-save(weights,file='./Build/Cache/weights.RData')
+saveRDS(SVI,file='Build/Cache/SVI.rds')
+saveRDS(weights,file='Build/Cache/weights.rds')
 rm(SVI_var,SVI,weights)

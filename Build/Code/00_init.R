@@ -10,3 +10,5 @@ if (!require(pacman)) {
 # List of packages needed
 p_load("tidyverse", "data.table", "furrr", "conflicted",  "lubridate", "units",  "sf", "tidycensus", "ineq")
 
+if(!dir.exists("Build/Cache/"))  dir.create("Build/Cache/")
+if(!dir.exists("Build/Data/"))  dir.create("Build/Data/")

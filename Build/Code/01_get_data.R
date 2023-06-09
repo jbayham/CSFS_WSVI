@@ -1,4 +1,4 @@
-#This script gets data from Census ACS using tidycensus and organizes the variables for the next scripts 
+#This script gets data from Census ACS using tidycensus and organizes the variables for the next scripts. Set API key using census_api_key("key",install = TRUE)
 #Variable in the ACS database names are preserved. 
 #variable codes and description can be found by running the command: tidycensus::load_variables(year, "acs5")
 #vars <- tidycensus::load_variables(2021, "acs5")
@@ -198,12 +198,9 @@ SVI_var<-var_1%>%
   left_join(.,var_16)%>%
   left_join(.,var_17)
 
-if(!dir.exists("./Build/Cache/")){
-  dir.create("./Build/Cache/")
-}     
 
 ### Removing non WUI CBGs
-save(SVI_var,file='./Build/Cache/SVI_var.RData')
+saveRDS(SVI_var,file='Build/Cache/SVI_var.rds')
 rm(var_1,var_2,var_3,var_4,var_5,var_6,var_7,var_8,var_9,var_10,var_11,var_12,var_13,var_14,var_15,var_16,var_17,SVI_var)
 rm(request_geo, request_year)
 
