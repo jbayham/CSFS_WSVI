@@ -50,10 +50,11 @@ wfsvi_cbg <- inner_join(SVI_geo,cbg_wui_flag,by = "GEOID") %>%
 
 
 #Save output layer
-saveRDS(wfsvi_cbg,file='Build/Output/wfsvi_cbg.RData')
-
+saveRDS(wfsvi_cbg,file='Build/Output/wfsvi_cbg.rds')
+st_write(wfsvi_cbg,"Build/Output/wfsvi_cbg.gpkg")
 
 ###################
+#move to analysis
 #check the fraction of CBGs that qualify and have WUI
 st_set_geometry(wfsvi_cbg,NULL) %>%
   summarize(check=sum((qualify_svi+wui_flag)==2,na.rm=T)) 
