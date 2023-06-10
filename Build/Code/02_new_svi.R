@@ -9,7 +9,7 @@ weights<- c(1.25,.75,1.25,.75,.25,.25,.5,.25,1.25,.5,0,.5,0,.25,0,1.25,1.25)
 #Innocent new codes. 
 #NB: Reverse direction of HH income
 
-SVI <- SVI_var%>%
+SVI <- SVI_var %>%
   mutate(overall_sum_SVI = ((weights[1]*poverty_percent_below_1)+
                               (weights[2]*civ_labor_force_unemployed_percent_2)+
                               (weights[3]*-1*median_hh_income_3)+
@@ -28,7 +28,7 @@ SVI <- SVI_var%>%
            (weights[16]*Gini_income)+
            (weights[17]*Gini_education)))%>%
   mutate(wfsvi = percent_rank(overall_sum_SVI))%>%
-  mutate(qualify=ifelse(wfsvi>=0.75,1,0))
+  mutate(qualify_svi=ifelse(wfsvi>=0.75,1,0))
 
 
 saveRDS(SVI,file='Build/Cache/SVI.rds')
