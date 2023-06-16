@@ -8,7 +8,7 @@ if (!require(pacman)) {
 }
 
 # List of packages needed
-p_load("tidyverse", "data.table", "furrr", "conflicted",  "lubridate", "units",  "sf", "tidycensus", "ineq","terra","exactextractr",install=F)
+p_load("tidyverse", "raster", "data.table", "furrr", "conflicted",  "lubridate", "units",  "sf", "tidycensus", "ineq","terra","exactextractr",install=F)
 
 
 if(!dir.exists("Build/Cache/"))  dir.create("Build/Cache/")

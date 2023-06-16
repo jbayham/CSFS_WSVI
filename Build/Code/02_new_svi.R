@@ -1,7 +1,7 @@
 ## This script takes the raw data and ranks it all creating the final index.  First it takes the weights that
 ## have been assigned to the variables and rescale them so that they sum to 1. Then it carries out the 
 ## percent ranking as discussed in the data section of the readme.  It saves the Final index rankings in the
-## Index folder. 
+## cache folder. 
 SVI_var <- readRDS('Build/Cache/SVI_var.rds')
 weights<- c(1.25,.75,1.25,.75,.25,.25,.5,.25,1.25,.5,0,.5,0,.25,0,1.25,1.25)
 
@@ -34,3 +34,5 @@ SVI <- SVI_var %>%
 saveRDS(SVI,file='Build/Cache/SVI.rds')
 saveRDS(weights,file='Build/Cache/weights.rds')
 rm(SVI_var,SVI,weights)
+
+print('COMPLETE')
