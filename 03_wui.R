@@ -1,5 +1,7 @@
 ### This script marks CBGs that contain at least some WUI.  Only these CBGs will be ranked in the WFSVI
 
+SVI_geo <- readRDS('Build/Cache/SVI_geo.rds')
+
 #Connect to the raster file
 wui <- raster("Build/Data/WUI.tif")%>% 
   terra::project(x=.,y=terra::crs(SVI_geo),threads=T)

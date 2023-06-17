@@ -1,30 +1,18 @@
 
-j40 <- read_sf("C:/Users/Vomitadyo/OneDrive - Colostate/Desktop/j4o/usa.shp")%>%
-  filter(SF=='Colorado')%>%
-  st_make_valid()
-
-ggplot()+
-  geom_sf(data = j40)
-
-#---------------------------------------------------------
-#create raster file 
-library(raster)
-
+#####################################################################################################
+#create raster file from a shape file
 # Read the shapefile
 shapefile <- read_sf("Build/data/2017_wui/2017_wui.shp")%>%
   dplyr::filter(GRIDCODE==1)%>%
   st_transform(4269)%>%
   st_make_valid()
 
-# Create an empty raster with the desired resolution
-raster_template <- raster(extent(shapefile), resolution = 0.01)
+raster_template <- raster(extent(shapefile), resolution = 0.01)# Create an empty raster with the desired resolution
+raster_file <- rasterize(shapefile, raster_template)# Rasterize the shapefile using the empty raster as a template
+writeRaster(raster_file, "Build/Data/WUI.tif",overwrite=TRUE)# Save the raster file
+#####################################################################################################
 
-# Rasterize the shapefile using the empty raster as a template
-raster_file <- rasterize(shapefile, raster_template)
 
-# Save the raster file
-writeRaster(raster_file, "Build/Data/WUI.tif",overwrite=TRUE)
-##---------------------------------
 
 
 
@@ -35,9 +23,9 @@ tract_geo <- read_sf("Build/Cache/tl_2022_08_tract/tl_rd22_08_tract.shp")%>%
   dplyr::select(GEOID)
 
 #define parameters
-cbg_geo_centre <- st_centroid(cbg_geo)
-request_geo1 <- "block group"
-request_geo2 <- "tract"
+cbg_geo_centre <- st_centroid(cbg_geo) #centre points of CBG which will be used to find CBG within certain census tracts
+request_geo1 <- "block group" #geography for downloading CBG level data
+request_geo2 <- "tract" #geography for downloading census tract level data
 request_year <- 2021
 
 ### Percentage of poverty status checked individuals who are below poverty line
@@ -74,3 +62,14 @@ var_list <- c("poverty_percent_below_1")
 # Loop through the list of variables and replace missing values
 var_1 <- reduce(var_list, replace_missing, .init = left_join(var_1, var_1_replacement, by = "GEOID"))
 ####################################################################################
+
+
+
+
+
+
+
+
+
+
+
