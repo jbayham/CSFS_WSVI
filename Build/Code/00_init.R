@@ -8,9 +8,14 @@ if (!require(pacman)) {
 }
 
 # List of packages needed
-p_load("tidyverse", "raster", "data.table", "furrr", "conflicted",  "lubridate", "units",  "sf", "tidycensus", "ineq","terra","exactextractr",install=F)
+p_load("tidyverse", "raster", "data.table", "purrr", "furrr", "conflicted",  "lubridate", "units",  "sf", "tidycensus", 
+       "ineq","terra","exactextractr", install=F)
 
+# declare preference when there are conflicts
+conflicts_prefer(dplyr::select)
+conflicts_prefer(dplyr::filter)
 
+# create required folders
 if(!dir.exists("Build/Cache/"))  dir.create("Build/Cache/")
 if(!dir.exists("Build/Data/"))  dir.create("Build/Data/")
 if(!dir.exists("Build/Output/"))  dir.create("Build/Output/")

@@ -1,22 +1,13 @@
-#This script gets data from ACS using tidycensus. 
-
 
 j40 <- read_sf("C:/Users/Vomitadyo/OneDrive - Colostate/Desktop/j4o/usa.shp")%>%
   filter(SF=='Colorado')%>%
   st_make_valid()
 
-
 ggplot()+
   geom_sf(data = j40)
 
-#convert the WUI shapefile to rater format.   
-shp <- read_sf("Build/data/2017_wui/2017_wui.shp")
-WUI <- raster(shp)
-writeRaster(WUI, "Build/Data/WUI.tif", format = "GTiff")
-rm(WUI, shp )
-
-
-
+#---------------------------------------------------------
+#create raster file 
 library(raster)
 
 # Read the shapefile
@@ -33,6 +24,53 @@ raster_file <- rasterize(shapefile, raster_template)
 
 # Save the raster file
 writeRaster(raster_file, "Build/Data/WUI.tif",overwrite=TRUE)
+##---------------------------------
 
 
 
+#####################################################################################################
+#  code for downloading cbg and tract data and replace missing values with  values from tract data
+#geometries for census tract
+tract_geo <- read_sf("Build/Cache/tl_2022_08_tract/tl_rd22_08_tract.shp")%>%
+  dplyr::select(GEOID)
+
+#define parameters
+cbg_geo_centre <- st_centroid(cbg_geo)
+request_geo1 <- "block group"
+request_geo2 <- "tract"
+request_year <- 2021
+
+### Percentage of poverty status checked individuals who are below poverty line
+### NB: poverty_pop_checked = C17002e1, poverty_pop_under_50 = C17002e2  and poverty_pop_50_99 = C17002e3
+var_1_cbg <- tidycensus::get_acs(geography = request_geo, variables = c("C17002_001", "C17002_002", "C17002_003"), state = "08", year = request_year)%>%
+  dplyr::select(GEOID, variable, estimate)%>%#select relevant var
+  pivot_wider(names_from = variable, values_from = estimate)%>%#convert from long to wide farmat
+  mutate(poverty_percent_below_1 = as.numeric(C17002_002+C17002_003)/C17002_001)%>%#calculate % of pop below 1
+  dplyr::select(GEOID,poverty_percent_below_1)
+
+#Download and calculate variable for census tract level
+var_1_ct <- tidycensus::get_acs(geography = request_geo2, variables = c("C17002_001", "C17002_002", "C17002_003"), state = "08", year = request_year)%>%
+  dplyr::select(GEOID, variable, estimate)%>%#select relevant var
+  pivot_wider(names_from = variable, values_from = estimate)%>%#convert from long to wide farmat
+  mutate(poverty_percent_below_1=(C17002_002+C17002_003)/C17002_001)%>%#calculate % of pop below 1
+  dplyr::select(GEOID,poverty_percent_below_1)%>%
+  right_join(., tract_geo)%>%
+  dplyr::select(-GEOID)%>%#remove tract GEOID
+  st_as_sf()%>%
+  st_join(., cbg_geo_centre)%>% #find cbgs within census tract and attach cbg GEOID. 
+  st_drop_geometry() #this is final data of tract level with cbg GEOIDs
+
+#Replace missing values of cgb data with tract values. 
+#Define a function to replace missing values in a single variable
+replace_missing <- function(df, var_name) {
+  df %>%
+    mutate(!!var_name := coalesce(!!sym(paste0(var_name, ".x")), !!sym(paste0(var_name, ".y")))) %>%
+    select(-c(paste0(var_name, ".x"), paste0(var_name, ".y")))
+}
+
+# Define a list of variables to replace missing values for
+var_list <- c("poverty_percent_below_1")
+
+# Loop through the list of variables and replace missing values
+var_1 <- reduce(var_list, replace_missing, .init = left_join(var_1, var_1_replacement, by = "GEOID"))
+####################################################################################
