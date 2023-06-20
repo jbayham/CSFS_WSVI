@@ -14,6 +14,8 @@ p_load("tidyverse", "raster", "data.table", "purrr", "furrr", "conflicted",  "lu
 # declare preference when there are conflicts
 conflicts_prefer(dplyr::select)
 conflicts_prefer(dplyr::filter)
+conflicts_prefer(raster::extract)
+conflicts_prefer(raster::shift)
 
 # create required folders
 if(!dir.exists("Build/Cache/"))  dir.create("Build/Cache/")

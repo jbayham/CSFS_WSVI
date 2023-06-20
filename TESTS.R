@@ -61,15 +61,30 @@ var_list <- c("poverty_percent_below_1")
 
 # Loop through the list of variables and replace missing values
 var_1 <- reduce(var_list, replace_missing, .init = left_join(var_1, var_1_replacement, by = "GEOID"))
-####################################################################################
+##############################################################################################################
 
 
 
+################################################################################################################
+#Monte Carlo Simulation 
 
+# Set the estimate and margin of error
+estimate <- 100
+margin_of_error <- 5
 
+# Set the confidence level
+confidence_level <- 0.95
 
+# Calculate the z-value
+z_value <- qnorm((1 + confidence_level) / 2)
 
+# Calculate the standard deviation
+standard_deviation <- margin_of_error / z_value
 
+# Create a normal distribution with the estimate as the mean and the standard deviation
+# calculated from the margin of error and confidence level
+simulated_data <- rnorm(1000, mean = estimate, sd = standard_deviation)
 
+###################################################################################################################
 
 

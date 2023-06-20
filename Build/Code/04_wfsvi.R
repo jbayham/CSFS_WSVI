@@ -2,14 +2,15 @@
 ## have been assigned to the variables and rescale them so that they sum to 1. Then it carries out the 
 ## percent ranking as discussed in the data section of the readme.  It saves the Final index rankings in the
 ## cache folder. 
-SVI_var <- readRDS('Build/Cache/SVI_var.rds')
+svi_wui <- readRDS('Build/Output/svi_wui.rds')
 weights<- c(1.25,.75,1.25,.75,.25,.25,.5,.25,1.25,.5,0,.5,0,.25,0,1.25,1.25)
 
 ###############
 #Innocent new codes. 
 #NB: Reverse direction of HH income
-SVI <- SVI_var%>%
-  rename_with( .fn = ~paste0(., '_rank'),.cols=as.character(names(SVI_var[,2:18])))%>%
+wfsvi <- svi_wui%>%
+  dplyr::select(-wui_flag)%>%
+  rename_with( .fn = ~paste0(., '_rank'),.cols=as.character(names(svi_wui[,2:18])))%>%
   mutate(directional_median_hh_income_3_rank=-1*median_hh_income_3_rank,.keep="unused")%>%
   mutate(across(!GEOID,percent_rank))%>%
   mutate(overall_sum=
@@ -33,8 +34,11 @@ SVI <- SVI_var%>%
          wfsvi=percent_rank(overall_sum))%>%
   mutate(qualify=ifelse(wfsvi>=.75,1,0))
 
-saveRDS(SVI,file='Build/Output/SVI.rds')
+saveRDS(wfsvi,file='Build/Output/wfsvi.rds')
 saveRDS(weights,file='Build/Cache/weights.rds')
-rm(SVI_var,SVI,weights)
+rm(weights, svi_wui, wfsvi)
 
 print('COMPLETE')
+
+
+

@@ -1,8 +1,7 @@
+### Analysis
 
+wfsvi <- readRDS('Build/Output/wfsvi.rds')
 
-#move to analysis
-
-load('Build/Output/wfsvi_cbg.rds')
 #check the fraction of CBGs that qualify and have WUI
 st_set_geometry(wfsvi_cbg,NULL) %>%
   summarize(check=sum((qualify_svi+wui_flag)==2,na.rm=T)) 
