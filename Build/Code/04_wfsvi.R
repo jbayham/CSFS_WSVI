@@ -3,10 +3,11 @@
 ## percent ranking as discussed in the data section of the readme.  It saves the Final index rankings in the
 ## cache folder. 
 svi_wui <- readRDS('Build/Output/svi_wui.rds')
+cbg_geo <- read_sf("Build/Cache/tl_2022_08_bg/tl_2022_08_bg.shp")%>%
+  dplyr::select(GEOID)
+
 weights<- c(1.25,.75,1.25,.75,.25,.25,.5,.25,1.25,.5,0,.5,0,.25,0,1.25,1.25)
 
-###############
-#Innocent new codes. 
 #NB: Reverse direction of HH income
 wfsvi <- svi_wui%>%
   dplyr::select(-wui_flag)%>%
@@ -18,13 +19,13 @@ wfsvi <- svi_wui%>%
            weights[2]*civ_labor_force_unemployed_percent_2_rank+
            weights[3]*directional_median_hh_income_3_rank+
            weights[4]*no_hs_degree_percent_4_rank+
-           weights[5]*over_65_percent_5_rank+                ## Household Compisition
+           weights[5]*over_65_percent_5_rank+                ## Household Composition
            weights[6]*under_18_percent_6_rank+
            weights[7]*disabled_adult_percent_7_rank+         
            weights[8]*single_householder_percent_8_rank+
            weights[9]*percent_minority_9_rank+               ## Minority status
            weights[10]*eng_proficiency_rank+
-           weights[11]*over_10_rank+         ## Housing/Transpotation
+           weights[11]*over_10_rank+         ## Housing/Transportation
            weights[12]*mobile_units_rank+
            weights[13]*over_1_person_room_percent_13_rank+
            weights[14]*no_vehicle_percent_14_rank+
@@ -32,11 +33,13 @@ wfsvi <- svi_wui%>%
            weights[16]*Gini_income_rank+                      ## Inequality measures
            weights[17]*Gini_education_rank,
          wfsvi=percent_rank(overall_sum))%>%
-  mutate(qualify=ifelse(wfsvi>=.75,1,0))
+  mutate(qualify=ifelse(wfsvi>=.75,1,0))%>%
+  left_join(., cbg_geo)%>%
+  st_as_sf()
 
 saveRDS(wfsvi,file='Build/Output/wfsvi.rds')
 saveRDS(weights,file='Build/Cache/weights.rds')
-rm(weights, svi_wui, wfsvi)
+rm(weights, svi_wui, wfsvi, cbg_geo)
 
 print('COMPLETE')
 

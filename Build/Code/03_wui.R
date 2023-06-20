@@ -25,10 +25,13 @@ cbg_wui_flag <- cbg_wui %>%
 
 #Join the wui flag back to the SVI data
 svi_wui <- inner_join(SVI_geo,cbg_wui_flag,by = "GEOID")%>%
-  dplyr::filter(wui_flag==1)
+  dplyr::filter(wui_flag==1)%>%
+  st_drop_geometry()
 
 #Save output layer
 saveRDS(svi_wui,file='Build/Output/svi_wui.rds')
 st_write(svi_wui,"Build/Output/svi_wui.gpkg")
 
 rm(cbg_geo, cbg_wui, cbg_wui_flag, svi_wui, SVI_geo, wui, wui_proj, wui_raster, wui_spat)
+
+print('COMPLETE')

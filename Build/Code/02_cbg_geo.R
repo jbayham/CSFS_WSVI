@@ -12,3 +12,5 @@ SVI_geo <- SVI_var%>%
 saveRDS(SVI_geo, file = 'Build/Cache/SVI_geo.rds')
 rm(cbg_geo, SVI_var, SVI_geo)
 ###########################
+
+print('COMPLETE')
