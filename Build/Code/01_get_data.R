@@ -14,7 +14,7 @@ cbg_geo_centre <- st_centroid(cbg_geo)#centre points of CBG which will be used t
 #define parameters
 request_geo1 <- "block group" #geography for downloading CBG level data
 request_geo2 <- "tract" #geography for downloading census tract level data
-request_year <- 2021
+request_year <- 2018
 
 ##Define function for replacing missing values
 replace_missing <- function(df, var_name) {
@@ -22,11 +22,16 @@ replace_missing <- function(df, var_name) {
     mutate(!!var_name := coalesce(!!sym(paste0(var_name, ".x")), !!sym(paste0(var_name, ".y")))) %>%
     select(-c(paste0(var_name, ".x"), paste0(var_name, ".y")))
 }
+#create sqlite data base to store data for simulation
+cbg_data <- dbConnect(SQLite(), dbname='cbg_data.sqlite')
+
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ### Percentage of poverty status checked individuals who are below poverty line
 ### NB: poverty_pop_checked = C17002e1, poverty_pop_under_50 = C17002e2  and poverty_pop_50_99 = C17002e3
-var_1_cbg <- tidycensus::get_acs(geography = request_geo1, variables = c("C17002_001", "C17002_002", "C17002_003"), state = "08", year = request_year)%>%
-  dplyr::select(GEOID, variable, estimate)%>%#select relevant var
+var_1_cbg_data <- tidycensus::get_acs(geography = request_geo1, variables = c("C17002_001", "C17002_002", "C17002_003"), state = "08", year = request_year)
+dbWriteTable(conn = cbg_data, name = "var_1_cbg_data", value = var_1_cbg_data, row.names = FALSE,overwrite = TRUE) #save for simulation
+
+var_1_cbg <- dplyr::select(var_1_cbg_data, GEOID, variable, estimate)%>%#select relevant var
   pivot_wider(names_from = variable, values_from = estimate)%>%#convert from long to wide farmat
   mutate(poverty_percent_below_1=(C17002_002+C17002_003)/C17002_001)%>%#calculate % of pop below 1
   dplyr::select(GEOID,poverty_percent_below_1)

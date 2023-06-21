@@ -88,3 +88,23 @@ simulated_data <- rnorm(1000, mean = estimate, sd = standard_deviation)
 ###################################################################################################################
 
 
+
+
+################################################################################################################################
+
+## imputing missing values using missForest package
+
+# Load the missForest package
+library(missForest)
+
+# Read in the data set
+data <- SVI_var
+data$GEOID <- as.factor(data$GEOID)
+missing_cols <- which(sapply(data, function(x) any(is.na(x))))# Identify columns with missing values
+imputed_data <- missForest(data[,missing_cols], maxiter = 10, ntree = 100, replace = TRUE)# Impute missing values
+
+
+
+aa <- filter(var_5_cbg, GEOID== "080019887001")
+
+
