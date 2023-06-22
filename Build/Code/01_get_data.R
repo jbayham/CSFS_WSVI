@@ -51,13 +51,15 @@ var_1_tract <- tidycensus::get_acs(geography = request_geo2, variables = c("C170
 #Replace missing values of cgb data with tract values. 
 var_list <- c("poverty_percent_below_1")# Define a list of variables to replace missing values for
 var_1 <- reduce(var_list, replace_missing, .init = left_join(var_1_cbg, var_1_tract, by = "GEOID"))# Loop through variables and replace missing values
-rm(var_1_cbg, var_1_tract)
+rm(var_1_cbg, var_1_tract, var_1_cbg_data)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### Percent of the Civilian population 16 and older who are unemployed.  These are classified as people in the workforce (IE are actively seeking work)
 ### civilian labor force = B23025e3; civilian labor force unemployed = B23025e5)
-var_2_cbg <- tidycensus::get_acs(geography = request_geo1, variables = c("B23025_003", "B23025_005") , state = "08", year = request_year)%>% 
-  dplyr::select(GEOID, variable, estimate)%>%
+var_2_cbg_data <- tidycensus::get_acs(geography = request_geo1, variables = c("B23025_003", "B23025_005") , state = "08", year = request_year)
+dbWriteTable(conn = cbg_data, name = "var_2_cbg_data", value = var_2_cbg_data, row.names = FALSE,overwrite = TRUE) #save for simulation
+
+var_2_cbg <- dplyr::select(var_2_cbg_data, GEOID, variable, estimate)%>%
   pivot_wider(names_from = variable, values_from = estimate)%>%
   mutate(civ_labor_force_unemployed_percent_2=B23025_005/B23025_003)%>%
   dplyr::select(GEOID,civ_labor_force_unemployed_percent_2)
@@ -77,13 +79,15 @@ var_2_tract <- tidycensus::get_acs(geography = request_geo2, variables = c("B230
 #Replace missing cgb values with tract values. 
 var_list <- c("civ_labor_force_unemployed_percent_2")# Define a list of variables to replace missing values for
 var_2 <- reduce(var_list, replace_missing, .init = left_join(var_2_cbg, var_2_tract, by = "GEOID"))# Loop through variables and replace missing values
-rm(var_2_cbg, var_2_tract)
+rm(var_2_cbg, var_2_tract,var_2_cbg_data)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### Per capita income is being replaced by median household income, which I prefer as a measure as it is not suseptible to upward bias from a few incomes
 ### median household income = B19013_001
-var_3_cbg <-  tidycensus::get_acs(geography = request_geo1, variables = c("B19013_001") , state = "08", year = request_year)%>% 
-  dplyr::select(GEOID, variable, estimate)%>%
+var_3_cbg_data <-  tidycensus::get_acs(geography = request_geo1, variables = c("B19013_001") , state = "08", year = request_year)
+dbWriteTable(conn = cbg_data, name = "var_3_cbg_data", value = var_3_cbg_data, row.names = FALSE,overwrite = TRUE) #save for simulation
+
+var_3_cbg <- dplyr::select(var_3_cbg_data, GEOID, variable, estimate)%>%
   pivot_wider(names_from = variable, values_from = estimate)%>%
   rename(median_hh_income_3 = B19013_001)
   
@@ -99,14 +103,16 @@ var_3_tract <-  tidycensus::get_acs(geography = request_geo2, variables = c("B19
 
 var_list <- c("median_hh_income_3")
 var_3 <- reduce(var_list, replace_missing, .init = left_join(var_3_cbg, var_3_tract, by = "GEOID"))
-rm(var_3_cbg, var_3_tract)
+rm(var_3_cbg, var_3_tract, var_3_cbg_data)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### Percent no HS diploma, this is only measured for those over 25 years old.  I am including a GED as HS diploma
 ### variables below show percentage who didn't attain from nursery to grade 12
 var_download <- c("B15003_001","B15003_002","B15003_003","B15003_004","B15003_005","B15003_006","B15003_007","B15003_008","B15003_009","B15003_010","B15003_011","B15003_012","B15003_013","B15003_014","B15003_015","B15003_016")
-var_4_cbg <- tidycensus::get_acs(geography = request_geo1, variables = var_download , state = "08", year = request_year)%>% 
-  dplyr::select(GEOID, variable, estimate)%>%
+var_4_cbg_data <- tidycensus::get_acs(geography = request_geo1, variables = var_download , state = "08", year = request_year)
+dbWriteTable(conn = cbg_data, name = "var_4_cbg_data", value = var_4_cbg_data, row.names = FALSE, overwrite = TRUE)#save for simulation
+
+var_4_cbg <- dplyr::select(var_4_cbg_data, GEOID, variable, estimate)%>%
   pivot_wider(names_from = variable, values_from = estimate)%>%
   mutate(no_hs_degree_percent_4=(B15003_002+B15003_003+B15003_004+B15003_005+B15003_006+B15003_007+B15003_008+B15003_009+B15003_010+B15003_011+B15003_012+B15003_013+B15003_014+B15003_015+B15003_016)/B15003_001)%>%
   dplyr::select(GEOID,no_hs_degree_percent_4)
@@ -124,13 +130,15 @@ var_4_tract <- tidycensus::get_acs(geography = request_geo2, variables = var_dow
 
 var_list <- c("no_hs_degree_percent_4")
 var_4 <- reduce(var_list, replace_missing, .init = left_join(var_4_cbg, var_4_tract, by = "GEOID"))
-rm(var_download, var_4_cbg, var_4_tract)
+rm(var_download, var_4_cbg, var_4_tract, var_4_cbg_data)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
  
 ### Percent over 65 years old
 var1_download <- c("B01001_001","B01001_020","B01001_021","B01001_022","B01001_023","B01001_024","B01001_025","B01001_044","B01001_045","B01001_046","B01001_047","B01001_048","B01001_049")
-var_5_cbg <- tidycensus::get_acs(geography = request_geo1, variables = var1_download , state = "08", year = request_year)%>% 
-  dplyr::select(GEOID, variable, estimate)%>%
+var_5_cbg_data <- tidycensus::get_acs(geography = request_geo1, variables = var1_download , state = "08", year = request_year)
+dbWriteTable(conn = cbg_data, name = "var_5_cbg_data", value = var_5_cbg_data, row.names = FALSE,overwrite = TRUE) #save for simulation
+
+var_5_cbg <- dplyr::select(var_5_cbg_data, GEOID, variable, estimate)%>%
   pivot_wider(names_from = variable, values_from = estimate)%>%
   mutate(over_65_percent_5=(B01001_020+B01001_021+B01001_022+B01001_023+B01001_024+B01001_025+B01001_044+B01001_045+B01001_046+B01001_047+B01001_048+B01001_049)/B01001_001)%>%
   dplyr::select(GEOID,over_65_percent_5)
@@ -148,14 +156,16 @@ var_5_tract <- tidycensus::get_acs(geography = request_geo2, variables = var1_do
 
 var_list <- c("over_65_percent_5")
 var_5 <- reduce(var_list, replace_missing, .init = left_join(var_5_cbg, var_5_tract, by = "GEOID"))
-rm(var1_download, var_5_cbg, var_5_tract)
+rm(var1_download, var_5_cbg, var_5_tract, var_5_cbg_data)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### Percent under 18 years old
 ### variables listed below shows number of people within certain age category.  
 var2_download <- c("B01001_001", "B01001_003", "B01001_004", "B01001_005", "B01001_006", "B01001_027", "B01001_028", "B01001_029", "B01001_030")
-var_6_cbg <- tidycensus::get_acs(geography = request_geo1, variables = var2_download,  state = "08", year = request_year)%>%
-  dplyr::select(GEOID, variable, estimate)%>%
+var_6_cbg_data <- tidycensus::get_acs(geography = request_geo1, variables = var2_download,  state = "08", year = request_year)
+dbWriteTable(conn = cbg_data, name = "var_6_cbg_data", value = var_6_cbg_data, row.names = FALSE,overwrite = TRUE) #save for simulation
+
+var_6_cbg <- dplyr::select(var_6_cbg_data, GEOID, variable, estimate)%>%
   pivot_wider(names_from = variable, values_from = estimate)%>%
   mutate(under_18_percent_6=(B01001_003+B01001_004+B01001_005+B01001_006+B01001_027+B01001_028+B01001_029+B01001_030)/B01001_001)%>%
   dplyr::select(GEOID, under_18_percent_6)
@@ -173,17 +183,18 @@ var_6_tract <- tidycensus::get_acs(geography = request_geo2, variables = var2_do
 
 var_list <- c("under_18_percent_6")
 var_6 <- reduce(var_list, replace_missing, .init = left_join(var_6_cbg, var_6_tract, by = "GEOID"))
-rm(var2_download, var_6_cbg, var_6_tract)
+rm(var2_download, var_6_cbg, var_6_tract, var_6_cbg_data)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### Percent with disability over 18, this is as a percent of people who have been examined for poverty status determination
 var3_download <- c("C21007_001", "C21007_005", "C21007_008", "C21007_012","C21007_015", "C21007_020", "C21007_023", "C21007_027", "C21007_030")
-var_7_cbg <- tidycensus::get_acs(geography = request_geo1, variables = var3_download,  state = "08", year = request_year)%>%
-  dplyr::select(GEOID, variable, estimate)%>%
+var_7_cbg_data <- tidycensus::get_acs(geography = request_geo1, variables = var3_download,  state = "08", year = request_year)
+dbWriteTable(conn = cbg_data, name = "var_7_cbg_data", value = var_7_cbg_data, row.names = FALSE,overwrite = TRUE) #save for simulation
+
+var_7_cbg <- dplyr::select(var_7_cbg_data ,GEOID, variable, estimate)%>%
   pivot_wider(names_from = variable, values_from = estimate)%>%
   mutate(disabled_adult_percent_7=(C21007_005+C21007_008+C21007_012+C21007_015+C21007_020+C21007_023+C21007_027+C21007_030)/C21007_001)%>%
   dplyr::select(GEOID,disabled_adult_percent_7)
-
 
 var_7_tract <- tidycensus::get_acs(geography = request_geo2, variables = var3_download,  state = "08", year = request_year)%>%
   dplyr::select(GEOID, variable, estimate)%>%
@@ -198,13 +209,15 @@ var_7_tract <- tidycensus::get_acs(geography = request_geo2, variables = var3_do
 
 var_list <- c("disabled_adult_percent_7")
 var_7 <- reduce(var_list, replace_missing, .init = left_join(var_7_cbg, var_7_tract, by = "GEOID"))
-rm(var3_download, var_7_cbg, var_7_tract)
+rm(var3_download, var_7_cbg, var_7_tract, var_7_cbg_data)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### Percent single parent households of households with children under 18
 ### households with own children = B23007_001, male single householder = B23007e21, fem_single_householder=B23007e26
-var_8_cbg <- tidycensus::get_acs(geography = request_geo1, variables = c("B23007_001", "B23007_021", "B23007_026"),  state = "08", year = request_year)%>%
-  dplyr::select(GEOID, variable, estimate)%>%
+var_8_cbg_data <- tidycensus::get_acs(geography = request_geo1, variables = c("B23007_001", "B23007_021", "B23007_026"),  state = "08", year = request_year)
+dbWriteTable(conn = cbg_data, name = "var_8_cbg_data", value = var_8_cbg_data, row.names = FALSE,overwrite = TRUE) #save for simulation
+
+var_8_cbg <- dplyr::select(var_8_cbg_data ,GEOID, variable, estimate)%>%
   pivot_wider(names_from = variable, values_from = estimate)%>%
   mutate(single_householder_percent_8=(B23007_021+B23007_026)/B23007_001)%>%
   dplyr::select(GEOID,single_householder_percent_8)
@@ -222,13 +235,15 @@ var_8_tract <- tidycensus::get_acs(geography = request_geo2, variables = c("B230
 
 var_list <- c("single_householder_percent_8")
 var_8 <- reduce(var_list, replace_missing, .init = left_join(var_8_cbg, var_8_tract, by = "GEOID"))
-rm(var_8_cbg, var_8_tract)
+rm(var_8_cbg, var_8_tract, var_8_cbg_data)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### Percent of Minority people
 ###estimate total = B02001_001, white alone=B02001_002, white_hispanic=B03002_013 
-var_9_cbg <- tidycensus::get_acs(geography = request_geo1, variables = c("B02001_001", "B02001_002", "B03002_013"),  state = "08", year = request_year)%>%
-  dplyr::select(GEOID, variable, estimate)%>%
+var_9_cbg_data <- tidycensus::get_acs(geography = request_geo1, variables = c("B02001_001", "B02001_002", "B03002_013"),  state = "08", year = request_year)
+dbWriteTable(conn = cbg_data, name = "var_9_cbg_data", value = var_9_cbg_data, row.names = FALSE,overwrite = TRUE) #save for simulation
+
+var_9_cbg <- dplyr::select(var_9_cbg_data ,GEOID, variable, estimate)%>%
   pivot_wider(names_from = variable, values_from = estimate)%>%
   mutate(percent_minority_9=(B02001_001-B02001_002+B03002_013)/B02001_001)%>%
   dplyr::select(GEOID,percent_minority_9)
@@ -246,7 +261,7 @@ var_9_tract <- tidycensus::get_acs(geography = request_geo2, variables = c("B020
 
 var_list <- c("percent_minority_9")
 var_9 <- reduce(var_list, replace_missing, .init = left_join(var_9_cbg, var_9_tract, by = "GEOID"))
-rm(var_9_cbg, var_9_tract)
+rm(var_9_cbg, var_9_tract, var_9_cbg_data)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #### Percent of people who speak English less than "well"
@@ -254,8 +269,10 @@ rm(var_9_cbg, var_9_tract)
 var_download <- c("B16004_001", "B16004_007", "B16004_008", "B16004_012", "B16004_013", "B16004_017", "B16004_018", "B16004_022", "B16004_023", "B16004_029",
                   "B16004_030", "B16004_034", "B16004_035", "B16004_039", "B16004_040", "B16004_044", "B16004_045", "B16004_051", "B16004_052", "B16004_056",
                   "B16004_057", "B16004_061", "B16004_062", "B16004_066", "B16004_067")
-var_10_cbg <-  tidycensus::get_acs(geography = request_geo1, variables = var_download,  state = "08", year = request_year)%>%
-  dplyr::select(GEOID, variable, estimate)%>%
+var_10_cbg_data <-  tidycensus::get_acs(geography = request_geo1, variables = var_download,  state = "08", year = request_year)
+dbWriteTable(conn = cbg_data, name = "var_10_cbg_data", value = var_10_cbg_data, row.names = FALSE,overwrite = TRUE) #save for simulation
+
+var_10_cbg <- dplyr::select(var_10_cbg_data ,GEOID, variable, estimate)%>%
   pivot_wider(names_from = variable, values_from = estimate)%>%
   mutate(eng_proficiency=(B16004_007+B16004_008+B16004_012+B16004_013+B16004_017+B16004_018+B16004_022+B16004_023+B16004_029+B16004_030+B16004_034+B16004_035+
                             B16004_039+B16004_040+B16004_044+B16004_045+B16004_051+B16004_052+B16004_056+B16004_057+B16004_061+B16004_062+B16004_066+B16004_067)/B16004_001)%>%
@@ -275,12 +292,14 @@ var_10_tract <-  tidycensus::get_acs(geography = request_geo2, variables = var_d
 
 var_list <- c("eng_proficiency")
 var_10 <- reduce(var_list, replace_missing, .init = left_join(var_10_cbg, var_10_tract, by = "GEOID"))
-rm(var_10_cbg, var_10_tract)
+rm(var_10_cbg, var_10_tract, var_10_cbg_data)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #### Percentage of housing units with 10 or more units in structure
-var_11_cbg <- tidycensus::get_acs(geography = request_geo1, variables = c("B25024_001", "B25024_007", "B25024_008", "B25024_009"),  state = "08", year = request_year)%>%
-  dplyr::select(GEOID, variable, estimate)%>%
+var_11_cbg_data <- tidycensus::get_acs(geography = request_geo1, variables = c("B25024_001", "B25024_007", "B25024_008", "B25024_009"),  state = "08", year = request_year)
+dbWriteTable(conn = cbg_data, name = "var_11_cbg_data", value = var_11_cbg_data, row.names = FALSE,overwrite = TRUE) #save for simulation
+
+var_11_cbg <- dplyr::select(var_11_cbg_data, GEOID, variable, estimate)%>%
   pivot_wider(names_from = variable, values_from = estimate)%>%
   mutate(over_10=(B25024_007+B25024_008+B25024_009)/B25024_001)%>%
   dplyr::select(GEOID,over_10)
@@ -298,12 +317,14 @@ var_11_tract <- tidycensus::get_acs(geography = request_geo2, variables = c("B25
 
 var_list <- c("over_10")
 var_11 <- reduce(var_list, replace_missing, .init = left_join(var_11_cbg, var_11_tract, by = "GEOID"))
-rm(var_11_cbg, var_11_tract)
+rm(var_11_cbg, var_11_tract, var_11_cbg_data)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #### Percentage of houses that are mobile homes
-var_12_cbg <- tidycensus::get_acs(geography = request_geo1, variables = c("B25024_001",  "B25024_010"), state = "08", year = request_year)%>%
-  dplyr::select(GEOID, variable, estimate)%>%
+var_12_cbg_data <- tidycensus::get_acs(geography = request_geo1, variables = c("B25024_001",  "B25024_010"), state = "08", year = request_year)
+dbWriteTable(conn = cbg_data, name = "var_12_cbg_data", value = var_12_cbg_data, row.names = FALSE,overwrite = TRUE) #save for simulation
+
+var_12_cbg <- dplyr::select(var_12_cbg_data, GEOID, variable, estimate)%>%
   pivot_wider(names_from = variable, values_from = estimate)%>%
   mutate(mobile_units= B25024_010/B25024_001)%>%
   dplyr::select(GEOID, mobile_units)
@@ -321,13 +342,15 @@ var_12_tract <- tidycensus::get_acs(geography = request_geo2, variables = c("B25
 
 var_list <- c("mobile_units")
 var_12 <- reduce(var_list, replace_missing, .init = left_join(var_12_cbg, var_12_tract, by = "GEOID"))
-rm(var_12_cbg, var_12_tract)
+rm(var_12_cbg, var_12_tract, var_12_cbg_data)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #### Percent of homes with more than  one occupant per room
 ###total_units=B25014_001, owner_less_50=B25014_003, owner_51_100=B25014_004, renter_less_50=B25014_009, renter_51_100=B25014_010
-var_13_cbg <- tidycensus::get_acs(geography=request_geo1, variables=c("B25014_001","B25014_003","B25014_004","B25014_009","B25014_010"), state="08", year=request_year)%>%
-  dplyr::select(GEOID, variable, estimate)%>%
+var_13_cbg_data <- tidycensus::get_acs(geography=request_geo1, variables=c("B25014_001","B25014_003","B25014_004","B25014_009","B25014_010"), state="08", year=request_year)
+dbWriteTable(conn = cbg_data, name = "var_13_cbg_data", value = var_13_cbg_data, row.names = FALSE,overwrite = TRUE) #save for simulation
+
+var_13_cbg <- dplyr::select(var_13_cbg_data, GEOID, variable, estimate)%>%
   pivot_wider(names_from = variable, values_from = estimate)%>%
   mutate(over_1_person_room_percent_13=(B25014_001-B25014_003-B25014_004-B25014_009-B25014_010)/B25014_001)%>%
   dplyr::select(GEOID,over_1_person_room_percent_13)
@@ -345,13 +368,15 @@ var_13_tract <- tidycensus::get_acs(geography=request_geo2, variables=c("B25014_
 
 var_list <- c("over_1_person_room_percent_13")
 var_13 <- reduce(var_list, replace_missing, .init = left_join(var_13_cbg, var_13_tract, by = "GEOID"))
-rm(var_13_cbg, var_13_tract)
+rm(var_13_cbg, var_13_tract, var_13_cbg_data)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### Percent of households with no vehicle
 ### total_units=B25044_001, owner_no_vehicle=B25044_003, renter_no_vehicle=B25044_0010
-var_14_cbg <- tidycensus::get_acs(geography = request_geo1, variables = c("B25044_001","B25044_003","B25044_010"), state = "08", year = request_year)%>%
-  dplyr::select(GEOID, variable, estimate)%>%
+var_14_cbg_data <- tidycensus::get_acs(geography = request_geo1, variables = c("B25044_001","B25044_003","B25044_010"), state = "08", year = request_year)
+dbWriteTable(conn = cbg_data, name = "var_14_cbg_data", value = var_14_cbg_data, row.names = FALSE,overwrite = TRUE) #save for simulation
+
+var_14_cbg <- dplyr::select(vqr_14_cbg_data, GEOID, variable, estimate)%>%
   pivot_wider(names_from = variable, values_from = estimate)%>%
   mutate(no_vehicle_percent_14=(B25044_003+B25044_010)/B25044_001)%>%
   dplyr::select(GEOID,no_vehicle_percent_14)
@@ -369,13 +394,15 @@ var_14_tract <- tidycensus::get_acs(geography = request_geo2, variables = c("B25
 
 var_list <- c("no_vehicle_percent_14")
 var_14 <- reduce(var_list, replace_missing, .init = left_join(var_14_cbg, var_14_tract, by = "GEOID"))
-rm(var_14_cbg, var_14_tract)
+rm(var_14_cbg, var_14_tract, var_14_cbg_data)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### Percent of the population that lives in group quarters
 ### households= B09019_001, group_quarters = B09019_026
-var_15_cbg <- tidycensus::get_acs(geography = request_geo1, variables = c("B09019_001", "B09019_026"), state = "08", year = request_year)%>%
-  dplyr::select(GEOID, variable, estimate)%>%
+var_15_cbg_data <- tidycensus::get_acs(geography = request_geo1, variables = c("B09019_001", "B09019_026"), state = "08", year = request_year)
+dbWriteTable(conn = cbg_data, name = "var_15_cbg_data", value = var_15_cbg_data, row.names = FALSE,overwrite = TRUE) #save for simulation
+
+var_15_cbg <- dplyr::select(var_15_cbg_data, GEOID, variable, estimate)%>%
   pivot_wider(names_from = variable, values_from = estimate)%>%
   mutate(group_quarters_percent_15 = B09019_026/B09019_001)%>%
   dplyr::select(GEOID,group_quarters_percent_15)
@@ -393,7 +420,7 @@ var_15_tract <- tidycensus::get_acs(geography = request_geo2, variables = c("B09
 
 var_list <- c("group_quarters_percent_15")
 var_15 <- reduce(var_list, replace_missing, .init = left_join(var_15_cbg, var_15_tract, by = "GEOID"))
-rm(var_15_cbg, var_15_tract)
+rm(var_15_cbg, var_15_tract, var_15_cbg_data)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### Creating GINI coefficient for income.
@@ -401,8 +428,10 @@ rm(var_15_cbg, var_15_tract)
 var_download <- c( "B19001_001","B19001_002","B19001_003","B19001_004","B19001_005","B19001_006", "B19001_007","B19001_008",
                    "B19001_009","B19001_010","B19001_011","B19001_012","B19001_013","B19001_014", "B19001_015","B19001_016","B19001_017")
 #cbg level
-var_16_cbg_data <- tidycensus::get_acs(geography = request_geo1, variables = var_download, state = "08", year = request_year)%>%
-  dplyr::select(GEOID, variable, estimate)%>%
+var_16_cbg_data_gini <- tidycensus::get_acs(geography = request_geo1, variables = var_download, state = "08", year = request_year)
+dbWriteTable(conn = cbg_data, name = "var_16_cbg_data_gini", value = var_16_cbg_data_gini, row.names = FALSE,overwrite = TRUE) #save for simulation
+
+var_16_cbg_data <- dplyr::select(var_16_cbg_data_gini ,GEOID, variable, estimate)%>%
   pivot_wider(names_from = variable, values_from = estimate)
 
 #calculate GINI coefficient
@@ -440,7 +469,7 @@ var_16_tract_new <- var_16_tract%>%
 #replace cbg Gini values with tract Gini values.
 var_list <- c("Gini_income")
 var_16 <- reduce(var_list, replace_missing, .init = left_join(var_16_cbg, var_16_tract_new, by = "GEOID"))
-rm(var_download, gini_coefficients,i, var_16_cbg, var_16_tract, var_16_tract_new, var_16_cbg,var_16_cbg_data, var_16_tract_data)
+rm(var_download, gini_coefficients,i, var_16_cbg, var_16_tract, var_16_tract_new, var_16_cbg,var_16_cbg_data, var_16_tract_data, var_16_cbg_data_gini)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #### GINI for education
@@ -448,8 +477,10 @@ rm(var_download, gini_coefficients,i, var_16_cbg, var_16_tract, var_16_tract_new
 var_download <- c("B15003_001","B15003_002","B15003_003","B15003_004","B15003_005","B15003_006","B15003_007","B15003_008","B15003_009","B15003_010","B15003_011","B15003_012",
                   "B15003_013","B15003_014","B15003_015","B15003_016","B15003_017","B15003_018","B15003_019","B15003_020","B15003_021","B15003_022","B15003_023","B15003_024","B15003_025") 
 #cbg level GINI coeficient
-var_17_cbg_data <- tidycensus::get_acs(geography = request_geo1, variables = var_download, state = "08", year = request_year)%>%
-  dplyr::select(GEOID, variable, estimate)%>%
+var_17_cbg_data_gini <- tidycensus::get_acs(geography = request_geo1, variables = var_download, state = "08", year = request_year)
+dbWriteTable(conn = cbg_data, name = "var_17_cbg_data_gini", value = var_17_cbg_data_gini, row.names = FALSE,overwrite = TRUE) #save for simulation
+
+var_17_cbg_data <- dplyr::select(var_17_cbg_data_gini, GEOID, variable, estimate)%>%
   pivot_wider(names_from = variable, values_from = estimate)
 
 var_17_cbg <- select(var_17_cbg_data, GEOID)# Create an empty vector to store the Gini coefficients
@@ -485,7 +516,8 @@ var_17_tract_new <- var_17_tract%>%
 #replace cbg Gini values with tract Gini values.
 var_list <- c("Gini_education")
 var_17 <- reduce(var_list, replace_missing, .init = left_join(var_17_cbg, var_17_tract_new, by = "GEOID"))
-rm(var_download, gini_coefficients,i, var_17_cbg, var_17_tract, var_17_tract_new, var_17_cbg_data, var_17_tract_data)
+rm(var_download, gini_coefficients,i, var_17_cbg, var_17_tract, var_17_tract_new, var_17_cbg_data, var_17_tract_data, var_17_cbg_data_gini)
+dbDisconnect(cbg_data)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 SVI_var<-var_1%>%
@@ -508,6 +540,6 @@ SVI_var<-var_1%>%
 
 saveRDS(SVI_var,file='Build/Cache/SVI_var.rds')
 rm(var_1,var_2,var_3,var_4,var_5,var_6,var_7,var_8,var_9,var_10,var_11,var_12,var_13,var_14,var_15,var_16,var_17,SVI_var)
-rm(request_geo1, request_geo2, request_year, tract_geo, cbg_geo, cbg_geo_centre, var_list, replace_missing)
+rm(cbg_data, request_geo1, request_geo2, request_year, tract_geo, cbg_geo, cbg_geo_centre, var_list, replace_missing)
 
 print("COMPLETE")
