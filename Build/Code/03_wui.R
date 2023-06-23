@@ -8,11 +8,11 @@ cbg_geo <- read_sf("Build/Cache/tl_2022_08_bg/tl_2022_08_bg.shp")%>%
 wui_raster <- raster("Build/data/WUI.tif")
 
 # Convert the raster to a SpatRaster object and reproject
-wui_spat <- rast(wui_raster)
-wui <- project(wui_spat, terra::crs(SVI_geo))
+wui_spat <- terra::rast(wui_raster)
+wui <- terra::project(wui_spat, terra::crs(SVI_geo))
 
 #reclassify zeros as NA
-NAflag(wui) <- 0
+terra::NAflag(wui) <- 0
 
 #count the number of non-NA (any WUI) cells in each CBG
 cbg_wui <- exact_extract(wui,cbg_geo,
@@ -35,3 +35,4 @@ st_write(svi_wui,"Build/Output/svi_wui.gpkg")
 rm(cbg_geo, cbg_wui, cbg_wui_flag, svi_wui, SVI_geo, wui, wui_proj, wui_raster, wui_spat)
 
 print('COMPLETE')
+

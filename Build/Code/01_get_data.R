@@ -2,19 +2,19 @@
 #Variable in the ACS database names are preserved. 
 #variable codes and description can be found by running the command: tidycensus::load_variables(year, "acs5")
 #vars <- tidycensus::load_variables(2021, "acs5")
-#if CBG level data is missing, tract level values will be used insteady. 
+#if CBG level data is missing, tract level values will be used in steady. 
 
 #geometries for census tract and CBGs
 tract_geo <- read_sf("Build/Cache/tl_2022_08_tract/tl_rd22_08_tract.shp")%>%
   dplyr::select(GEOID)
 cbg_geo <- read_sf("Build/Cache/tl_2022_08_bg/tl_2022_08_bg.shp")%>%
   dplyr::select(GEOID)
-cbg_geo_centre <- st_centroid(cbg_geo)#centre points of CBG which will be used to find CBG within certain census tracts
+cbg_geo_centre <- st_centroid(cbg_geo)#center points of CBG which will be used to find CBG within certain census tracts
 
 #define parameters
 request_geo1 <- "block group" #geography for downloading CBG level data
 request_geo2 <- "tract" #geography for downloading census tract level data
-request_year <- 2018
+request_year <- 2021
 
 ##Define function for replacing missing values
 replace_missing <- function(df, var_name) {
@@ -376,7 +376,7 @@ rm(var_13_cbg, var_13_tract, var_13_cbg_data)
 var_14_cbg_data <- tidycensus::get_acs(geography = request_geo1, variables = c("B25044_001","B25044_003","B25044_010"), state = "08", year = request_year)
 dbWriteTable(conn = cbg_data, name = "var_14_cbg_data", value = var_14_cbg_data, row.names = FALSE,overwrite = TRUE) #save for simulation
 
-var_14_cbg <- dplyr::select(vqr_14_cbg_data, GEOID, variable, estimate)%>%
+var_14_cbg <- dplyr::select(var_14_cbg_data, GEOID, variable, estimate)%>%
   pivot_wider(names_from = variable, values_from = estimate)%>%
   mutate(no_vehicle_percent_14=(B25044_003+B25044_010)/B25044_001)%>%
   dplyr::select(GEOID,no_vehicle_percent_14)
