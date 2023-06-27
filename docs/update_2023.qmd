@@ -1,0 +1,32 @@
+---
+title: "Updating Reduced Match Criteria for the Forest Restoration & Wildfire Risk Mitigation Grant"
+author: "Innocent Vomitadyo and Jude Bayham"
+format: 
+  html:
+      toc: TRUE
+      embed-resources: true
+---
+
+## Introduction
+
+In 2020, our research team at Colorado State University developed the [Wildfire Social Vulnerability Index](https://jbayham.github.io/CSFS_WSVI/report.html) (WFSVI) in order to set a criteria for reduced match for the Forest Restoration & Wildfire Risk Mitigation (FRWRM) Grant. This report describes updates to the WFSVI including updated data, alignment with the federal [Justice 40](https://screeningtool.geoplatform.gov/en/#3/33.47/-97.5) initiative, and further analysis of the WFSVI and reduced match criteria. 
+
+## American Community Survey Update
+
+describe the updated data including limitations due to covid
+
+## Justice 40
+
+[Executive Order 14008](https://www.federalregister.gov/documents/2021/02/01/2021-02177/tackling-the-climate-crisis-at-home-and-abroad#:~:text=Sec.%20223.%20Justice40,40-percent%20goal.) directed the Council on Environmental Quality (CEQ) to develop the Climate and Economic Justice Screening Tool (CEJST). This tool uses data to analyze burdens across eight categories: climate change, energy, health, housing, legacy pollution, transportation, water and wastewater, and workforce development. The primary purpose of the CEJST is to aid federal agencies in identifying disadvantaged communities that would benefit from the programs offered under the Justice40 Initiative. While the Colorado State Forest Service is not a federal agency, the goal of the CEJST is aligned with the intent of HB 20-1057, which established the reduced match criteria.
+
+We collect data from the [Council on Environmental Quality](https://screeningtool.geoplatform.gov/en/downloads). The WFSVI is constructed at the Census Block Group (CBG), while the CEJST is constructed at the Census Tract (comprised of CBGs). The CEJST contains a binary indicator for every Census Tract that determines whether it is considered "disadvantaged." We consider any disadvantaged Census Tract to qualify for reduced match. 
+
+## Comparison Map
+
+This section presents a map to compare the original WFSVI (2020) to the updated version (2023).
+
+Jude to build map
+
+Some narrative
+
+## 
