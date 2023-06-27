@@ -1,0 +1,100 @@
+---
+title: "Defining Reduced Match Criteria for the Forest Restoration & Wildfire Risk Mitigation Grant"
+author: "Christine Dimke and Jude Bayham"
+format: 
+  html:
+      toc: TRUE
+      embed-resources: true
+---
+
+## Problem statement 
+
+The Colorado State Forest Service (CSFS) seeks to reduce wildfire risk and promote healthy forests through the Forest Restoration & Wildfire Risk Mitigation (FRWRM) grant program. The FRWRM grant program has adopted a cost-share structure requiring applicants to specify a commitment of their resources as “match” for the awarded grant funding. In 2020, Colorado passed HB 20-1057, which amended the program to increase access for communities with “fewer economic resources'' by reducing the match requirement from 50% self-financing to 25% for qualifying applicants.
+
+Defining "fewer economic resources" is challenging because resources refer to everything at a community’s disposal.  In this work, we will draw from the literature to define an index that captures populations’ vulnerability to natural disasters such as wildland fire.  We tailor the index, the Wildland Fire Social Vulnerability Index (WFSVI),  to the wildland urban interface (WUI) in Colorado.  The WFSVI allows us to identify the areas of the state that are the most vulnerable.  We assign the top quartile as eligible for increased match as part of the FRWRM program. 
+
+This document first provides background on the social vulnerability index. We then describe the data, the variables used, and the construction of the WFSVI.  We conclude with some limitations.
+
+## Background
+
+We adapt the Social Vulnerability Index (SVI) (Flanagan et al., 2011) to the wildland fire context in Colorado.  The SVI was created in response to Hurricane Katrina to capture the social (rather than biophysical) features of a community that make it vulnerable.  The SVI ranges from 0 (not vulnerable) to 100 (highly vulnerable) recognizing that those who are socially vulnerable are more likely to experience loss and less likely to recover.  The original intent of the SVI was to help state and federal level disaster responders identify the most affected areas post-event.  The authors also recognize its potential for use in other stages of the disaster cycle, such as mitigation.  Allocating funding for mitigation activities represents a forward-looking approach to equitable planning for wildfire incidents.
+
+The SVI addresses four main categories of vulnerability: socioeconomic status, household composition/ disability, minority status/ language, and housing/transportation.  These characteristics are important during all phases of the disaster cycle but especially mitigation.  Those with little purchasing power, high burden of care, or who experience difficulty interacting with the community for cultural or physical reasons may be less able to participate in mitigation activity.  Communities who have high overall levels of vulnerability may require additional assistance to complete migitation activities. We adopt this notion of social vulnerability to describe communities with *fewer economic resources*.
+
+### Data
+
+We construct the Colorado WFSVI using data from the 2016 - 2020 American Community Survey (US Census, 2020).  The original SVI was calculated at the census tract, but the data are now available at the census block group (smaller geographic unit) to better identify community demographics.  We then crop the spatial layers to the boundary of the WUI as defined by the boundaries used in the grant process. 
+
+ACS data is a reliable source of demographic data between decennial censuses.  The Census Bureau holds the responsibility to furnish useful information for resource allocation and research, but it also has a responsibility to protect individual identity.  That means that for Census Block Groups (CBGs) that have small populations, information may not be reported.  There are a handful of CBGs in Colorado with no population, or one so small that most variables of interest were not reported.  These are left out of analysis and assigned an index value of zero.  We also identify CBGS that are missing only one variable, this is predominantly income.  We impute this to be the mean of all Colorado CBGs and include them in the ranking described below.   
+
+We conduct all data analysis and geoprocessing in the R Statistical Computing Language (R Core Team, 2020).  The code is made available on [GitHub](https://github.com/jbayham/CSFS_WSVI/tree/master).
+
+
+### Variables
+
+We describe the variables used to construct the index below. For each element of the index, we describe the variable, reference the relevant table in the ACS, and express the relative importance of the element in the percentages in parentheses.  The percentages represent the relative weight of the variable in the SVI ranking.  The individual variable weights sum to represent the relative weight of the categories. 
+
+#### Socioeconomic Status Variables (39 %)
+1.  Percent of individuals below the poverty line (C17002 - 12.20 %)
+2.  Percent of the Civilian labor force which is unemployed (B23025 - 7.31 %)
+3.  Median household income (B19013 - 12.20 %)
+[The original SVI uses per capita income]
+4.  Percent of adults over 25 without a High School Diploma(B15003 - 7.31 %)
+
+#### Household Composition/Disability (12.2 %)
+5.  Percent of people over the age of 65 (B01001 - 2.44 %)
+6.  Percent of people under the age of 18 (B01001 - 2.44 %)
+7.  Percent of the poverty status determined population above 18 with a disability (C21007 - 2.44 %)
+[The original SVI included those over 5, but this data is not included in the ACS]
+8.  Percent of households with a male or female householder, no spouse present, with children under 18 (B23007 - 2.44 %)
+
+#### Minority Status/Language (17.1 %)
+9.  Percent of the population that are of minority status (Non-white or Hispanic) (B02001 - 12.20 %)
+10. Percent of the population that speaks English less than "well" (B16004 - 4.88 %)
+
+#### Housing/Transportation (7.32 %)
+11. Percent of housing structures that have 10 or more units (B25024 - 0%)
+12. Percent of housing units that are mobile homes (B25024 - 4.88 %)
+13. Percent of households that live in a housing unit with more people than rooms (B25014 - 0%)
+14. Percent of households with no vehicle (B25044 - 2.44%)
+15. Percent of people who live in group housing such as nursing homes (B09019 - 0%)
+
+#### New Equity Variables (24.4 %)
+16. Income GINI (B19001 - 12.20 %)
+17. Years of schooling/ Education GINI (B15003 - 12.20 %)
+
+## Methods
+
+We construct the WFSVI based on Flanagan et al (2011).  The SVI and WFSVI are bounded between 0 and 1 with 0 being the least vulnerable.  The following steps outline the construction of the WFSVI. We make a few minor changes to the original index variables to reflect modern ideas on measures of central tendency as well as data limitations.  These changes are italicized.
+
+1. We percent rank the variables independently across all Census Block Groups (CBGs) in Colorado. *We add the GINI variables to account for mixing of high and low levels of resources.*
+
+2. *We place zero weights on variables less relevant to wildfire (e.g., Percent of housing structures that have 10 or more units, Percent of households that live in a housing unit with more people than rooms, and Percent of people who live in group housing such as nursing homes).  We also reweight other variables to emphasize resources that limit the ability to engage in mitigation.*
+
+3. Finally we add them together, and percent rank them again.  We place more weight on income and housing characteristics that are more relevant to wildfire risk.  This percent rank is the  WFSVI score.
+
+We use the WFSVI score to assign the status of "fewer economic resources" with the WFSVI. We assign a qualifying status to any CBG with a rank above the 75th percentile (top quartile).  CBGs that rank in the top quartile in the WFSVI are eligible for an increased match.
+
+## Limitations
+
+In constructing the WFSVI we acknowledge several possible limitations to the SVI. First, average measures within a community may obscure the variation in vulnerability within the community.  For example, a census defined geography may contain households that qualify as highly vulnerable and households that qualify as minimally vulnerable.  Average characteristics reported in this community may indicate moderate vulnerability.  We attempt to account for this by adding two measures to the WFSVI: income GINI and an education GINI.  The GINI coefficient measures inequality. Using the example of income, if everyone had the same income, the income GINI would equal zero.  Conversely, if one household earned all the income in a CBG and the rest of the community received none, the income GINI would equal one.  
+
+American Community Survey data is based on a sample with a reported margin of error. In small census block groups, the margin of error may be large. We acknowledge the potential that the data may be inaccurate. However, the ACS is the most reliable survey of information required to calculate the WFSVI.
+
+
+
+
+
+
+
+## References
+Flanagan, Barry E., Edward W. Gregory, Elaine J Hallisey, Janet L. Heitgerd, and Brian Lewis. 2011. “A Social Vulnerability Index for Disaster Management.” Journal of Homeland Security and Emergency Management 8 (1). https://doi.org/10.2202/1547-7355.1792.
+
+Gaither, Cassandra Johnson, Neelam C. Poudyal, Scott Goodrick, J. M. Bowker, Sparkle Malone, and Jianbang Gan. 2011. “Wildland Fire Risk and Social Vulnerability in the Southeastern United States: An Exploratory Spatial Data Analysis Approach.” Forest Policy and Economics 13 (1): 24–36. https://doi.org/10.1016/j.forpol.2010.07.009.
+
+Palaiologou, Palaiologos, Alan A. Ager, Max Nielsen-Pincus, Cody R. Evers, and Michelle A. Day. 2019. “Social Vulnerability to Large Wildfires in the Western USA.” Landscape and Urban Planning 189 (September): 99–116. https://doi.org/10.1016/j.landurbplan.2019.04.006.
+
+R Core Team (2022). R: A language and environment for statistical computing. R Foundation for Statistical Computing, Vienna,
+  Austria. URL https://www.R-project.org/.
+  
+U.S. Census Bureau. (2020). *2016-2020 American Community Survey 5-year Public Use Microdata Samples*.  Retrieved from https://docs.safegraph.com/docs/open-census-data
