@@ -1,12 +1,12 @@
 ### Monte Carlo Simulation 
 ### We assume the each variable in the CBGs normally distribute because most CBGs have population greater than 30,  hence we can use the cental limit theorem
 
-wfsvi <- readRDS('Build/Output/wfsvi.rds')
+wfsvi_j40 <- readRDS('Build/Output/wfsvi_j40.rds')
 svi_wui <- readRDS('Build/Output/svi_wui.rds')
 cbg_geo <- read_sf("Build/Cache/tl_2022_08_bg/tl_2022_08_bg.shp")%>%
   dplyr::select(GEOID)
 
-n_iterations <- 1000# Set the number of iterations
+n_iterations <- 3# Set the number of iterations
 qualify_counts <- numeric(nrow(svi_wui))# Initialize a vector to store the results
 
 # Run the simulation
@@ -236,12 +236,12 @@ for (i in 1:n_iterations) {
   
 }
 
-wfsvi$qualify_counts <- qualify_counts
-wfsvi$percent_qualify <- (qualify_counts/n_iterations*100)%>%
+wfsvi_j40$qualify_counts <- qualify_counts
+wfsvi_j40$percent_qualify <- (qualify_counts/n_iterations*100)%>%
   round(1)
 
 #PLot the simulation results
-new_qualifying_cbg <- filter(wfsvi, qualify==1)
+new_qualifying_cbg <- filter(wfsvi_j40, qualifying_cbg==1)
 ggplot()+
   geom_sf(data = new_qualifying_cbg, aes(fill = percent_qualify), color = 'NA')
 
