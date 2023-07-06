@@ -1,1 +1,0 @@
-#This script downloads the J40 data set and identifies CBGs that are within any disadvantaged tracts in J40 

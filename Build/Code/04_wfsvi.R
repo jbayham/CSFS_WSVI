@@ -33,7 +33,7 @@ wfsvi <- svi_wui%>%
            weights[16]*Gini_income_rank+                      ## Inequality measures
            weights[17]*Gini_education_rank,
          wfsvi=percent_rank(overall_sum))%>%
-  mutate(qualify=ifelse(wfsvi>=.75,1,0))%>%
+  mutate(wfsvi_qualify=ifelse(wfsvi>=.75,1,0))%>%
   left_join(., cbg_geo)%>%
   st_as_sf()
 

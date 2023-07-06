@@ -244,3 +244,4 @@ wfsvi$percent_qualify <- (qualify_counts/n_iterations*100)%>%
 new_qualifying_cbg <- filter(wfsvi, qualify==1)
 ggplot()+
   geom_sf(data = new_qualifying_cbg, aes(fill = percent_qualify), color = 'NA')
+

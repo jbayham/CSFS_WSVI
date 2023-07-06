@@ -18,3 +18,22 @@ download.file(url="ftp://ftp2.census.gov/geo/tiger/TIGER_RD18/STATE/08_COLORADO/
 unzip("Build/Cache/tl_2022_08_tract.zip",exdir = "Build/Cache/tl_2022_08_tract")
 ###################
 
+## Download J40 Data in csv format
+download.file("https://static-data-screeningtool.geoplatform.gov/data-versions/1.0/data/score/downloadable/1.0-communities.csv",
+              destfile = file.path("Build/Cache/1.0-communities.csv"), 
+              method = "auto")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
