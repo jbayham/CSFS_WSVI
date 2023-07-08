@@ -6,7 +6,7 @@ svi_wui <- readRDS('Build/Output/svi_wui.rds')
 cbg_geo <- read_sf("Build/Cache/tl_2022_08_bg/tl_2022_08_bg.shp")%>%
   dplyr::select(GEOID)
 
-n_iterations <- 3# Set the number of iterations
+n_iterations <- 1000# Set the number of iterations
 qualify_counts <- numeric(nrow(svi_wui))# Initialize a vector to store the results
 
 # Run the simulation
