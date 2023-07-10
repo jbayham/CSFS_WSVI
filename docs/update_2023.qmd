@@ -33,8 +33,7 @@ Some narrative
 
 ## Other Changes
 
-
-
+All the necessary data files and geometries/shape files,  except the WUI layer,  will now be downloaded automatically. This process can only be done once when the user runs the scripts for the first time. The script, 00_download_geometries, will download the necessary shapefile and unzip them into the cache directory. However, the WUI layer must be added manually in Tiff format. 
 
 ## Limitations
 
