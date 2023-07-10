@@ -15,9 +15,7 @@ In 2020, our research team at Colorado State University developed the [Wildfire 
 
 Previously, the data was downloaded as CSV files from [Safegraph](https://www.safegraph.com/free-data/open-census-data). A new script named 01_get_data uses the tidy-census package to download data directly from the [American Community Survey](https://data.census.gov/) (ACS). The script downloads data for the Census Block Group (CBG) and census tract, then calculates the respective variables for both geographies. The census tract values will fill in any missing block group values. The process is now automated, allowing users to run all scripts with data for any year.
 
-We also added another script, 07_monte_carlo_simulation.R, which generates data using the estimates and margin of errors from ACS data. It then records the times each CBG qualifies per a given number of iterations. Estimates from ACS are used as means, and the margins of errors are used to calculate the standard deviation. We assume that the ACS data is normally distributed. Given the data distribution, the simulation process identifies CBGs that have qualified but otherwise would be less likely to qualify or vice-versa.
-
-The COVID-19 pandemic impacted trends and affected the ability to generate data due to sampling challenges. The U.S. Census Bureau reported that, due to the difficulties of fielding a household survey during the COVID-19 pandemic, household nonresponse increased substantially in the American Community Survey, with evidence of increased nonresponse bias in many statistics. These inaccuracies and high margins of errors may cause some CBGs to qualify even though they shouldn’t or not qualify when they should. It may take some time before the full impact of the pandemic on census data accuracy is fully understood. 
+We also added another script, 07_monte_carlo_simulation.R, which generates data using the estimates and margin of errors downloaded from ACS. It calculates the wfsvi for each CBG containing WUI and then records the times each CBG qualifies per a given number of iterations. Estimates from ACS are used as means, and the margins of errors are used to calculate the standard deviation. We assume that the ACS data is normally distributed. Given the data distribution, the simulation process identifies CBGs that have qualified but otherwise would be less likely to qualify or vice-versa. 
 
 ## Justice 40
 
@@ -33,4 +31,12 @@ Jude to build map
 
 Some narrative
 
-## 
+## Other Changes
+
+
+
+
+## Limitations
+
+American Community Survey data is based on a sample with a reported margin of error. The COVID-19 pandemic impacted trends and affected the ability to generate data due to sampling challenges. The U.S. Census Bureau reported that, due to the difficulties of fielding a household survey during the COVID-19 pandemic, household nonresponse increased substantially in the ACS, with evidence of increased nonresponse bias in many statistics. These inaccuracies and high margins of errors may cause some CBGs to qualify even though they shouldn’t or not qualify when they should. It may take some time before the full impact of the pandemic on census data accuracy is fully understood. It is also important to note that the margin of error may be significant in small census block groups. We acknowledge the potential that the data may be inaccurate. However, the ACS is the most reliable data to calculate the WFSVI. 
+
