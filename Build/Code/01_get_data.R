@@ -520,7 +520,7 @@ rm(var_download, gini_coefficients,i, var_17_cbg, var_17_tract, var_17_tract_new
 dbDisconnect(cbg_data)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-SVI_var<-var_1%>%
+SVI_var_all_CBG<-var_1%>%
   left_join(.,var_2)%>%
   left_join(.,var_3)%>%
   left_join(.,var_4)%>%
@@ -538,8 +538,21 @@ SVI_var<-var_1%>%
   left_join(.,var_16)%>%
   left_join(.,var_17)
 
+#Identify CBGs with zero population
+tot_pop <- tidycensus::get_acs(geography = request_geo1, variables = 	'B01001_001', state = "08", year = request_year)%>%
+  filter(estimate==0)
+
+zero_GEOIDs <- c(tot_pop$GEOID)
+
+#Remove CBGs with zero population
+SVI_var <- filter(SVI_var_all_CBG, !(GEOID %in% zero_GEOIDs))
+
+#save the data set
 saveRDS(SVI_var,file='Build/Cache/SVI_var.rds')
+
+#remove variables from memory
 rm(var_1,var_2,var_3,var_4,var_5,var_6,var_7,var_8,var_9,var_10,var_11,var_12,var_13,var_14,var_15,var_16,var_17,SVI_var)
 rm(cbg_data, request_geo1, request_geo2, request_year, tract_geo, cbg_geo, cbg_geo_centre, var_list, replace_missing)
+rm(tot_pop, zero_GEOIDs, SVI_var_all_CBG)
 
 print("COMPLETE")

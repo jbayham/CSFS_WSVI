@@ -105,6 +105,50 @@ imputed_data <- missForest(data[,missing_cols], maxiter = 10, ntree = 100, repla
 
 
 
-aa <- filter(var_5_cbg, GEOID== "080019887001")
+
+
+
+
+
+
+
+library(missForest)
+library(randomForest)
+
+# Load your data (let's assume it's in a data frame called "my_data")
+# Get the names of all the variables
+my_data <- select(SVI_var, -GEOID)
+
+
+library(randomForest)
+
+# Load your data (let's assume it's in a data frame called "my_data")
+# Get the names of all the variables
+all_vars <- colnames(my_data)
+
+# Create an empty list to store the models and predictions
+models <- list()
+predictions <- list()
+
+# Fit a separate random forest model for each column
+for (col in all_vars) {
+  # Specify the response variable as the current column
+  response_var <- col
+  
+  # Specify the predictor variables as all the other columns
+  predictor_vars <- setdiff(all_vars, col)
+  
+  # Fit the random forest model with the current column as the response variable
+  models[[col]] <- randomForest(x = my_data[, predictor_vars], y = my_data[, response_var], ntree = 500)
+  
+  # Make predictions with the current model
+  predictions[[col]] <- predict(models[[col]], newdata = my_data[, predictor_vars])
+}
+
+# Evaluate the performance of each model
+performance_metrics <- sapply(1:length(all_vars), function(i) {
+  mean((predictions[[i]] - my_data[, i])^2)
+})
+
 
 

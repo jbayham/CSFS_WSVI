@@ -17,6 +17,9 @@ conflicts_prefer(dplyr::filter)
 conflicts_prefer(raster::extract)
 conflicts_prefer(raster::shift)
 
+p_load("tidyverse", "raster", "data.table", "purrr", "furrr", "conflicted",  "lubridate", "units",  "sf", "tidycensus", 
+       "ineq","terra","exactextractr", "missForest", "RSQLite", install= F)
+
 # create required folders
 if(!dir.exists("Build/Cache/"))  dir.create("Build/Cache/")
 if(!dir.exists("Build/Data/"))  dir.create("Build/Data/")

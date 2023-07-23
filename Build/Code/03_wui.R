@@ -32,7 +32,7 @@ svi_wui <- inner_join(SVI_geo,cbg_wui_flag,by = "GEOID")%>%
 saveRDS(svi_wui,file='Build/Output/svi_wui.rds')
 st_write(svi_wui,"Build/Output/svi_wui.gpkg")
 
-rm(cbg_geo, cbg_wui, cbg_wui_flag, svi_wui, SVI_geo, wui, wui_proj, wui_raster, wui_spat)
+rm(cbg_geo, cbg_wui, cbg_wui_flag, svi_wui, SVI_geo, wui, wui_raster, wui_spat)
 
 print('COMPLETE')
 

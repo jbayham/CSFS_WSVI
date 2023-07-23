@@ -2,10 +2,7 @@
 wfsvi_j40 <- readRDS('Build/Output/wfsvi_j40.rds')
 
 #check the fraction of CBGs that qualify and have WUI
-#st_set_geometry(wfsvi_cbg,NULL) %>%
-  #summarize(check=sum((qualify_svi+wui_flag)==2,na.rm=T)) 
-
-st_set_geometry(wfsvi_j40,NULL) %>%
+st_set_geometry(wfsvi_j40,NULL)%>%
   summarize(check=sum((qualifying_cbg)==1,na.rm=T))
 
 # filter qualifying CBGs

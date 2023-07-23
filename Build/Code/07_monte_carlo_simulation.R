@@ -6,7 +6,7 @@ svi_wui <- readRDS('Build/Output/svi_wui.rds')
 cbg_geo <- read_sf("Build/Cache/tl_2022_08_bg/tl_2022_08_bg.shp")%>%
   dplyr::select(GEOID)
 
-n_iterations <- 1000# Set the number of iterations
+n_iterations <- 5# Set the number of iterations
 qualify_counts <- numeric(nrow(svi_wui))# Initialize a vector to store the results
 
 # Run the simulation
@@ -204,7 +204,6 @@ for (i in 1:n_iterations) {
   
   #NB: Reverse direction of HH income
   new_wfsvi <- new_svi_wui%>%
-    #dplyr::select(-wui_flag)%>%
     rename_with( .fn = ~paste0(., '_rank'),.cols=as.character(names(new_svi_wui[,2:18])))%>%
     mutate(directional_median_hh_income_3_rank=-1*median_hh_income_3_rank,.keep="unused")%>%
     mutate(across(!GEOID,percent_rank))%>%
