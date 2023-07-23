@@ -11,17 +11,20 @@ format:
 
 In 2020, our research team at Colorado State University developed the [Wildfire Social Vulnerability Index](https://jbayham.github.io/CSFS_WSVI/report.html) (WFSVI) in order to set a criteria for reduced match for the Forest Restoration & Wildfire Risk Mitigation (FRWRM) Grant. This report describes updates to the WFSVI including updated data, alignment with the federal [Justice 40](https://screeningtool.geoplatform.gov/en/#3/33.47/-97.5) initiative, and further analysis of the WFSVI and reduced match criteria. 
 
+
 ## American Community Survey Update
 
 Previously, the data was downloaded as CSV files from [Safegraph](https://www.safegraph.com/free-data/open-census-data). A new script named 01_get_data uses the tidy-census package to download data directly from the [American Community Survey](https://data.census.gov/) (ACS). The script downloads data for the Census Block Group (CBG) and census tract, then calculates the respective variables for both geographies. The census tract values will fill in any missing block group values. The process is now automated, allowing users to run all scripts with data for any year.
 
 We also added another script, 07_monte_carlo_simulation.R, which generates data using the estimates and margin of errors downloaded from ACS. It calculates the wfsvi for each CBG containing WUI and then records the times each CBG qualifies per a given number of iterations. Estimates from ACS are used as means, and the margins of errors are used to calculate the standard deviation. We assume that the ACS data is normally distributed. Given the data distribution, the simulation process identifies CBGs that have qualified but otherwise would be less likely to qualify or vice-versa. 
 
+
 ## Justice 40
 
 [Executive Order 14008](https://www.federalregister.gov/documents/2021/02/01/2021-02177/tackling-the-climate-crisis-at-home-and-abroad#:~:text=Sec.%20223.%20Justice40,40-percent%20goal.) directed the Council on Environmental Quality (CEQ) to develop the Climate and Economic Justice Screening Tool (CEJST). This tool uses data to analyze burdens across eight categories: climate change, energy, health, housing, legacy pollution, transportation, water and wastewater, and workforce development. The primary purpose of the CEJST is to aid federal agencies in identifying disadvantaged communities that would benefit from the programs offered under the Justice40 Initiative. While the Colorado State Forest Service is not a federal agency, the goal of the CEJST is aligned with the intent of HB 20-1057, which established the reduced match criteria.
 
 We collect data from the [Council on Environmental Quality](https://screeningtool.geoplatform.gov/en/downloads). The WFSVI is constructed at the Census Block Group (CBG), while the CEJST is constructed at the Census Tract (comprised of CBGs). The CEJST contains a binary indicator for every Census Tract that determines whether it is considered "disadvantaged." We consider any disadvantaged Census Tract to qualify for reduced match. 
+
 
 ## Comparison Map
 
@@ -31,9 +34,11 @@ Jude to build map
 
 Some narrative
 
+
 ## Other Changes
 
 All the necessary data files and geometries/shape files,  except the WUI layer,  will now be downloaded automatically. This process can only be done once when the user runs the scripts for the first time. The script, 00_download_geometries, will download the necessary shapefile and unzip them into the cache directory. However, the WUI layer must be added manually in Tiff format. 
+
 
 ## Limitations
 
