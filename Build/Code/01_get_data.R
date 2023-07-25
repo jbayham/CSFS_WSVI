@@ -543,9 +543,15 @@ tot_pop <- tidycensus::get_acs(geography = request_geo1, variables = 	'B01001_00
   filter(estimate==0)
 
 zero_GEOIDs <- c(tot_pop$GEOID)
+new_svi_var <- filter(SVI_var_all_CBG, !(GEOID %in% zero_GEOIDs))#Remove CBGs with zero population
 
-#Remove CBGs with zero population
-SVI_var <- filter(SVI_var_all_CBG, !(GEOID %in% zero_GEOIDs))
+#impute any remaining missing values with missForest package
+data <-as.data.frame(new_svi_var)
+GEOID <- data$GEOID# Extract the GEOID variable
+vars_for_imputation <- data[, !names(data) %in% c("GEOID")]#Specify the variables to be used (excluding the GEOID)
+imputed_data <- missForest(vars_for_imputation)#Impute missing values using missForest
+SVI_var <- cbind(GEOID = GEOID, imputed_data$ximp)#Combine the imputed data with the GEOID variable
+rm(data, GEOID, vars_for_imputation, imputed_data)
 
 #save the data set
 saveRDS(SVI_var,file='Build/Cache/SVI_var.rds')
