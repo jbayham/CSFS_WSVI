@@ -6,7 +6,11 @@ j40_tracts <- read.csv("Build/Cache/1.0-communities.csv")%>%
   filter(State.Territory=='Colorado')%>%
   dplyr::select(Census.tract.2010.ID, Identified.as.disadvantaged)
 
+## select part of GEOID which corresponds to tract IDs
 wfsvi$tract_ID <-  substr(wfsvi$GEOID, 2, 11)
+
+## merge the J40 communities with CBG data and determine qualifying CBG
+## All CBGs in the J40 tracts will automatically qualify regardless of their SVI
 wfsvi_j40 <- merge(wfsvi, j40_tracts, by.x= 'tract_ID', by.y='Census.tract.2010.ID', all.x=TRUE)%>%
   mutate(j40_qualify = if_else(coalesce(Identified.as.disadvantaged, 'False')=='True', 1, 0))%>%
   mutate(qualifying_cbg = if_else(wfsvi_qualify==1|j40_qualify==1, 1, 0))

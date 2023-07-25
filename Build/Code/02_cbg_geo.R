@@ -3,7 +3,8 @@ SVI_var <- readRDS('Build/Cache/SVI_var.rds')
 
 ## Load CO wide data set
 cbg_geo <- read_sf("Build/Cache/tl_2022_08_bg/tl_2022_08_bg.shp")%>%
-  dplyr::select(GEOID)
+  dplyr::select(GEOID)%>%
+  filter(GEOID %in% SVI_var$GEOID)#filter only geometries for CBGs in the SVI_var
 
 #Join SVI to cbg layer
 SVI_geo <- SVI_var%>%

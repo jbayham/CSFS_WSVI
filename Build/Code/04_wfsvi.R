@@ -4,7 +4,8 @@
 ## cache folder. 
 svi_wui <- readRDS('Build/Output/svi_wui.rds')
 cbg_geo <- read_sf("Build/Cache/tl_2022_08_bg/tl_2022_08_bg.shp")%>%
-  dplyr::select(GEOID)
+  dplyr::select(GEOID)%>%
+  filter(GEOID %in% svi_wui$GEOID) 
 
 weights<- c(1.25,.75,1.25,.75,.25,.25,.5,.25,1.25,.5,0,.5,0,.25,0,1.25,1.25)
 

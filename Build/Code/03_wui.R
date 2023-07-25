@@ -2,7 +2,8 @@
 SVI_geo <- readRDS('Build/Cache/SVI_geo.rds')%>%
   st_as_sf()
 cbg_geo <- read_sf("Build/Cache/tl_2022_08_bg/tl_2022_08_bg.shp")%>%
-  dplyr::select(GEOID)
+  dplyr::select(GEOID)%>%
+  filter(GEOID %in% SVI_geo$GEOID)#filter GEOIDs in the SVI data only.
 
 #Connect to the raster file
 wui_raster <- raster("Build/data/WUI.tif")
