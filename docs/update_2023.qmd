@@ -42,6 +42,12 @@ Some narrative
 All the necessary data files and geometries/shape files,  except the WUI layer,  will now be downloaded automatically. This process can only be done once when the user runs the scripts for the first time. The script, 00_download_geometries, will download the necessary shapefile and unzip them into the cache directory. However, the WUI layer must be added manually in Tiff format. 
 
 
+
+using RData format, 
+using st_intersect to reduce processing time
+interactive maps to visualise
+
+
 ## Limitations
 
 American Community Survey data is based on a sample with a reported margin of error. The COVID-19 pandemic impacted trends and affected the ability to generate data due to sampling challenges. The U.S. Census Bureau reported that, due to the difficulties of fielding a household survey during the COVID-19 pandemic, household nonresponse increased substantially in the ACS, with evidence of increased nonresponse bias in many statistics. These inaccuracies and high margins of errors may cause some CBGs to qualify even though they shouldn’t or not qualify when they should. It may take some time before the full impact of the pandemic on census data accuracy is fully understood. It is also important to note that the margin of error may be significant in small census block groups. We acknowledge the potential that the data may be inaccurate. However, the ACS is the most reliable data to calculate the WFSVI. 

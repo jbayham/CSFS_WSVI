@@ -23,7 +23,7 @@ replace_missing <- function(df, var_name) {
     select(-c(paste0(var_name, ".x"), paste0(var_name, ".y")))
 }
 #create sqlite data base to store data for simulation
-cbg_data <- dbConnect(SQLite(), dbname='cbg_data.sqlite')
+cbg_data <- dbConnect(SQLite(), dbname='Build/Cache/cbg_data.sqlite')
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ### Percentage of poverty status checked individuals who are below poverty line
@@ -559,6 +559,7 @@ saveRDS(SVI_var,file='Build/Cache/SVI_var.rds')
 #remove variables from memory
 rm(var_1,var_2,var_3,var_4,var_5,var_6,var_7,var_8,var_9,var_10,var_11,var_12,var_13,var_14,var_15,var_16,var_17,SVI_var)
 rm(cbg_data, request_geo1, request_geo2, request_year, tract_geo, cbg_geo, cbg_geo_centre, var_list, replace_missing)
-rm(tot_pop, zero_GEOIDs, SVI_var_all_CBG)
+rm(tot_pop, zero_GEOIDs, SVI_var_all_CBG, new_svi_var)
 
 print("COMPLETE")
+

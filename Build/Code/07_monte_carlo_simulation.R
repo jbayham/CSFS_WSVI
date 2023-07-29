@@ -6,14 +6,14 @@ svi_wui <- readRDS('Build/Output/svi_wui.rds')
 cbg_geo <- read_sf("Build/Cache/tl_2022_08_bg/tl_2022_08_bg.shp")%>%
   dplyr::select(GEOID)
 
-n_iterations <- 1000# Set the number of iterations
+n_iterations <- 5# Set the number of iterations
 qualify_counts <- numeric(nrow(svi_wui))# Initialize a vector to store the results
 
 # Run the simulation
 for (i in 1:n_iterations) {
   
   # Generate random data
-  cbg_data <- DBI::dbConnect(SQLite(), dbname='cbg_data.sqlite')
+  cbg_data <- DBI::dbConnect(SQLite(), dbname='Build/Cache/cbg_data.sqlite')
   var_1 <-tbl(cbg_data,"var_1_cbg_data")%>%
     as.data.frame()%>%
     mutate(simulated = abs((rnorm(n(), mean = estimate, sd=(moe/1.645)))))%>%
@@ -198,13 +198,13 @@ for (i in 1:n_iterations) {
     st_as_sf()%>%
     dplyr::select(GEOID)
   
-  new_svi_wui <- right_join(simulated_SVI_var, GEOID)%>%
+  simulated_svi_wui <- right_join(simulated_SVI_var, GEOID)%>%
     st_drop_geometry()
   weights<- c(1.25,.75,1.25,.75,.25,.25,.5,.25,1.25,.5,0,.5,0,.25,0,1.25,1.25)
   
   #NB: Reverse direction of HH income
-  new_wfsvi <- new_svi_wui%>%
-    rename_with( .fn = ~paste0(., '_rank'),.cols=as.character(names(new_svi_wui[,2:18])))%>%
+  simulated_wfsvi <- simulated_svi_wui%>%
+    rename_with( .fn = ~paste0(., '_rank'),.cols=as.character(names(simulated_svi_wui[,2:18])))%>%
     mutate(directional_median_hh_income_3_rank=-1*median_hh_income_3_rank,.keep="unused")%>%
     mutate(across(!GEOID,percent_rank))%>%
     mutate(overall_sum=
@@ -226,21 +226,26 @@ for (i in 1:n_iterations) {
              weights[16]*Gini_income_rank+                      ## Inequality measures
              weights[17]*Gini_education_rank,
            wfsvi=percent_rank(overall_sum))%>%
-    mutate(qualify=ifelse(wfsvi>=.75,1,0))
+    mutate(qualifying_cbg=ifelse(wfsvi>=.75,1,0))
   
   rm(var_1,var_2,var_3,var_4,var_5,var_6,var_7,var_8,var_9,var_10,var_11,var_12,var_13,var_14,var_15,var_16,var_17)
   
   # Count the number of times each row qualifies
-  qualify_counts <- ifelse(is.na(new_wfsvi$qualify), 0, qualify_counts + new_wfsvi$qualify)
+  qualify_counts <- ifelse(is.na(new_wfsvi$qualifying_cbg), 0, qualify_counts + new_wfsvi$qualifying_cbg)
   
 }
 
-wfsvi_j40$qualify_counts <- qualify_counts
-wfsvi_j40$percent_qualify <- (qualify_counts/n_iterations*100)%>%
+simulated_wfsvi$qualify_counts <- qualify_counts
+simulated_wfsvi$percent_qualify <- (qualify_counts/n_iterations*100)%>%
   round(1)
 
-#PLot the simulation results
-new_qualifying_cbg <- filter(wfsvi_j40, qualifying_cbg==1)
+## Attach geometries CBG geometries and convert to sf
+simulated_wfsvi_sf <- simulated_wfsvi%>%
+  as.data.frame()%>%
+  merge(., cbg_geo, by = 'GEOID', all.x=TRUE)%>%
+  st_as_sf()
+
+#Plot the simulation results
 ggplot()+
-  geom_sf(data = new_qualifying_cbg, aes(fill = percent_qualify), color = 'NA')
+  geom_sf(data = simulated_wfsvi_sf, aes(fill = percent_qualify), color = 'NA')
 
