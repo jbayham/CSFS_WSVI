@@ -1,15 +1,16 @@
 ### This script marks CBGs that contain at least some WUI.  Only these CBGs will be ranked in the WFSVI
 SVI_geo <- readRDS('Build/Cache/SVI_geo.rds')%>%
   st_as_sf()
+
 cbg_geo <- read_sf("Build/Cache/tl_2022_08_bg/tl_2022_08_bg.shp")%>%
   dplyr::select(GEOID)%>%
   filter(GEOID %in% SVI_geo$GEOID)#filter GEOIDs in the SVI data only.
 
 #Connect to the raster file
-wui_raster <- raster("Build/data/WUI.tif")
+#wui_raster <- raster("Build/Data/WUI.tif")
 
 # Convert the raster to a SpatRaster object and reproject
-wui_spat <- terra::rast(wui_raster)
+wui_spat <- terra::rast("Build/Data/WUI.tif")
 wui <- terra::project(wui_spat, terra::crs(SVI_geo))
 
 #reclassify zeros as NA
