@@ -6,12 +6,14 @@ svi_wui <- readRDS('Build/Output/svi_wui.rds')
 cbg_geo <- read_sf("Build/Cache/tl_2022_08_bg/tl_2022_08_bg.shp")%>%
   dplyr::select(GEOID)
 
-n_iterations <- 3# Set the number of iterations
+# Set parameters
+n_iterations <- 10
 qualify_counts <- numeric(nrow(svi_wui))# Initialize a vector to store the results
+wfsvi_statistics <- data.frame(matrix(NA, nrow = nrow(svi_wui), ncol = n_iterations))
 set.seed(20)
 
 # Run the simulation
-for (i in 1:n_iterations) {
+for (j in 1:n_iterations) {
   
   # Generate random data
   cbg_data <- DBI::dbConnect(SQLite(), dbname='Build/Cache/cbg_data.sqlite')
@@ -229,30 +231,41 @@ for (i in 1:n_iterations) {
            wfsvi=percent_rank(overall_sum))%>%
     mutate(qualifying_cbg=ifelse(wfsvi>=.75,1,0))%>%
     as.data.frame()
-  
-  rm(var_1,var_2,var_3,var_4,var_5,var_6,var_7,var_8,var_9,var_10,var_11,var_12,var_13,var_14,var_15,var_16,var_17)
-  
-  # Count the number of times each row qualifies
-  qualify_counts <- ifelse(is.na(simulated_wfsvi$qualifying_cbg), 0, qualify_counts + simulated_wfsvi$qualifying_cbg)
-  
+ 
+  qualify_counts <- ifelse(is.na(simulated_wfsvi$qualifying_cbg), 0, qualify_counts + simulated_wfsvi$qualifying_cbg)# Count the number of times each row qualifies
+  wfsvi_statistics[, j] <- simulated_wfsvi$wfsvi# Save the wfsvi values in a separate data frame
+  print(paste("Completed iteration", j, "of", n_iterations))# print progress
 }
+rm(var_1,var_2,var_3,var_4,var_5,var_6,var_7,var_8,var_9,var_10,var_11,var_12,var_13,var_14,var_15,var_16,var_17)
 
 ## Simulation results 
-
 wfsvi_j40$qualify_counts <- qualify_counts
 wfsvi_j40$percent_qualify <- (qualify_counts/n_iterations*100)%>%
   round(1)
 
 simulation_results <- select(wfsvi_j40, GEOID, wfsvi, Identified.as.disadvantaged, qualifying_cbg, percent_qualify)
-saveRDS(simulation_results,file='Build/Cache/simulation_results.rds')
 
-## Plot 
+## Confidence Intervals
+data <- wfsvi_statistics # define the dataframe with list of wfsvi from the simulation
 
-ggplot()+
-  geom_sf(data = simulation_results)
+# Define a function to calculate the row-wise confidence intervals
+calc_ci <- function(data, conf_level) {
+  n <- ncol(data)
+  row_means <- rowMeans(data)
+  row_sds <- apply(data, 1, sd)
+  std_err <- row_sds / sqrt(n)
+  z_star <- qnorm((1 + conf_level) / 2)
+  lower <- row_means - z_star * std_err
+  upper <- row_means + z_star * std_err
+  return(data.frame(simulated_wfsvi_mean = row_means, lower_ci = lower, upper_ci = upper))
+}
 
+# Calculate the row means and confidence intervals
+confidence_intervals <- calc_ci(data, conf_level = 0.95)
 
-rm(simulated_SVI_var, simulated_svi_wui, simulated_wfsvi, cbg_geo, wfsvi_j40, n_iterations, qualify_counts, weights, GEOID, svi_wui)
+final_simulated_results <- cbind(simulation_results, confidence_intervals)
+saveRDS(final_simulated_results,file='Build/Cache/final_simulated_results.rds')
 
+rm(simulated_SVI_var, simulated_svi_wui, simulated_wfsvi, cbg_geo, wfsvi_j40, n_iterations, qualify_counts, weights, GEOID, svi_wui,confidence_intervals, data, simulation_results, wfsvi_statistics)
 
 print('COMPLETE')
