@@ -6,7 +6,7 @@ svi_wui <- readRDS('Build/Output/svi_wui.rds')
 cbg_geo <- read_sf("Build/Cache/tl_2022_08_bg/tl_2022_08_bg.shp")%>%
   dplyr::select(GEOID)
 
-n_iterations <- 15# Set the number of iterations
+n_iterations <- 3# Set the number of iterations
 qualify_counts <- numeric(nrow(svi_wui))# Initialize a vector to store the results
 
 # Run the simulation
@@ -226,12 +226,14 @@ for (i in 1:n_iterations) {
              weights[16]*Gini_income_rank+                      ## Inequality measures
              weights[17]*Gini_education_rank,
            wfsvi=percent_rank(overall_sum))%>%
-    mutate(qualifying_cbg=ifelse(wfsvi>=.75,1,0))
+    mutate(qualifying_cbg=ifelse(wfsvi>=.75,1,0))%>%
+    as.data.frame()
   
   rm(var_1,var_2,var_3,var_4,var_5,var_6,var_7,var_8,var_9,var_10,var_11,var_12,var_13,var_14,var_15,var_16,var_17)
   
   # Count the number of times each row qualifies
   qualify_counts <- ifelse(is.na(simulated_wfsvi$qualifying_cbg), 0, qualify_counts + simulated_wfsvi$qualifying_cbg)
+  
   
 }
 
@@ -245,7 +247,13 @@ simulated_wfsvi_sf <- simulated_wfsvi%>%
   merge(., cbg_geo, by = 'GEOID', all.x=TRUE)%>%
   st_as_sf()
 
+
 #Plot the simulation results
 ggplot()+
   geom_sf(data = simulated_wfsvi_sf, aes(fill = percent_qualify), color = 'NA', alpha=0.5)
+
+
+
+
+
 
