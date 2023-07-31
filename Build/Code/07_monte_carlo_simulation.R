@@ -8,6 +8,7 @@ cbg_geo <- read_sf("Build/Cache/tl_2022_08_bg/tl_2022_08_bg.shp")%>%
 
 n_iterations <- 3# Set the number of iterations
 qualify_counts <- numeric(nrow(svi_wui))# Initialize a vector to store the results
+set.seed(20)
 
 # Run the simulation
 for (i in 1:n_iterations) {
@@ -234,26 +235,24 @@ for (i in 1:n_iterations) {
   # Count the number of times each row qualifies
   qualify_counts <- ifelse(is.na(simulated_wfsvi$qualifying_cbg), 0, qualify_counts + simulated_wfsvi$qualifying_cbg)
   
-  
 }
 
-simulated_wfsvi$qualify_counts <- qualify_counts
-simulated_wfsvi$percent_qualify <- (qualify_counts/n_iterations*100)%>%
+## Simulation results 
+
+wfsvi_j40$qualify_counts <- qualify_counts
+wfsvi_j40$percent_qualify <- (qualify_counts/n_iterations*100)%>%
   round(1)
 
-## Attach geometries CBG geometries and convert to sf
-simulated_wfsvi_sf <- simulated_wfsvi%>%
-  as.data.frame()%>%
-  merge(., cbg_geo, by = 'GEOID', all.x=TRUE)%>%
-  st_as_sf()
+simulation_results <- select(wfsvi_j40, GEOID, wfsvi, Identified.as.disadvantaged, qualifying_cbg, percent_qualify)
+saveRDS(simulation_results,file='Build/Cache/simulation_results.rds')
 
+## Plot 
 
-#Plot the simulation results
 ggplot()+
-  geom_sf(data = simulated_wfsvi_sf, aes(fill = percent_qualify), color = 'NA', alpha=0.5)
+  geom_sf(data = simulation_results)
 
 
+rm(simulated_SVI_var, simulated_svi_wui, simulated_wfsvi, cbg_geo, wfsvi_j40, n_iterations, qualify_counts, weights, GEOID, svi_wui)
 
 
-
-
+print('COMPLETE')
