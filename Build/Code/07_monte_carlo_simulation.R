@@ -7,7 +7,7 @@ cbg_geo <- read_sf("Build/Cache/tl_2022_08_bg/tl_2022_08_bg.shp")%>%
   dplyr::select(GEOID)
 
 # Set parameters
-n_iterations <- 10
+n_iterations <- 1000
 qualify_counts <- numeric(nrow(svi_wui))# Initialize a vector to store the results
 wfsvi_statistics <- data.frame(matrix(NA, nrow = nrow(svi_wui), ncol = n_iterations))
 set.seed(20)
