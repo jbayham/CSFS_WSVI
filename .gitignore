@@ -4,6 +4,7 @@
 .Ruserdata
 /Build/Cache/
 /Build/Data/
+/Build/Output/
 /*.sqlite
 /*.html
 /*.RData
