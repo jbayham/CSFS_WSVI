@@ -12,92 +12,96 @@ qualify_counts <- numeric(nrow(svi_wui))# Initialize a vector to store the resul
 wfsvi_statistics <- data.frame(matrix(NA, nrow = nrow(svi_wui), ncol = n_iterations))
 set.seed(20)
 
-# Run the simulation
-for (j in 1:n_iterations) {
+#Build tables for sampling
+cbg_data <- DBI::dbConnect(SQLite(), dbname='Build/Cache/cbg_data.sqlite')
+tab_shell <- vector("list",17)
+tab_shell <- map(1:17,function(x){
+  if(x<=15){
+    temp_tab <- tbl(cbg_data,paste0("var_",x,"_cbg_data")) %>%
+      collect()
+  } else {
+    temp_tab <- tbl(cbg_data,paste0("var_",x,"_cbg_data_gini")) %>%
+      collect()
+  }
   
+  return(temp_tab)
+  })
+
+dbDisconnect(cbg_data)
+
+if(!dir.exists("Build/Cache/sims")) dir.create("Build/Cache/sims")
+
+# Run the simulation
+#for (j in 1:n_iterations) {
+plan(multisession(workers = 10))
+future_walk(c(1:n_iterations),
+           function(x){
+             
+  set.seed(x)
   # Generate random data
-  cbg_data <- DBI::dbConnect(SQLite(), dbname='Build/Cache/cbg_data.sqlite')
-  var_1 <-tbl(cbg_data,"var_1_cbg_data")%>%
-    as.data.frame()%>%
+  var_1 <-tab_shell[[1]] %>%
     mutate(simulated = abs((rnorm(n(), mean = estimate, sd=(moe/1.645)))))%>%
     dplyr::select(GEOID, variable, simulated)%>%#select relevant var
     pivot_wider(names_from = variable, values_from = simulated)%>%#convert from long to wide farmat
     mutate(poverty_percent_below_1=(C17002_002+C17002_003)/C17002_001)%>%#calculate % of pop below 1
     dplyr::select(GEOID,poverty_percent_below_1)
   
-    var_2 <- tbl(cbg_data, 'var_2_cbg_data')%>%
-    as.data.frame()%>%
+  var_2 <- tab_shell[[2]]%>%
     mutate(simulated = abs((rnorm(n(), mean = estimate, sd=(moe/1.645)))))%>%
     dplyr::select(GEOID, variable, simulated)%>%#select relevant var
     pivot_wider(names_from = variable, values_from = simulated)%>%
     mutate(civ_labor_force_unemployed_percent_2=B23025_005/B23025_003)%>%
     dplyr::select(GEOID,civ_labor_force_unemployed_percent_2)
   
-  var_3 <- tbl(cbg_data, 'var_3_cbg_data')%>%
-    as.data.frame()%>%
+  var_3 <- tab_shell[[3]]%>%
     mutate(simulated = abs((rnorm(n(), mean = estimate, sd=(moe/1.645)))))%>%
     dplyr::select(GEOID, variable, simulated)%>%#select relevant var
     pivot_wider(names_from = variable, values_from = simulated)%>%
     rename(median_hh_income_3 = B19013_001)
   
-  var_4 <- tbl(cbg_data, 'var_4_cbg_data')%>%
-    as.data.frame()%>%
+  var_4 <- tab_shell[[4]]%>%
     mutate(simulated = abs((rnorm(n(), mean = estimate, sd=(moe/1.645)))))%>%
     dplyr::select(GEOID, variable, simulated)%>%#select relevant var
     pivot_wider(names_from = variable, values_from = simulated)%>%
     mutate(no_hs_degree_percent_4=(B15003_002+B15003_003+B15003_004+B15003_005+B15003_006+B15003_007+B15003_008+B15003_009+B15003_010+B15003_011+B15003_012+B15003_013+B15003_014+B15003_015+B15003_016)/B15003_001)%>%
     dplyr::select(GEOID,no_hs_degree_percent_4)
   
-  var_5 <- tbl(cbg_data, 'var_5_cbg_data')%>%
-    as.data.frame()%>%
+  var_5 <- tab_shell[[5]]%>%
     mutate(simulated = abs((rnorm(n(), mean = estimate, sd=(moe/1.645)))))%>%
     dplyr::select(GEOID, variable, simulated)%>%#select relevant var
     pivot_wider(names_from = variable, values_from = simulated)%>%
     mutate(over_65_percent_5=(B01001_020+B01001_021+B01001_022+B01001_023+B01001_024+B01001_025+B01001_044+B01001_045+B01001_046+B01001_047+B01001_048+B01001_049)/B01001_001)%>%
     dplyr::select(GEOID,over_65_percent_5)
   
-  var_5 <- tbl(cbg_data, 'var_5_cbg_data')%>%
-    as.data.frame()%>%
-    mutate(simulated = abs((rnorm(n(), mean = estimate, sd=(moe/1.645)))))%>%
-    dplyr::select(GEOID, variable, simulated)%>%#select relevant var
-    pivot_wider(names_from = variable, values_from = simulated)%>%
-    mutate(over_65_percent_5=(B01001_020+B01001_021+B01001_022+B01001_023+B01001_024+B01001_025+B01001_044+B01001_045+B01001_046+B01001_047+B01001_048+B01001_049)/B01001_001)%>%
-    dplyr::select(GEOID,over_65_percent_5)
-  
-  var_6 <- tbl(cbg_data, 'var_6_cbg_data')%>%
-    as.data.frame()%>%
+  var_6 <- tab_shell[[6]]%>%
     mutate(simulated = abs((rnorm(n(), mean = estimate, sd=(moe/1.645)))))%>%
     dplyr::select(GEOID, variable, simulated)%>%#select relevant var
     pivot_wider(names_from = variable, values_from = simulated)%>%
     mutate(under_18_percent_6=(B01001_003+B01001_004+B01001_005+B01001_006+B01001_027+B01001_028+B01001_029+B01001_030)/B01001_001)%>%
     dplyr::select(GEOID, under_18_percent_6)
   
-  var_7 <- tbl(cbg_data, 'var_7_cbg_data')%>%
-    as.data.frame()%>%
+  var_7 <- tab_shell[[7]]%>%
     mutate(simulated = abs((rnorm(n(), mean = estimate, sd=(moe/1.645)))))%>%
     dplyr::select(GEOID, variable, simulated)%>%#select relevant var
     pivot_wider(names_from = variable, values_from = simulated)%>%
     mutate(disabled_adult_percent_7=(C21007_005+C21007_008+C21007_012+C21007_015+C21007_020+C21007_023+C21007_027+C21007_030)/C21007_001)%>%
     dplyr::select(GEOID,disabled_adult_percent_7)
   
-  var_8 <- tbl(cbg_data, 'var_8_cbg_data')%>%
-    as.data.frame()%>%
+  var_8 <- tab_shell[[8]]%>%
     mutate(simulated = abs((rnorm(n(), mean = estimate, sd=(moe/1.645)))))%>%
     dplyr::select(GEOID, variable, simulated)%>%#select relevant var
     pivot_wider(names_from = variable, values_from = simulated)%>%
     mutate(single_householder_percent_8=(B23007_021+B23007_026)/B23007_001)%>%
     dplyr::select(GEOID,single_householder_percent_8)
   
-  var_9 <- tbl(cbg_data, 'var_9_cbg_data')%>%
-    as.data.frame()%>%
+  var_9 <- tab_shell[[9]]%>%
     mutate(simulated = abs((rnorm(n(), mean = estimate, sd=(moe/1.645)))))%>%
     dplyr::select(GEOID, variable, simulated)%>%#select relevant var
     pivot_wider(names_from = variable, values_from = simulated)%>%
     mutate(percent_minority_9=(B02001_001-B02001_002+B03002_013)/B02001_001)%>%
     dplyr::select(GEOID,percent_minority_9)
   
-  var_10 <- tbl(cbg_data, 'var_10_cbg_data')%>%
-    as.data.frame()%>%
+  var_10 <- tab_shell[[10]]%>%
     mutate(simulated = abs((rnorm(n(), mean = estimate, sd=(moe/1.645)))))%>%
     dplyr::select(GEOID, variable, simulated)%>%#select relevant var
     pivot_wider(names_from = variable, values_from = simulated)%>%
@@ -105,51 +109,46 @@ for (j in 1:n_iterations) {
                               B16004_039+B16004_040+B16004_044+B16004_045+B16004_051+B16004_052+B16004_056+B16004_057+B16004_061+B16004_062+B16004_066+B16004_067)/B16004_001)%>%
     dplyr::select(GEOID,eng_proficiency)
   
-  var_11 <- tbl(cbg_data, 'var_11_cbg_data')%>%
-    as.data.frame()%>%
+  var_11 <- tab_shell[[11]]%>%
     mutate(simulated = abs((rnorm(n(), mean = estimate, sd=(moe/1.645)))))%>%
     dplyr::select(GEOID, variable, simulated)%>%#select relevant var
     pivot_wider(names_from = variable, values_from = simulated)%>%
     mutate(over_10=(B25024_007+B25024_008+B25024_009)/B25024_001)%>%
     dplyr::select(GEOID,over_10)
   
-  var_12 <- tbl(cbg_data, 'var_12_cbg_data')%>%
-    as.data.frame()%>%
+  var_12 <- tab_shell[[12]]%>%
     mutate(simulated = abs((rnorm(n(), mean = estimate, sd=(moe/1.645)))))%>%
     dplyr::select(GEOID, variable, simulated)%>%#select relevant var
     pivot_wider(names_from = variable, values_from = simulated)%>%
     mutate(mobile_units= B25024_010/B25024_001)%>%
     dplyr::select(GEOID, mobile_units)
   
-  var_13 <- tbl(cbg_data, 'var_13_cbg_data')%>%
-    as.data.frame()%>%
+  var_13 <- tab_shell[[13]]%>%
     mutate(simulated = abs((rnorm(n(), mean = estimate, sd=(moe/1.645)))))%>%
     dplyr::select(GEOID, variable, simulated)%>%#select relevant var
     pivot_wider(names_from = variable, values_from = simulated)%>%
     mutate(over_1_person_room_percent_13=(B25014_001-B25014_003-B25014_004-B25014_009-B25014_010)/B25014_001)%>%
     dplyr::select(GEOID,over_1_person_room_percent_13)
   
-  var_14 <- tbl(cbg_data, 'var_14_cbg_data')%>%
-    as.data.frame()%>%
+  var_14 <- tab_shell[[14]]%>%
     mutate(simulated = abs((rnorm(n(), mean = estimate, sd=(moe/1.645)))))%>%
     dplyr::select(GEOID, variable, simulated)%>%#select relevant var
     pivot_wider(names_from = variable, values_from = simulated)%>%
     mutate(no_vehicle_percent_14=(B25044_003+B25044_010)/B25044_001)%>%
     dplyr::select(GEOID,no_vehicle_percent_14)
   
-  var_15 <- tbl(cbg_data, 'var_15_cbg_data')%>%
-    as.data.frame()%>%
+  var_15 <- tab_shell[[15]]%>%
     mutate(simulated = abs((rnorm(n(), mean = estimate, sd=(moe/1.645)))))%>%
     dplyr::select(GEOID, variable, simulated)%>%#select relevant var
     pivot_wider(names_from = variable, values_from = simulated)%>%
     mutate(group_quarters_percent_15 = B09019_026/B09019_001)%>%
     dplyr::select(GEOID,group_quarters_percent_15)
   
-  var_16_data <- tbl(cbg_data, "var_16_cbg_data_gini")%>%
-    as.data.frame()%>%
+  var_16_data <- tab_shell[[16]]%>%
     mutate(simulated = abs((rnorm(n(), mean = estimate, sd=(moe/1.645)))))%>%
     dplyr::select(GEOID, variable, simulated)%>%#select relevant var
     pivot_wider(names_from = variable, values_from = simulated)
+  
   #calculate GINI coefficient
   var_16 <- select(var_16_data, GEOID)# Create an empty vector to store the Gini coefficients
   gini_coefficients <- numeric(nrow(var_16_data))
@@ -160,8 +159,7 @@ for (j in 1:n_iterations) {
   var_16$Gini_income <- gini_coefficients# Add the Gini coefficients as a new column
   rm(var_16_data)
   
-  var_17_data <- tbl(cbg_data, "var_17_cbg_data_gini")%>%
-    as.data.frame()%>%
+  var_17_data <- tab_shell[[17]]%>%
     mutate(simulated = abs((rnorm(n(), mean = estimate, sd=(moe/1.645)))))%>%
     dplyr::select(GEOID, variable, simulated)%>%#select relevant var
     pivot_wider(names_from = variable, values_from = simulated)
@@ -173,8 +171,8 @@ for (j in 1:n_iterations) {
     gini_coefficients[i] <- Gini(as.vector(unlist(var_17_data[i, -1])))
   }
   var_17$Gini_education <- gini_coefficients# Add the Gini coefficients as a new column
-  dbDisconnect(cbg_data)
-  rm(var_17_data, cbg_data, gini_coefficients, i)
+  
+  rm(var_17_data, gini_coefficients, i)
   
   simulated_SVI_var<-var_1%>%
     left_join(.,var_2)%>%
@@ -194,22 +192,16 @@ for (j in 1:n_iterations) {
     left_join(.,var_16)%>%
     left_join(.,var_17)
   
-  # Analyze the data
-  # CBG found to have wui. 
-  GEOID <- svi_wui%>%
-    left_join(., cbg_geo)%>%
-    st_as_sf()%>%
-    dplyr::select(GEOID)
+
+  simulated_svi_wui <- inner_join(simulated_SVI_var, select(svi_wui,GEOID))
   
-  simulated_svi_wui <- right_join(simulated_SVI_var, GEOID)%>%
-    st_drop_geometry()
-  weights<- c(1.25,.75,1.25,.75,.25,.25,.5,.25,1.25,.5,0,.5,0,.25,0,1.25,1.25)
+  weights<- c(.122,.0731,.122,.0731,.0244,.0244,.0244,.0244,.122,.0488,0,.0488,0,.0244,0,.122,.122)
   
   #NB: Reverse direction of HH income
   simulated_wfsvi <- simulated_svi_wui%>%
     rename_with( .fn = ~paste0(., '_rank'),.cols=as.character(names(simulated_svi_wui[,2:18])))%>%
     mutate(directional_median_hh_income_3_rank=-1*median_hh_income_3_rank,.keep="unused")%>%
-    mutate(across(!GEOID,percent_rank))%>%
+    mutate(across(-GEOID,percent_rank))%>%
     mutate(overall_sum=
              weights[1]*poverty_percent_below_1_rank+##Socioeconomic
              weights[2]*civ_labor_force_unemployed_percent_2_rank+
@@ -229,43 +221,33 @@ for (j in 1:n_iterations) {
              weights[16]*Gini_income_rank+                      ## Inequality measures
              weights[17]*Gini_education_rank,
            wfsvi=percent_rank(overall_sum))%>%
-    mutate(qualifying_cbg=ifelse(wfsvi>=.75,1,0))%>%
-    as.data.frame()
+    mutate(qualifying_cbg=ifelse(wfsvi>=.75,1,0),
+           run=x)%>%
+    select(GEOID,wfsvi,qualifying_cbg,run)
  
-  qualify_counts <- ifelse(is.na(simulated_wfsvi$qualifying_cbg), 0, qualify_counts + simulated_wfsvi$qualifying_cbg)# Count the number of times each row qualifies
-  wfsvi_statistics[, j] <- simulated_wfsvi$wfsvi# Save the wfsvi values in a separate data frame
-  print(paste("Completed iteration", j, "of", n_iterations))# print progress
-}
-rm(var_1,var_2,var_3,var_4,var_5,var_6,var_7,var_8,var_9,var_10,var_11,var_12,var_13,var_14,var_15,var_16,var_17)
+  #return(simulated_wfsvi)
+  saveRDS(simulated_wfsvi,paste0("Build/Cache/sims/run_",x,".rds"))
+  #qualify_counts <- ifelse(is.na(simulated_wfsvi$qualifying_cbg), 0, qualify_counts + simulated_wfsvi$qualifying_cbg)# Count the number of times each row qualifies
+  #wfsvi_statistics[, j] <- simulated_wfsvi$wfsvi# Save the wfsvi values in a separate data frame
+  #print(paste("Completed iteration", j, "of", n_iterations))# print progress
+},.progress = TRUE) 
+
+#Read all cached simulations
+sim_results <- list.files("Build/Cache/sims",pattern = ".rds",full.names = T) %>%
+  map_dfr(readRDS) %>%
+  mutate(qualifying_cbg = ifelse(is.na(qualifying_cbg) | is.nan(qualifying_cbg),0,qualifying_cbg))
+
 
 ## Simulation results 
-wfsvi_j40$qualify_counts <- qualify_counts
-wfsvi_j40$percent_qualify <- (qualify_counts/n_iterations*100)%>%
-  round(1)
+sim_results_summary <- sim_results %>%
+  group_by(GEOID) %>%
+  summarize(percent_qualify = sum(qualifying_cbg)/n_distinct(run),
+            wfsvi_mean = mean(wfsvi,na.rm=T),
+            wfsvi_l95 = stats::quantile(wfsvi,probs = .05,na.rm = T),
+            wfsvi_u95 = stats::quantile(wfsvi,probs = .95,na.rm = T))
 
-simulation_results <- select(wfsvi_j40, GEOID, wfsvi, Identified.as.disadvantaged, qualifying_cbg, percent_qualify)
 
-## Confidence Intervals
-data <- wfsvi_statistics # define the dataframe with list of wfsvi from the simulation
+saveRDS(sim_results_summary,file='Build/Cache/final_simulated_results.rds')
 
-# Define a function to calculate the row-wise confidence intervals
-calc_ci <- function(data, conf_level) {
-  n <- ncol(data)
-  row_means <- rowMeans(data)
-  row_sds <- apply(data, 1, sd)
-  std_err <- row_sds / sqrt(n)
-  z_star <- qnorm((1 + conf_level) / 2)
-  lower <- row_means - z_star * std_err
-  upper <- row_means + z_star * std_err
-  return(data.frame(simulated_wfsvi_mean = row_means, lower_ci = lower, upper_ci = upper))
-}
-
-# Calculate the row means and confidence intervals
-confidence_intervals <- calc_ci(data, conf_level = 0.95)
-
-final_simulated_results <- cbind(simulation_results, confidence_intervals)
-saveRDS(final_simulated_results,file='Build/Cache/final_simulated_results.rds')
-
-rm(simulated_SVI_var, simulated_svi_wui, simulated_wfsvi, cbg_geo, wfsvi_j40, n_iterations, qualify_counts, weights, GEOID, svi_wui,confidence_intervals, data, simulation_results, wfsvi_statistics)
 
 print('COMPLETE')
