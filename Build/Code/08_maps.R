@@ -1,12 +1,16 @@
 #This script generates the interactive map to display the layer
 
 #Read data
+sim_results <- readRDS("Build/Cache/final_simulated_results.rds") 
+
 wfsvi_j40 <- readRDS('Build/Output/wfsvi_j40.rds') %>%
   st_transform(4326) %>%
   mutate(q_indicator=ifelse(qualifying_cbg==1,"Qualifying","Not Qualifying"),
-         across(c(poverty_percent_below_1_rank:wfsvi),~round(.,digits = 2)))
+         across(c(poverty_percent_below_1_rank:wfsvi),~round(.,digits = 2))) %>%
+  #inner_join(select(sim_results,GEOID,percent_qualify)) 
+  inner_join(sim_results) 
 
-sim_results <- readRDS("Build/Cache/simulation_results.rds")
+
 
 #Set color scale
 color_scale <- colorFactor(palette = "viridis",domain = c("Qualifying","Not Qualifying"))
@@ -26,7 +30,7 @@ map <- map %>%
               weight = 1,
               popup = ~paste0("<b>Block Group ID:</b> ", GEOID,
                               "<br><b>WFSVI:</b> ", wfsvi,
-                              "<br><b>Qualifying Frequency:</b> ", "placeholder",
+                              "<br><b>Qualifying Frequency:</b> ", percent(percent_qualify,accuracy=1),
                               "<br><b>J40 Qualifying:</b> ", Identified.as.disadvantaged,
                               "<br><b>Poverty (12%):</b> ", poverty_percent_below_1_rank,
                               "<br><b>Unemployed (7%):</b> ", civ_labor_force_unemployed_percent_2_rank,
@@ -50,9 +54,10 @@ map <- map %>%
     overlayGroups = c("qualifying"),
     options = layersControlOptions(collapsed = TRUE)
   )
+map
 ###########################
 
-mapshot(map,url="docs/WFSVI_2021.html")
+mapshot(map,url="docs/WFSVI_2023.html")
 
 #Notes for map:
 #- the categories in the popup window correspond to the index components described here: original report doc
