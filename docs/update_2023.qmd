@@ -9,17 +9,15 @@ format:
 
 ## Introduction
 
-In 2020, our research team at Colorado State University developed the [Wildfire Social Vulnerability Index](https://jbayham.github.io/CSFS_WSVI/report.html) (WFSVI) in order to set a criteria for reduced match for the Forest Restoration & Wildfire Risk Mitigation (FRWRM) Grant. This report describes updates to the WFSVI including updated data, alignment with the federal [Justice 40](https://screeningtool.geoplatform.gov/en/#3/33.47/-97.5) initiative, and further analysis of the WFSVI and reduced match criteria. 
+In 2020, our research team at Colorado State University developed the [Wildfire Social Vulnerability Index](https://jbayham.github.io/CSFS_WSVI/report.html) (WFSVI) in order to set a criteria for reduced match for the Forest Restoration & Wildfire Risk Mitigation (FRWRM) Grant. This report describes updates to the WFSVI including updated data from the US Census, alignment with the federal [Justice 40](https://screeningtool.geoplatform.gov/en/#3/33.47/-97.5) initiative, and further analysis of the WFSVI and reduced match criteria. 
 
 
 
 ## American Community Survey Update
 
-Previously, the data was downloaded as CSV files from [Safegraph](https://www.safegraph.com/free-data/open-census-data). A new script named 01_get_data uses the tidy-census package to download data directly from the [American Community Survey](https://data.census.gov/) (ACS). The script downloads data for the Census Block Group (CBG) and census tract, then calculates the respective variables for both geographies. The census tract values will fill in any missing block group values. The script then filters out CBGs that have a total population of zero. Any other remaining missing values will be imputed using the missForest package.
+The original WFSVI was built using 5-year (2016 - 2020) [American Community Survey](https://data.census.gov/) (ACS) estimates. We have updated the WFSVI using the most current 5-year (2017-2021) ACS data. In some cases, no data is reported for a census block group because of poor response to the ACS or insufficient sample size to meet data disclosure requirements.  We use two methods to impute missing values.  First, if the data is reported at the census tract^[Multiple block groups are [nested within tracts](https://www2.census.gov/geo/pdfs/reference/geodiagram.pdf).], we use the census tract data to fill any missing records. While these data may be less spatially accurate, they represent the next best estimate of the block group value.  Second, we use a machine learning imputation model to complete missing records when tract level information is unavailable. The machine learning method is known as random forest and is implemented via [missForest](https://github.com/stekhoven/missForest) package in R. The random forest method uses nonmissing data for one variable to train a model based on other nonmissing variables from other block groups around the state and uses that model to estimate missing values. It applies this procedure to each variable and iteratively updates until the model converges on its best estimate (see the [package documentation](https://github.com/stekhoven/missForest) for more information).  
 
-When downloading ACS data, the user can redefine the variable for the year. This allows them to download data for any year they want. The process is now automated, allowing users to run all scripts with data for any year.
-
-We also added another script, 07_monte_carlo_simulation.R, which generates data using the estimates and margin of errors downloaded from ACS. It calculates the wfsvi for each CBG containing WUI and then records the times each CBG qualifies per a given number of iterations. Estimates from ACS are used as means, and the margins of errors are used to calculate the standard deviation. We assume that the ACS data is normally distributed. Given the data distribution, the simulation process identifies CBGs that qualify but otherwise would be less likely to qualify. 
+The original WFSVI used ACS data but sourced the data from [Safegraph](https://www.safegraph.com/free-data/open-census-data). While the data was accurate, it was less accessible and relied on analysts at SafeGraph to update the data when the Census released new data. We have rebuilt the code to access the Census Application Programming Interface (API) via the [tidycensus](https://walker-data.com/tidycensus/) package. The [code](https://github.com/jbayham/CSFS_WSVI/blob/master/Build/Code/01_get_data.R) now downloads data for the Census Block Groups (CBG) and Census Tracts, then calculates the index component for both geographies using tract information to fill in missing block group information. The user can now define the year from which to query census data, making the layer easy to update in the future.
 
 
 ## Justice 40
@@ -29,9 +27,16 @@ We also added another script, 07_monte_carlo_simulation.R, which generates data 
 We collect data from the [Council on Environmental Quality](https://screeningtool.geoplatform.gov/en/downloads). The WFSVI is constructed at the Census Block Group (CBG), while the CEJST is constructed at the Census Tract (comprised of CBGs). The CEJST contains a binary indicator for every Census Tract that determines whether it is considered "disadvantaged." We consider any disadvantaged Census Tract to qualify for reduced match. 
 
 
+## Analysis
+
+Data from the ACS is sampled with uncertainty. We develop a method to investigate how the uncertainty affects the qualifying classification of a particular block group. A margin of error is reported for each variable (component of the WFSVI) in each block group. We use the margin of error to estimate the standard deviation of the reported estimate.  We define a normal sampling distribution with the estimate as the mean and its standard deviation for each census variable for each block group. We then conduct a Monte Carlo simulation by sampling values from each distribution and recomputing the WFSVI. We run 1000 simulations and calculate the fraction of simulations that a block group qualifies based on its WFSVI above the 75th percentile cutoff. For example, a block group may qualify for reduced match in every one of the 1000 simulations indicating strong confidence that that block group indeed should qualify. In contrast, a block group that only qualifies 50% of the time suggests less confidence that it should qualify. The simulation is conducted in the script [07_monte_carlo_simulation.R](https://github.com/jbayham/CSFS_WSVI/blob/master/Build/Code/07_monte_carlo_simulation.R).
+
+
 ## Comparison Map
 
 This section presents a map to compare the original WFSVI (2020) to the updated version (2023).
+
+<iframe src="https://jbayham.github.io/CSFS_WSVI/WFSVI_2021.html"></iframe>
 
 Jude to build map
 
