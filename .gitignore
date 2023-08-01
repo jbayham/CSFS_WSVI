@@ -9,3 +9,6 @@
 /*.html
 /*.RData
 TESTS
+
+
+*.DS_Store
