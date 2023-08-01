@@ -1,4 +1,6 @@
+#This script generates the interactive map to display the layer
 
+#Read data
 wfsvi_j40 <- readRDS('Build/Output/wfsvi_j40.rds') %>%
   st_transform(4326) %>%
   mutate(q_indicator=ifelse(qualifying_cbg==1,"Qualifying","Not Qualifying"),
@@ -6,16 +8,10 @@ wfsvi_j40 <- readRDS('Build/Output/wfsvi_j40.rds') %>%
 
 sim_results <- readRDS("Build/Cache/simulation_results.rds")
 
-#sample for testing
-#mapview::mapview(slice_sample(wfsvi_j40,n=200),zcol="qualifying_cbg")
-
-#mapview::mapview(wfsvi_j40,zcol="qualifying_cbg")
-
-library(leaflet)
-library(scales)
-
+#Set color scale
 color_scale <- colorFactor(palette = "viridis",domain = c("Qualifying","Not Qualifying"))
 
+#################
 # Create the map
 map <- leaflet(data = slice_sample(wfsvi_j40,n=200)) %>%
   addTiles() %>%
@@ -30,6 +26,7 @@ map <- map %>%
               weight = 1,
               popup = ~paste0("<b>Block Group ID:</b> ", GEOID,
                               "<br><b>WFSVI:</b> ", wfsvi,
+                              "<br><b>Qualifying Frequency:</b> ", "placeholder",
                               "<br><b>J40 Qualifying:</b> ", Identified.as.disadvantaged,
                               "<br><b>Poverty (12%):</b> ", poverty_percent_below_1_rank,
                               "<br><b>Unemployed (7%):</b> ", civ_labor_force_unemployed_percent_2_rank,
@@ -46,14 +43,16 @@ map <- map %>%
                               "<br><b>Income Inequality (12%):</b> ", Gini_income_rank,
                               "<br><b>Education Inequality (12%):</b> ", Gini_education_rank))
 
-map %>%
+map <- map %>%
   addLegend("bottomright", pal = color_scale, values = c("Qualifying","Not Qualifying"),
             title = NULL) %>%
   addLayersControl(
-    #baseGroups = c("OpenStreetMap.Mapnik", "Stamen.Toner"),
     overlayGroups = c("qualifying"),
     options = layersControlOptions(collapsed = TRUE)
   )
+###########################
+
+mapshot(map,url="docs/WFSVI_2021.html")
 
 #Notes for map:
 #- the categories in the popup window correspond to the index components described here: original report doc

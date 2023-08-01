@@ -9,7 +9,7 @@ if (!require(pacman)) {
 
 # List of packages needed
 p_load("tidyverse", "raster", "data.table", "purrr", "furrr", "conflicted",  "lubridate", "units",  "sf", "tidycensus", 
-       "ineq","terra","exactextractr", "missForest", "RSQLite", install= F)
+       "ineq","terra","exactextractr", "missForest", "RSQLite","mapview","leaflet","scales", install= F)
 
 # declare preference when there are conflicts
 conflict_prefer("select","dplyr")

@@ -7,7 +7,7 @@ cbg_geo <- read_sf("Build/Cache/tl_2022_08_bg/tl_2022_08_bg.shp")%>%
   dplyr::select(GEOID)%>%
   filter(GEOID %in% svi_wui$GEOID) 
 
-weights<- c(1.25,.75,1.25,.75,.25,.25,.5,.25,1.25,.5,0,.5,0,.25,0,1.25,1.25)
+weights<- c(.122,.731,.122,.731,.0244,.0244,.0244,.0244,.122,.0488,0,.0488,0,.0244,0,.122,.122)
 
 #NB: Reverse direction of HH income
 wfsvi <- svi_wui%>%
