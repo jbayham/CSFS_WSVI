@@ -5,6 +5,7 @@ format:
   html:
       toc: TRUE
       embed-resources: true
+      page-layout: full
 ---
 
 ## Introduction
@@ -32,26 +33,84 @@ We collect data from the [Council on Environmental Quality](https://screeningtoo
 Data from the ACS is sampled with uncertainty. We develop a method to investigate how the uncertainty affects the qualifying classification of a particular block group. A margin of error is reported for each variable (component of the WFSVI) in each block group. We use the margin of error to estimate the standard deviation of the reported estimate.  We define a normal sampling distribution with the estimate as the mean and its standard deviation for each census variable for each block group. We then conduct a Monte Carlo simulation by sampling values from each distribution and recomputing the WFSVI. We run 1000 simulations and calculate the fraction of simulations that a block group qualifies based on its WFSVI above the 75th percentile cutoff. For example, a block group may qualify for reduced match in every one of the 1000 simulations indicating strong confidence that that block group indeed should qualify. In contrast, a block group that only qualifies 50% of the time suggests less confidence that it should qualify. The simulation is conducted in the script [07_monte_carlo_simulation.R](https://github.com/jbayham/CSFS_WSVI/blob/master/Build/Code/07_monte_carlo_simulation.R).
 
 
-## Comparison Map
+## Updated WFSVI Layer
 
-This section presents a map to compare the original WFSVI (2020) to the updated version (2023).
-
-<iframe src="https://jbayham.github.io/CSFS_WSVI/WFSVI_2021.html"></iframe>
-
-Jude to build map
-
-Some narrative
+```{r}
+#| echo: false
+#| fig-height: 8
 
 
-## Other Changes
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(sf,quietly = T))
+suppressPackageStartupMessages(library(leaflet,quietly = T))
+suppressPackageStartupMessages(library(scales,quietly = T))
 
-All the necessary data files and geometries/shape files,  except the WUI layer,  will now be downloaded automatically. This process can only be done once when the user runs the scripts for the first time. The script, 00_download_geometries, will download the necessary shapefile and unzip them into the cache directory. However, the WUI layer must be added manually in Tiff format. 
+#Read data
+sim_results <- readRDS("../Build/Cache/final_simulated_results.rds") 
+
+wfsvi_j40 <- readRDS('../Build/Output/wfsvi_j40.rds') %>%
+  st_transform(4326) %>%
+  mutate(q_indicator=ifelse(qualifying_cbg==1,"Qualifying","Not Qualifying"),
+         across(c(poverty_percent_below_1_rank:wfsvi),~round(.,digits = 2))) %>%
+  #inner_join(select(sim_results,GEOID,percent_qualify)) 
+  inner_join(sim_results,by = "GEOID") 
+
+
+
+#Set color scale
+color_scale <- colorFactor(palette = "viridis",domain = c("Qualifying","Not Qualifying"))
+
+#################
+# Create the map
+#map <- leaflet(data = slice_sample(wfsvi_j40,n=200)) %>%
+map <- leaflet(data = wfsvi_j40) %>%
+  addTiles() %>%
+  setView(lng = -105.5509, lat = 39.5501, zoom = 7)  # Set initial map view to Colorado
+
+# Add census block groups as polygons
+map <- map %>%
+  addPolygons(group = "qualifying",
+              fillColor = ~color_scale(q_indicator), 
+              fillOpacity = 0.4,
+              color = "white", 
+              weight = 1,
+              popup = ~paste0("<b>Block Group ID:</b> ", GEOID,
+                              "<br><b>WFSVI:</b> ", wfsvi,
+                              "<br><b>Qualifying Frequency:</b> ", percent(percent_qualify,accuracy=1),
+                              "<br><b>J40 Qualifying:</b> ", Identified.as.disadvantaged,
+                              "<br><b>Poverty (12%):</b> ", poverty_percent_below_1_rank,
+                              "<br><b>Unemployed (7%):</b> ", civ_labor_force_unemployed_percent_2_rank,
+                              "<br><b>Household Income (12%):</b> ", directional_median_hh_income_3_rank,
+                              "<br><b>Education (7%):</b> ", no_hs_degree_percent_4_rank,
+                              "<br><b>Over 65 (2%):</b> ", over_65_percent_5_rank,
+                              "<br><b>Under 18 (2%):</b> ", under_18_percent_6_rank,
+                              "<br><b>Disability (2%):</b> ", disabled_adult_percent_7_rank,
+                              "<br><b>Single-parent Family (2%):</b> ", single_householder_percent_8_rank,
+                              "<br><b>Minority (12%):</b> ", percent_minority_9_rank,
+                              "<br><b>English-speaking (5%):</b> ", eng_proficiency_rank,
+                              "<br><b>Mobile Housing (5%):</b> ", mobile_units_rank,
+                              "<br><b>No Vehicle (2%):</b> ", no_vehicle_percent_14_rank,
+                              "<br><b>Income Inequality (12%):</b> ", Gini_income_rank,
+                              "<br><b>Education Inequality (12%):</b> ", Gini_education_rank))
+
+map <- map %>%
+  addLegend("bottomright", pal = color_scale, values = c("Qualifying","Not Qualifying"),
+            title = NULL) %>%
+  addLayersControl(
+    overlayGroups = c("qualifying"),
+    options = layersControlOptions(collapsed = TRUE)
+  )
+map
+
+```
+
+The interactive map shows census block groups that qualify for reduced match in yellow. The user can zoom into any location and click on block groups for more information.  The popup contains the block group identifying number, the WFSVI value, the qualifying frequency described above, whether it qualifies because of its Justice 40 designation, and the value of each WFSVI component. The index is described in more detail in the [original report](report.html). The WFSVI and its components are all displayed in percentiles of the distribution of all values in Colorado block groups. The higher the value, the more likely the block group is to qualify for the reduced match. The percentage reported for each index component represents the weight of the component in the overall WFSVI. Note that the percentages are rounded and may not add to one
 
 
 
 
 ## Limitations
 
-American Community Survey data is based on a sample with a reported margin of error. The COVID-19 pandemic impacted trends and affected the ability to generate data due to sampling challenges. The U.S. Census Bureau reported that, due to the difficulties of fielding a household survey during the COVID-19 pandemic, household nonresponse increased substantially in the ACS, with evidence of increased nonresponse bias in many statistics. These inaccuracies and high margins of errors may cause some CBGs to qualify even though they shouldn’t or not qualify when they should. It may take some time before the full impact of the pandemic on census data accuracy is fully understood. It is also important to note that the margin of error may be significant in small census block groups. We acknowledge the potential that the data may be inaccurate. However, the ACS is the most reliable data to calculate the WFSVI. 
+American Community Survey data is based on a sample with a reported margin of error. The COVID-19 pandemic impacted trends and affected the ability to collect data due to sampling challenges. The [U.S. Census Bureau reported](https://www.census.gov/newsroom/blogs/random-samplings/2021/10/pandemic-impact-on-2020-acs-1-year-data.html) that, due to the difficulties of fielding a household survey during the COVID-19 pandemic, household nonresponse increased substantially in the ACS, with evidence of increased nonresponse bias in many statistics. These challenges largely apply to the 1-year ACS estimates and are less of a concern for the 5-year estimates. However, these inaccuracies and high margins of errors may lead to inaccurate classifications. It may take some time before the full impact of the pandemic on census data accuracy is fully understood. It is also important to note that the margin of error may be significant in small census block groups. We acknowledge the potential that the data may be inaccurate. However, the ACS is the most reliable data to calculate the WFSVI. 
 
 
