@@ -48,12 +48,25 @@ suppressPackageStartupMessages(library(scales,quietly = T))
 #Read data
 sim_results <- readRDS("../Build/Cache/final_simulated_results.rds") 
 
-wfsvi_j40 <- readRDS('../Build/Output/wfsvi_j40.rds') %>%
+wfsvi_coes <- readRDS('../Build/Output/wfsvi_coes.rds') %>%
   st_transform(4326) %>%
   mutate(q_indicator=ifelse(qualifying_cbg==1,"Qualifying","Not Qualifying"),
+         coes_DIC=ifelse(coes_DIC==1,T,F),
          across(c(poverty_percent_below_1_rank:wfsvi),~round(.,digits = 2))) %>%
   #inner_join(select(sim_results,GEOID,percent_qualify)) 
   inner_join(sim_results,by = "GEOID") 
+
+
+#save layer
+out <- wfsvi_coes %>%
+  select(block_group=GEOID,
+         poverty_percent_below_1_rank:directional_median_hh_income_3_rank,
+         wfsvi,percent_qualify,
+         COES_DIC=coes_DIC,
+         reduced_match_qualify=q_indicator) 
+
+st_write(out,"wfsvi_2023.gpkg",append=FALSE)
+write_csv(st_set_geometry(out,NULL),"wfsvi_2023.csv")
 
 
 
@@ -63,7 +76,7 @@ color_scale <- colorFactor(palette = "viridis",domain = c("Qualifying","Not Qual
 #################
 # Create the map
 #map <- leaflet(data = slice_sample(wfsvi_j40,n=200)) %>%
-map <- leaflet(data = wfsvi_j40) %>%
+map <- leaflet(data = wfsvi_coes) %>%
   addTiles() %>%
   setView(lng = -105.5509, lat = 39.5501, zoom = 7)  # Set initial map view to Colorado
 
@@ -77,7 +90,7 @@ map <- map %>%
               popup = ~paste0("<b>Block Group ID:</b> ", GEOID,
                               "<br><b>WFSVI:</b> ", wfsvi,
                               "<br><b>Qualifying Frequency:</b> ", percent(percent_qualify,accuracy=1),
-                              "<br><b>J40 Qualifying:</b> ", Identified.as.disadvantaged,
+                              "<br><b>CO Disp. Imp. Comm.:</b> ", coes_DIC,
                               "<br><b>Poverty (12%):</b> ", poverty_percent_below_1_rank,
                               "<br><b>Unemployed (7%):</b> ", civ_labor_force_unemployed_percent_2_rank,
                               "<br><b>Household Income (12%):</b> ", directional_median_hh_income_3_rank,
@@ -100,12 +113,15 @@ map <- map %>%
     overlayGroups = c("qualifying"),
     options = layersControlOptions(collapsed = TRUE)
   )
+
+#print map
 map
 
 ```
 
 The interactive map shows census block groups that qualify for reduced match in yellow. The user can zoom into any location and click on block groups for more information.  The popup contains the block group identifying number, the WFSVI value, the qualifying frequency described above, whether it qualifies because of its Justice 40 designation, and the value of each WFSVI component. The index is described in more detail in the [original report](report.html). The WFSVI and its components are all displayed in percentiles of the distribution of all values in Colorado block groups. The higher the value, the more likely the block group is to qualify for the reduced match. The percentage reported for each index component represents the weight of the component in the overall WFSVI. Note that the percentages are rounded and may not add to one
 
+You can download the spatial data [here](wfsvi_2023.gpkg) and a spreadsheet version of the data [here](wfsvi_2023.csv)
 
 
 
