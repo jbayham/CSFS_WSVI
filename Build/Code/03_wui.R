@@ -7,10 +7,10 @@ cbg_geo <- read_sf("Build/Cache/tl_2022_08_bg/tl_2022_08_bg.shp")%>%
   filter(GEOID %in% SVI_geo$GEOID)#filter GEOIDs in the SVI data only.
 
 #Connect to the raster file
-#wui_raster <- raster("Build/Data/WUI.tif")
+#wui_raster <- raster("Build/Data/WildlandUrbanInterface_COWRA22/WildlandUrbanInterface_COWRA22.tif")
 
 # Convert the raster to a SpatRaster object and reproject
-wui_spat <- terra::rast("Build/Data/WUI.tif")
+wui_spat <- terra::rast("Build/Data/WildlandUrbanInterface_COWRA22/WildlandUrbanInterface_COWRA22.tif")
 wui <- terra::project(wui_spat, terra::crs(SVI_geo))
 
 #reclassify zeros as NA
@@ -32,7 +32,7 @@ svi_wui <- inner_join(SVI_geo,cbg_wui_flag,by = "GEOID")%>%
 
 #Save output layer
 saveRDS(svi_wui,file='Build/Output/svi_wui.rds')
-st_write(svi_wui,"Build/Output/svi_wui.gpkg")
+st_write(svi_wui,"Build/Output/svi_wui.gpkg",append=F)
 
 rm(cbg_geo, cbg_wui, cbg_wui_flag, svi_wui, SVI_geo, wui, wui_raster, wui_spat)
 

@@ -35,7 +35,7 @@ wfsvi <- svi_wui%>%
            weights[17]*Gini_education_rank,
          wfsvi=percent_rank(overall_sum))%>%
   mutate(wfsvi_qualify=ifelse(wfsvi>=.75,1,0))%>%
-  left_join(., cbg_geo)%>%
+  left_join(., cbg_geo,by = "GEOID")%>%
   st_as_sf()
 
 saveRDS(wfsvi,file='Build/Output/wfsvi.rds')
