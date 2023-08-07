@@ -1,7 +1,7 @@
 ### Monte Carlo Simulation 
 ### We assume the each variable in the CBGs normally distribute because most CBGs have population greater than 30,  hence we can use the cental limit theorem
 
-wfsvi_j40 <- readRDS('Build/Output/wfsvi_j40.rds')
+wfsvi_coes <- readRDS('Build/Output/wfsvi_coes.rds')
 svi_wui <- readRDS('Build/Output/svi_wui.rds')
 cbg_geo <- read_sf("Build/Cache/tl_2022_08_bg/tl_2022_08_bg.shp")%>%
   dplyr::select(GEOID)
@@ -10,11 +10,9 @@ cbg_geo <- read_sf("Build/Cache/tl_2022_08_bg/tl_2022_08_bg.shp")%>%
 n_iterations <- 1000
 qualify_counts <- numeric(nrow(svi_wui))# Initialize a vector to store the results
 wfsvi_statistics <- data.frame(matrix(NA, nrow = nrow(svi_wui), ncol = n_iterations))
-set.seed(20)
 
 #Build tables for sampling
 cbg_data <- DBI::dbConnect(SQLite(), dbname='Build/Cache/cbg_data.sqlite')
-tab_shell <- vector("list",17)
 tab_shell <- map(1:17,function(x){
   if(x<=15){
     temp_tab <- tbl(cbg_data,paste0("var_",x,"_cbg_data")) %>%
