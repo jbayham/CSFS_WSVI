@@ -1,6 +1,8 @@
 ---
 title: "Updating Reduced Match Criteria for the Forest Restoration & Wildfire Risk Mitigation Grant"
 author: "Innocent Vomitadyo and Jude Bayham"
+date: last-modified
+date-format: "[Updated on] MMMM, YYYY"
 format: 
   html:
       toc: TRUE
@@ -10,7 +12,7 @@ format:
 
 ## Introduction
 
-In 2020, our research team at Colorado State University developed the [Wildfire Social Vulnerability Index](https://jbayham.github.io/CSFS_WSVI/report.html) (WFSVI) in order to set a criteria for reduced match for the Forest Restoration & Wildfire Risk Mitigation (FRWRM) Grant. This report describes updates to the WFSVI including updated data from the US Census, alignment with the federal [Justice 40](https://screeningtool.geoplatform.gov/en/#3/33.47/-97.5) initiative, and further analysis of the WFSVI and reduced match criteria. 
+In 2020, our research team at Colorado State University developed the [Wildfire Social Vulnerability Index](https://jbayham.github.io/CSFS_WSVI/report.html) (WFSVI) in order to set a criteria for reduced match for the Forest Restoration & Wildfire Risk Mitigation (FRWRM) Grant. This report describes updates to the WFSVI including updated data from the US Census, alignment with the CO [HB21-1266](https://leg.colorado.gov/sites/default/files/2021a_1266_signed.pdf) EnviroScreen tool, and further analysis of the WFSVI and reduced match criteria. 
 
 
 
@@ -21,11 +23,15 @@ The original WFSVI was built using 5-year (2016 - 2020) [American Community Surv
 The original WFSVI used ACS data but sourced the data from [Safegraph](https://www.safegraph.com/free-data/open-census-data). While the data was accurate, it was less accessible and relied on analysts at SafeGraph to update the data when the Census released new data. We have rebuilt the code to access the Census Application Programming Interface (API) via the [tidycensus](https://walker-data.com/tidycensus/) package. The [code](https://github.com/jbayham/CSFS_WSVI/blob/master/Build/Code/01_get_data.R) now downloads data for the Census Block Groups (CBG) and Census Tracts, then calculates the index component for both geographies using tract information to fill in missing block group information. The user can now define the year from which to query census data, making the layer easy to update in the future.
 
 
-## Justice 40
+## Colorado EnviroScreen Data
 
-[Executive Order 14008](https://www.federalregister.gov/documents/2021/02/01/2021-02177/tackling-the-climate-crisis-at-home-and-abroad#:~:text=Sec.%20223.%20Justice40,40-percent%20goal.) directed the Council on Environmental Quality (CEQ) to develop the Climate and Economic Justice Screening Tool (CEJST). This tool uses data to analyze burdens across eight categories: climate change, energy, health, housing, legacy pollution, transportation, water and wastewater, and workforce development. The primary purpose of the CEJST is to aid federal agencies in identifying disadvantaged communities that would benefit from the programs offered under the Justice40 Initiative. While the Colorado State Forest Service is not a federal agency, the goal of the CEJST is aligned with the intent of HB 20-1057, which established the reduced match criteria.
+Colorado’s Environmental Justice Act ([HB21-1266](https://leg.colorado.gov/sites/default/files/2021a_1266_signed.pdf)) prompted the development of the [EnviroScreen](https://teeo-cdphe.shinyapps.io/COEnviroScreen_English/) mapping tool to identify "disproportionately impacted communities". We consider any disproportionately impacted community to automatically qualify for the FRWRM reduced match requirement. According to the EnviroScreen documentation, a disproportionately impacted community is defined as
 
-We collect data from the [Council on Environmental Quality](https://screeningtool.geoplatform.gov/en/downloads). The WFSVI is constructed at the Census Block Group (CBG), while the CEJST is constructed at the Census Tract (comprised of CBGs). The CEJST contains a binary indicator for every Census Tract that determines whether it is considered "disadvantaged." We consider any disadvantaged Census Tract to qualify for reduced match. 
+> ... census block groups where more than 40% of the population are low-income (meaning that median household income is at or below 200% of the federal poverty line), 50% of the households are housing cost-burdened (meaning that a household spends more than 30% of its income on housing costs like rent or a mortgage), 40% of the population are people of color (including all people who do not identify as non-Hispanic white), or 20% of households are linguistically isolated (meaning that all members of a household that are 14 years old or older have difficulty with speaking English). Also included in this definition are mobile home communities, the Ute Mountain Ute and Southern Ute Indian Reservations, and all areas that qualify as disadvantaged in the federal [Climate and Economic Justice Screening Tool](https://screeningtool.geoplatform.gov/en/#3/33.47/-97.5). The definition also includes census block groups that experience higher rates of cumulative impacts, which is represented by an EnviroScreen Score (Percentile) above 80.
+
+The CO EnviroScreen tool data was built using 5-year ACS data from 2015-2019 along with many other data sources. The challenge is that this updated uses data from the 5-year ACS 2017-2021, which are based on census block groups redefined in 2020. Consequently, the CO EnviroScreen tool data cannot be directly merged with the WFSVI data. We use a geographic crosswalk designed to harmonize data across time (Manson et al., 2021). The crosswalk develops a set of weights based on the estimated fraction of the population or households in the 2010-2020 block group definition to the 2020 block group definition. We use the population weights to translate the following data between block group definitions: the low-income, people of color, the cumulative impact score, and the Justice 40 criteria, and the household weights to map the housing burden and linguistic isolation criteria. We then apply the qualifying thresholds defined above to determine which of the 2020 block groups qualifies as a disproportionately impacted community. 
+
+The integration of the CO EnviroScreen tool aligns the WFSVI with HB21-1266 in Colorado and the federal Justice 40 initiative.
 
 
 ## Analysis
@@ -65,7 +71,9 @@ out <- wfsvi_coes %>%
          COES_DIC=coes_DIC,
          reduced_match_qualify=q_indicator) 
 
-st_write(out,"wfsvi_2023.gpkg",append=FALSE)
+st_write(out,"wfsvi_2023.gpkg",append=FALSE,quiet = TRUE)
+st_write(out,"wfsvi_2023.shp",append=FALSE,quiet = TRUE)
+zip(zipfile="wfsvi_2023_shp.zip",files = c("wfsvi_2023.dbf","wfsvi_2023.prj","wfsvi_2023.shp","wfsvi_2023.shx"))
 write_csv(st_set_geometry(out,NULL),"wfsvi_2023.csv")
 
 
@@ -119,9 +127,15 @@ map
 
 ```
 
-The interactive map shows census block groups that qualify for reduced match in yellow. The user can zoom into any location and click on block groups for more information.  The popup contains the block group identifying number, the WFSVI value, the qualifying frequency described above, whether it qualifies because of its Justice 40 designation, and the value of each WFSVI component. The index is described in more detail in the [original report](report.html). The WFSVI and its components are all displayed in percentiles of the distribution of all values in Colorado block groups. The higher the value, the more likely the block group is to qualify for the reduced match. The percentage reported for each index component represents the weight of the component in the overall WFSVI. Note that the percentages are rounded and may not add to one
+The interactive map shows census block groups that qualify for reduced match in yellow. The user can zoom into any location and click on block groups for more information.  The popup contains the block group identifying number, the WFSVI value, the qualifying frequency described above, whether it qualifies because of its "disproportionately impacted community" designation, and the value of each WFSVI component. The index is described in more detail in the [original report](report.html). The WFSVI and its components are all displayed in percentiles of the distribution of all values in Colorado block groups. The higher the value, the more likely the block group is to qualify for the reduced match. The percentage reported for each index component represents the weight of the component in the overall WFSVI. Note that the percentages are rounded and may not add to one
 
-You can download the spatial data [here](wfsvi_2023.gpkg) and a spreadsheet version of the data [here](wfsvi_2023.csv)
+You can download the spatial data in several formats here:
+
+- [wfsvi_2023_shp.zip](wfsvi_2023_shp.zip) 
+
+- [wfsvi_2023.gpkg](wfsvi_2023.gpkg) 
+
+- [wfsvi_2023.csv](wfsvi_2023.csv)
 
 
 
@@ -129,4 +143,9 @@ You can download the spatial data [here](wfsvi_2023.gpkg) and a spreadsheet vers
 
 American Community Survey data is based on a sample with a reported margin of error. The COVID-19 pandemic impacted trends and affected the ability to collect data due to sampling challenges. The [U.S. Census Bureau reported](https://www.census.gov/newsroom/blogs/random-samplings/2021/10/pandemic-impact-on-2020-acs-1-year-data.html) that, due to the difficulties of fielding a household survey during the COVID-19 pandemic, household nonresponse increased substantially in the ACS, with evidence of increased nonresponse bias in many statistics. These challenges largely apply to the 1-year ACS estimates and are less of a concern for the 5-year estimates. However, these inaccuracies and high margins of errors may lead to inaccurate classifications. It may take some time before the full impact of the pandemic on census data accuracy is fully understood. It is also important to note that the margin of error may be significant in small census block groups. We acknowledge the potential that the data may be inaccurate. However, the ACS is the most reliable data to calculate the WFSVI. 
 
+## References
+
+Steven Manson, Jonathan Schroeder, David Van Riper, Tracy Kugler, and Steven Ruggles.
+IPUMS National Historical Geographic Information System: Version 16.0 [dataset].
+Minneapolis, MN: IPUMS. 2021. http://doi.org/10.18128/D050.V16.0
 
