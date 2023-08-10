@@ -2,7 +2,7 @@
 title: "Updating Reduced Match Criteria for the Forest Restoration & Wildfire Risk Mitigation Grant"
 author: "Innocent Vomitadyo and Jude Bayham"
 date: last-modified
-date-format: "[Updated] MMMM, YYYY"
+date-format: "MMMM, YYYY"
 format: 
   html:
       toc: TRUE
