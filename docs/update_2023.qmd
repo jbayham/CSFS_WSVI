@@ -2,7 +2,7 @@
 title: "Updating Reduced Match Criteria for the Forest Restoration & Wildfire Risk Mitigation Grant"
 author: "Innocent Vomitadyo and Jude Bayham"
 date: last-modified
-date-format: "[Updated on] MMMM, YYYY"
+date-format: "[Updated] MMMM, YYYY"
 format: 
   html:
       toc: TRUE
@@ -12,7 +12,7 @@ format:
 
 ## Introduction
 
-In 2020, our research team at Colorado State University developed the [Wildfire Social Vulnerability Index](https://jbayham.github.io/CSFS_WSVI/report.html) (WFSVI) in order to set a criteria for reduced match for the Forest Restoration & Wildfire Risk Mitigation (FRWRM) Grant. This report describes updates to the WFSVI including updated data from the US Census, alignment with the CO [HB21-1266](https://leg.colorado.gov/sites/default/files/2021a_1266_signed.pdf) EnviroScreen tool, and further analysis of the WFSVI and reduced match criteria. 
+In 2020, our research team at Colorado State University developed the [Wildfire Social Vulnerability Index](https://jbayham.github.io/CSFS_WSVI/report.html) (WFSVI) in order to set a criteria for reduced match for the Forest Restoration & Wildfire Risk Mitigation (FRWRM) Grant. This report describes updates to the WFSVI including updated data from the US Census, alignment with the CO [HB21-1266](https://leg.colorado.gov/sites/default/files/2021a_1266_signed.pdf) EnviroScreen tool, and further analysis of the WFSVI and reduced match criteria. The number of census block groups qualifying for reduced match has increased due to updated data and the inclusion of *disproportionately impacted communities* information from CO EnviroScreen.
 
 
 
@@ -71,10 +71,21 @@ out <- wfsvi_coes %>%
          COES_DIC=coes_DIC,
          reduced_match_qualify=q_indicator) 
 
+
+
 st_write(out,"wfsvi_2023.gpkg",append=FALSE,quiet = TRUE)
-st_write(out,"wfsvi_2023.shp",append=FALSE,quiet = TRUE)
+suppressWarnings(st_write(out,"wfsvi_2023.shp",append=FALSE,quiet = TRUE))
 zip(zipfile="wfsvi_2023_shp.zip",files = c("wfsvi_2023.dbf","wfsvi_2023.prj","wfsvi_2023.shp","wfsvi_2023.shx"))
 write_csv(st_set_geometry(out,NULL),"wfsvi_2023.csv")
+
+out_qualify_only <- out %>%
+  select(block_group,reduced_match_qualify)
+
+st_write(out_qualify_only,"reduced_qualify_2023.gpkg",append=FALSE,quiet = TRUE)
+suppressWarnings(st_write(out_qualify_only,"reduced_qualify_2023.shp",append=FALSE,quiet = TRUE))
+zip(zipfile="reduced_qualify_2023_shp.zip",
+    files = c("reduced_qualify_2023.dbf","reduced_qualify_2023.prj","reduced_qualify_2023.shp","reduced_qualify_2023.shx"))
+write_csv(st_set_geometry(out_qualify_only,NULL),"reduced_qualify_2023.csv")
 
 
 
@@ -129,7 +140,16 @@ map
 
 The interactive map shows census block groups that qualify for reduced match in yellow. The user can zoom into any location and click on block groups for more information.  The popup contains the block group identifying number, the WFSVI value, the qualifying frequency described above, whether it qualifies because of its "disproportionately impacted community" designation, and the value of each WFSVI component. The index is described in more detail in the [original report](report.html). The WFSVI and its components are all displayed in percentiles of the distribution of all values in Colorado block groups. The higher the value, the more likely the block group is to qualify for the reduced match. The percentage reported for each index component represents the weight of the component in the overall WFSVI. Note that the percentages are rounded and may not add to one
 
-You can download the spatial data in several formats here:
+You can download spatial and non-spatial version of the layer containing the reduced match qualifying indicator here:
+
+- [reduced_qualify_2023_shp.zip](reduced_qualify_2023_shp.zip) 
+
+- [reduced_qualify_2023.gpkg](reduced_qualify_2023.gpkg) 
+
+- [reduced_qualify_2023.csv](reduced_qualify_2023.csv)
+
+
+The following files include the indicator for reduced match and the underlying data:
 
 - [wfsvi_2023_shp.zip](wfsvi_2023_shp.zip) 
 
