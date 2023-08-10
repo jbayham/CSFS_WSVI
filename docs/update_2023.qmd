@@ -157,6 +157,8 @@ The following files include the indicator for reduced match and the underlying d
 
 - [wfsvi_2023.csv](wfsvi_2023.csv)
 
+- [codebook.csv](codebook.csv)
+
 
 
 ## Limitations

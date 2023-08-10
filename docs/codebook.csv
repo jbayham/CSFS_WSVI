@@ -1,0 +1,23 @@
+﻿WFSVI Codebook,
+Variable,Description
+GEOID,census block group
+poverty_percent_below_1_rank,Percent of individuals below the poverty line (C17002)
+civ_labor_force_unemployed_percent_2_rank,Percent of the Civilian labor force unemployed (B23025)
+directional_median_hh_income_3_rank,Median household income (B19013)
+no_hs_degree_percent_4_rank,Percent of adults over 25 without a High School Diploma (B15003)
+over_65_percent_5_rank,Percent of people over the age of 65 (B01001)
+under_18_percent_6_rank,Percent of people under the age of 18 (B01001)
+disabled_adult_percent_7_rank,Percent of the poverty status determined population above 18 with a disability (C21007)
+single_householder_percent_8_rank,"Percent of households with a male or female householder, no spouse present, with children under 18 (B23007)"
+percent_minority_9_rank,Percent of the population that are of minority status (Non-white or Hispanic) (B02001)
+eng_proficiency_rank,Percent of the population that speaks English less than “well” (B16004)
+mobile_units_rank,Percent of housing units that are mobile homes (B25024)
+no_vehicle_percent_14_rank,Percent of households with no vehicle (B25044)
+Gini_income_rank,Income GINI (B19001)
+Gini_education_rank,Years of schooling/ Education GINI (B15003)
+over_10_rank,Percent of housing structures that have 10 or more units (B25024)
+group_quarters_percent_15_rank,Percent of people who live in group housing such as nursing homes (B09019)
+wfsvi,Wildfire Social Vulnerability Index: Percent rank of the sum of the index components
+percent_qualify,The fraction of 1000 simulations in which the block group qualified. The simulations are conducted based on the distributions of the underlying census data.
+COES_DIC,Colorado EnviroScreen Disproportionately Impacted Communities
+reduced_match_qualify,A binary indicator for whether the block group qualifies for reduced match
