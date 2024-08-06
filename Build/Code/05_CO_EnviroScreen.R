@@ -1,7 +1,7 @@
 #This script incorporates the CO EnviroScreen definition of Disporportionately Impacted Communities HB 23-1223.
 
 
-wfsvi <- readRDS('Build/Output/wfsvi.rds') 
+
 
 #The CO EnviroScreen tool was built using 5 year ACS data from 2015-2019. The older vintage uses historical boundaries from the 2010 census that have since been updated.  This analysis uses the 5 year ACS 2017-2021, which is based on post 2020 block group definitions. We use crosswalks built to harmonize data across the two boundary vintages (Manson et al., 2021). We use population and housing weights based on the CO EnviroScreen component.
 # Steven Manson, Jonathan Schroeder, David Van Riper, Tracy Kugler, and Steven Ruggles.
@@ -10,7 +10,7 @@ wfsvi <- readRDS('Build/Output/wfsvi.rds')
 xwalk <- read_csv("Build/Data/nhgis_bg2020_bg2010_08.csv") %>%
   select(bg2020ge,bg2010ge,wt_pop,wt_hh)
 
-#CO EnviroScreen data (https://teeo-cdphe.shinyapps.io/COEnviroScreen_English/)
+#CO EnviroScreen data (https://data-cdphe.opendata.arcgis.com/datasets/c9c666475d884afbbf62dd3acedbdbb4_0/explore?location=38.930621%2C-105.550850%2C7.32)
 co_enviro_screen <- read_csv("Build/Data/Colorado_EnviroScreen_v1_BlockGroup.csv") %>%
   dplyr::select(GEOID, D_I_C,ES_S_,Prcnt_lw_,Hsn__,Prc___,Prcnt_ln_,May23_DIType,Jst40) %>%
   mutate(Jst40 = as.numeric(ifelse(is.na(Jst40),FALSE,TRUE))) %>%
@@ -37,6 +37,7 @@ coes_collapsed <- co_enviro_screen %>%
     es_score/100 > 0.80 ~ 1,
     new_dic==0 ~ 0
   ),
+  j40=round(j40),
   new_dic = ifelse(is.na(low_income),NA,new_dic)) %>%
   filter(str_sub(bg2020ge,1,2)=="08") 
 
@@ -45,17 +46,24 @@ summary(coes_collapsed$new_dic)
 
 
 
+
 ## merge the CO Enviro Screen disadvantaged communities with CBG data and determine qualifying CBG
 ## All CBGs in the J40 tracts will automatically qualify regardless of their SVI
+wfsvi <- readRDS('Build/Cache/wfsvi.rds') 
+
 wfsvi_coes <- inner_join(wfsvi, 
-                         select(coes_collapsed,bg2020ge,coes_DIC=new_dic), 
+                         select(coes_collapsed,bg2020ge,coes_DIC=new_dic,j40), 
                          by= c("GEOID"="bg2020ge")) %>%
-  mutate(qualifying_cbg = if_else(wfsvi_qualify==1 | coes_DIC==1, 1, 0))
+  mutate(qualifying_cbg = ifelse((wfsvi_qualify==1 | coes_DIC==1 | j40==1) & !is.na(coes_DIC), 1, 0))
 
 summary(wfsvi_coes$qualifying_cbg)
 
-saveRDS(wfsvi_coes, file='Build/Output/wfsvi_coes.rds')
-rm(j40_tracts, wfsvi, wfsvi_coes, xwalk, co_enviro_screen, coes_collapsed)
+summary(wfsvi_coes$coes_DIC)
+
+saveRDS(wfsvi_coes, file='Build/Cache/wfsvi_coes.rds')
+
+
+rm(wfsvi, wfsvi_coes, wfsvi_all, wfsvi_all_coes, xwalk, co_enviro_screen, coes_collapsed)
 
 print('COMPLETE')
 

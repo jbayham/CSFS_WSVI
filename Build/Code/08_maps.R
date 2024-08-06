@@ -57,7 +57,7 @@ map <- map %>%
 map
 ###########################
 
-mapshot(map,url="docs/WFSVI_2023.html")
+mapshot(map,url="docs/WFSVI_2024.html")
 
 #Notes for map:
 #- the categories in the popup window correspond to the index components described here: original report doc

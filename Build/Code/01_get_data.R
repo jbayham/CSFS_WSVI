@@ -14,7 +14,7 @@ cbg_geo_centre <- st_centroid(cbg_geo)#center points of CBG which will be used t
 #define parameters
 request_geo1 <- "block group" #geography for downloading CBG level data
 request_geo2 <- "tract" #geography for downloading census tract level data
-request_year <- 2021
+request_year <- 2022
 
 ##Define function for replacing missing values
 replace_missing <- function(df, var_name) {
@@ -22,8 +22,9 @@ replace_missing <- function(df, var_name) {
     mutate(!!var_name := coalesce(!!sym(paste0(var_name, ".x")), !!sym(paste0(var_name, ".y")))) %>%
     select(-c(paste0(var_name, ".x"), paste0(var_name, ".y")))
 }
+
 #create sqlite data base to store data for simulation
-cbg_data <- dbConnect(SQLite(), dbname='Build/Cache/cbg_data.sqlite')
+cbg_data <- dbConnect(SQLite(), dbname='Build/Cache/cbg_data_24.sqlite')
 
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ### Percentage of poverty status checked individuals who are below poverty line
@@ -48,7 +49,7 @@ var_1_tract <- tidycensus::get_acs(geography = request_geo2, variables = c("C170
   st_join(., cbg_geo_centre)%>% #find cbgs within census tract and attach cbg GEOID. 
   st_drop_geometry() #this is final data of tract level with cbg GEOIDs
 
-#Replace missing values of cgb data with tract values. 
+#Replace missing values of cbg data with tract values. 
 var_list <- c("poverty_percent_below_1")# Define a list of variables to replace missing values for
 var_1 <- reduce(var_list, replace_missing, .init = left_join(var_1_cbg, var_1_tract, by = "GEOID"))# Loop through variables and replace missing values
 rm(var_1_cbg, var_1_tract, var_1_cbg_data)
@@ -469,7 +470,7 @@ var_16_tract_new <- var_16_tract%>%
 #replace cbg Gini values with tract Gini values.
 var_list <- c("Gini_income")
 var_16 <- reduce(var_list, replace_missing, .init = left_join(var_16_cbg, var_16_tract_new, by = "GEOID"))
-rm(var_download, gini_coefficients,i, var_16_cbg, var_16_tract, var_16_tract_new, var_16_cbg,var_16_cbg_data, var_16_tract_data, var_16_cbg_data_gini)
+rm(var_download, gini_coefficients,i, var_16_cbg, var_16_tract, var_16_tract_new,var_16_cbg_data, var_16_tract_data, var_16_cbg_data_gini)
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #### GINI for education
@@ -549,6 +550,7 @@ new_svi_var <- filter(SVI_var_all_CBG, !(GEOID %in% zero_GEOIDs))#Remove CBGs wi
 data <-as.data.frame(new_svi_var)
 GEOID <- data$GEOID# Extract the GEOID variable
 vars_for_imputation <- data[, !names(data) %in% c("GEOID")]#Specify the variables to be used (excluding the GEOID)
+message(paste0("imputing ",nrow(vars_for_imputation) - nrow(drop_na(vars_for_imputation))," observations"))
 imputed_data <- missForest(vars_for_imputation)#Impute missing values using missForest
 SVI_var <- cbind(GEOID = GEOID, imputed_data$ximp)#Combine the imputed data with the GEOID variable
 rm(data, GEOID, vars_for_imputation, imputed_data)

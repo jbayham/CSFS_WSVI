@@ -1,8 +1,8 @@
 ### Monte Carlo Simulation 
 ### We assume the each variable in the CBGs normally distribute because most CBGs have population greater than 30,  hence we can use the cental limit theorem
 
-wfsvi_coes <- readRDS('Build/Output/wfsvi_coes.rds')
-svi_wui <- readRDS('Build/Output/svi_wui.rds')
+wfsvi_coes <- readRDS('Build/Cache/wfsvi_coes.rds')
+svi_wui <- readRDS('Build/Cache/svi_wui.rds')
 cbg_geo <- read_sf("Build/Cache/tl_2022_08_bg/tl_2022_08_bg.shp")%>%
   dplyr::select(GEOID)
 
@@ -25,13 +25,31 @@ tab_shell <- map(1:17,function(x){
   return(temp_tab)
   })
 
+med_inc_tract <- tab_shell[[3]] %>%
+  group_by(tract_id=str_sub(GEOID,1,11)) %>%
+  summarise(across(c(estimate,moe),~mean(.,na.rm=TRUE))) %>%
+  ungroup() %>%
+  mutate(across(c(estimate,moe),~ifelse(is.na(.) | is.nan(.) | is.infinite(.),NA,.))) %>%
+  fill(estimate,moe,.direction = "down") %>%
+  rename(estimate_imp=estimate,moe_imp=moe)
+
+summary(med_inc_tract)
+
+tab_shell[[3]] <- tab_shell[[3]] %>%
+  mutate(tract_id=str_sub(GEOID,1,11)) %>%
+  left_join(med_inc_tract,by="tract_id") %>%
+  mutate(estimate=coalesce(estimate,estimate_imp),
+         moe=coalesce(moe,moe_imp)) %>%
+  select(GEOID:moe)
+
+
 dbDisconnect(cbg_data)
 
 if(!dir.exists("Build/Cache/sims")) dir.create("Build/Cache/sims")
 
 # Run the simulation
 #for (j in 1:n_iterations) {
-plan(multisession(workers = 10))
+plan(multisession(workers = 4))
 future_walk(c(1:n_iterations),
            function(x){
              
@@ -51,7 +69,7 @@ future_walk(c(1:n_iterations),
     mutate(civ_labor_force_unemployed_percent_2=B23025_005/B23025_003)%>%
     dplyr::select(GEOID,civ_labor_force_unemployed_percent_2)
   
-  var_3 <- tab_shell[[3]]%>%
+  var_3 <- tab_shell[[3]]%>% 
     mutate(simulated = abs((rnorm(n(), mean = estimate, sd=(moe/1.645)))))%>%
     dplyr::select(GEOID, variable, simulated)%>%#select relevant var
     pivot_wider(names_from = variable, values_from = simulated)%>%
@@ -172,34 +190,24 @@ future_walk(c(1:n_iterations),
   
   rm(var_17_data, gini_coefficients, i)
   
-  simulated_SVI_var<-var_1%>%
-    left_join(.,var_2)%>%
-    left_join(.,var_3)%>%
-    left_join(.,var_4)%>%
-    left_join(.,var_5)%>%
-    left_join(.,var_6)%>%
-    left_join(.,var_7)%>%
-    left_join(.,var_8)%>%
-    left_join(.,var_9)%>%
-    left_join(.,var_10)%>%
-    left_join(.,var_11)%>%
-    left_join(.,var_12)%>%
-    left_join(.,var_13)%>%
-    left_join(.,var_14)%>%
-    left_join(.,var_15)%>%
-    left_join(.,var_16)%>%
-    left_join(.,var_17)
+  #Put all components into a list
+  var_list <- list(var_1, var_2, var_3, var_4, var_5, var_6, var_7, var_8, 
+                   var_9, var_10, var_11, var_12, var_13, var_14, var_15, 
+                   var_16, var_17)
+  
+  #Recursively join elements of the list
+  simulated_SVI_var <- reduce(var_list,left_join,by = join_by(GEOID))
   
 
-  simulated_svi_wui <- inner_join(simulated_SVI_var, select(svi_wui,GEOID))
+  simulated_svi <- inner_join(simulated_SVI_var, select(svi_wui,GEOID),by = join_by(GEOID))
   
   weights<- c(.122,.0731,.122,.0731,.0244,.0244,.0244,.0244,.122,.0488,0,.0488,0,.0244,0,.122,.122)
   
   #NB: Reverse direction of HH income
-  simulated_wfsvi <- simulated_svi_wui%>%
-    rename_with( .fn = ~paste0(., '_rank'),.cols=as.character(names(simulated_svi_wui[,2:18])))%>%
-    mutate(directional_median_hh_income_3_rank=-1*median_hh_income_3_rank,.keep="unused")%>%
-    mutate(across(-GEOID,percent_rank))%>%
+  simulated_wfsvi <- simulated_svi %>%
+    rename_with( .fn = ~paste0(., '_rank'),.cols=poverty_percent_below_1:Gini_education) %>%
+    mutate(directional_median_hh_income_3_rank=-1*median_hh_income_3_rank,.keep="unused") %>%
+    mutate(across(-GEOID,percent_rank)) %>%
     mutate(overall_sum=
              weights[1]*poverty_percent_below_1_rank+##Socioeconomic
              weights[2]*civ_labor_force_unemployed_percent_2_rank+
@@ -223,11 +231,8 @@ future_walk(c(1:n_iterations),
            run=x)%>%
     select(GEOID,wfsvi,qualifying_cbg,run)
  
-  #return(simulated_wfsvi)
   saveRDS(simulated_wfsvi,paste0("Build/Cache/sims/run_",x,".rds"))
-  #qualify_counts <- ifelse(is.na(simulated_wfsvi$qualifying_cbg), 0, qualify_counts + simulated_wfsvi$qualifying_cbg)# Count the number of times each row qualifies
-  #wfsvi_statistics[, j] <- simulated_wfsvi$wfsvi# Save the wfsvi values in a separate data frame
-  #print(paste("Completed iteration", j, "of", n_iterations))# print progress
+
 },.progress = TRUE) 
 
 #Read all cached simulations
@@ -235,6 +240,7 @@ sim_results <- list.files("Build/Cache/sims",pattern = ".rds",full.names = T) %>
   map_dfr(readRDS) %>%
   mutate(qualifying_cbg = ifelse(is.na(qualifying_cbg) | is.nan(qualifying_cbg),0,qualifying_cbg))
 
+summary(sim_results$wfsvi)
 
 ## Simulation results 
 sim_results_summary <- sim_results %>%
@@ -249,3 +255,8 @@ saveRDS(sim_results_summary,file='Build/Cache/final_simulated_results.rds')
 
 
 print('COMPLETE')
+
+sim_results_summary %>%
+  ggplot(aes(x=wfsvi_mean,y=percent_qualify)) +
+  geom_point()
+
