@@ -1,0 +1,272 @@
+---
+title: "Updating Reduced Match Criteria for the Forest Restoration & Wildfire Risk Mitigation Grant"
+author: "Jude Bayham"
+date: last-modified
+date-format: "MMMM, YYYY"
+format: 
+  html:
+      toc: TRUE
+      embed-resources: true
+      page-layout: full
+---
+
+## Introduction
+
+In 2020, our research team at Colorado State University developed the [Wildfire Social Vulnerability Index](https://jbayham.github.io/CSFS_WSVI/report.html) (WFSVI) in order to set a criteria for reduced match for the Forest Restoration & Wildfire Risk Mitigation (FRWRM) Grant. The data layer was updated in 2023 as described in this [report](https://jbayham.github.io/CSFS_WSVI/update_2023.html). This report describes the 2024 updates to the WFSVI, which consists of updating the 5-year American Community Survey from (2017-2021) to (2018-2022). Additionally, we provide a version of the WFSVI that is not clipped to WUI only areas.
+
+
+
+## American Community Survey Update
+
+The original WFSVI was built using 5-year (2016 - 2020) [American Community Survey](https://data.census.gov/) (ACS) estimates. We have updated the WFSVI using the most current 5-year (2018-2022) ACS data. In some cases, no data is reported for a census block group because of poor response to the ACS or insufficient sample size to meet data disclosure requirements.  We use two methods to impute missing values.  First, if the data is reported at the census tract^[Multiple block groups are [nested within tracts](https://www2.census.gov/geo/pdfs/reference/geodiagram.pdf).], we use the census tract data to fill any missing records. While these data may be less spatially accurate, they represent the next best estimate of the block group value.  Second, we use a machine learning imputation model to complete missing records when tract level information is unavailable. The machine learning method is known as random forest and is implemented via [missForest](https://github.com/stekhoven/missForest) package in R. The random forest method uses nonmissing data for one variable to train a model based on other nonmissing variables from other block groups around the state and uses that model to estimate missing values. It applies this procedure to each variable and iteratively updates until the model converges on its best estimate (see the [package documentation](https://github.com/stekhoven/missForest) for more information).  
+
+
+## Colorado EnviroScreen Data
+
+Colorado’s Environmental Justice Act ([HB21-1266](https://leg.colorado.gov/sites/default/files/2021a_1266_signed.pdf)) prompted the development of the [EnviroScreen](https://teeo-cdphe.shinyapps.io/COEnviroScreen_English/) mapping tool to identify "disproportionately impacted communities". We consider any disproportionately impacted community to automatically qualify for the FRWRM reduced match requirement. According to the EnviroScreen documentation, a disproportionately impacted community is defined as
+
+> ... census block groups where more than 40% of the population are low-income (meaning that median household income is at or below 200% of the federal poverty line), 50% of the households are housing cost-burdened (meaning that a household spends more than 30% of its income on housing costs like rent or a mortgage), 40% of the population are people of color (including all people who do not identify as non-Hispanic white), or 20% of households are linguistically isolated (meaning that all members of a household that are 14 years old or older have difficulty with speaking English). Also included in this definition are mobile home communities, the Ute Mountain Ute and Southern Ute Indian Reservations, and all areas that qualify as disadvantaged in the federal [Climate and Economic Justice Screening Tool](https://screeningtool.geoplatform.gov/en/#3/33.47/-97.5). The definition also includes census block groups that experience higher rates of cumulative impacts, which is represented by an EnviroScreen Score (Percentile) above 80.
+
+The CO EnviroScreen tool data was built using 5-year ACS data from 2015-2019 along with many other data sources. However, the current WFSVI is based on the 5-year ACS 2018-2022, which are based on census block groups redefined in 2020. Consequently, the CO EnviroScreen tool data cannot be directly merged with the WFSVI data. We use a geographic crosswalk designed to harmonize data across time (Manson et al., 2021). The crosswalk develops a set of weights based on the estimated fraction of the population or households in the 2010-2020 block group definition to the 2020 block group definition. We use the population weights to translate the following data between block group definitions: low-income, people of color, the cumulative impact score, and the Justice 40 criteria, and the household weights to map the housing burden and linguistic isolation criteria. We then apply the qualifying thresholds defined above to determine which of the 2020 block groups qualifies as a disproportionately impacted community. 
+
+The integration of the CO EnviroScreen tool aligns the WFSVI with HB21-1266 in Colorado and the federal Justice 40 initiative. Future versions of the WFSVI will include [Colorado EnviroScreen 2.0](https://cdphe.colorado.gov/enviroscreen), which is currently under development.
+
+
+## Updated WFSVI Layer
+
+The 2024 update of the WFSVI layer includes a version clipped to census block groups (CBG) that include WUI (comparable to previous years), and an unclipped version that includes all CBGs regardless of WUI. The version used to inform the reduced match for FRWRM is clipped to the WUI because only WUI areas qualify for the program. The version clipped to the WUI includes a variable indicating that a CBG qualifies for the reduced match while the unclipped version only includes the WFSVI score. Otherwise, the layers contain the same information. 
+
+**Method Update**: Previous versions of the WFSVI calculate percent rank scores (i.e., percentile) for each index component using only the subset of CBGs with WUI (see [report](https://jbayham.github.io/CSFS_WSVI/report.html#variables)). The current version calculate percent rank scores for the index components using every CBG in the state. The percent rank is a relative metric and depends on the set of values a particular CBG is being compared. We implement this change in method to create a consistent WFSVI between the WUI-clipped and unclipped versions. **Therefore, WFSVI scores, and thus CBGs qualifying for reduced match in FRWRM, may differ from last year because of changes in the American Community Survey data and the set of CBGs used to calculate the WFSVI. **
+
+### WFSVI-WUI
+
+The WFSVI-WUI is the version clipped to CBGs with WUI and should be used for the FRWRM grant.
+
+```{r}
+#| echo: false
+
+
+suppressPackageStartupMessages(library(tidyverse))
+suppressPackageStartupMessages(library(sf,quietly = T))
+suppressPackageStartupMessages(library(leaflet,quietly = T))
+suppressPackageStartupMessages(library(scales,quietly = T))
+
+#Read data
+sim_results <- readRDS("../Build/Cache/final_simulated_results.rds") 
+
+wfsvi_coes <- readRDS('../Build/Cache/wfsvi_coes.rds') %>%
+  st_transform(4326) %>%
+  mutate(q_indicator=ifelse(qualifying_cbg==1,"Qualifying","Not Qualifying"),
+         coes_DIC=ifelse(coes_DIC==1,T,F),
+         across(c(ends_with("rank"),overall_sum,wfsvi),~round(.,digits = 2))) %>%
+  inner_join(select(sim_results,GEOID,percent_qualify),by = join_by(GEOID)) 
+  
+
+
+#save layer
+#All CO CBGs
+out <- wfsvi_coes %>%
+  select(block_group=GEOID,
+         wui_flag,
+         poverty_percent_below_1_rank:directional_median_hh_income_3_rank,
+         wfsvi,
+         percent_qualify,
+         COES_DIC=coes_DIC,
+         J40=j40,
+         reduced_match_qualify=q_indicator) 
+
+
+
+st_write(out,"wfsvi_2024.gpkg",append=FALSE,quiet = TRUE)
+suppressWarnings(st_write(out,"wfsvi_2024.shp",append=FALSE,quiet = TRUE))
+zip(zipfile="wfsvi_2024_shp.zip",files = c("wfsvi_2024.dbf","wfsvi_2024.prj","wfsvi_2024.shp","wfsvi_2024.shx"))
+write_csv(st_set_geometry(out,NULL),"wfsvi_2024.csv")
+
+#CO WUI CBGs
+out_wui <- out %>%
+  filter(wui_flag==1) 
+
+st_write(out_wui,"wfsvi_wui_2024.gpkg",append=FALSE,quiet = TRUE)
+suppressWarnings(st_write(out_wui,"wfsvi_wui_2024.shp",append=FALSE,quiet = TRUE))
+zip(zipfile="wfsvi_wui_2024_shp.zip",files = c("wfsvi_wui_2024.dbf","wfsvi_wui_2024.prj","wfsvi_wui_2024.shp","wfsvi_wui_2024.shx"))
+write_csv(st_set_geometry(out_wui,NULL),"wfsvi_wui_2024.csv")
+  
+#CO WUI CBGs only qualifying indicator
+out_qualify_only <- out_wui %>%
+  select(block_group,reduced_match_qualify)
+
+st_write(out_qualify_only,"reduced_qualify_2024.gpkg",append=FALSE,quiet = TRUE)
+suppressWarnings(st_write(out_qualify_only,"reduced_qualify_2024.shp",append=FALSE,quiet = TRUE))
+zip(zipfile="reduced_qualify_2024_shp.zip",
+    files = c("reduced_qualify_2024.dbf","reduced_qualify_2024.prj","reduced_qualify_2024.shp","reduced_qualify_2024.shx"))
+write_csv(st_set_geometry(out_qualify_only,NULL),"reduced_qualify_2024.csv")
+
+
+```
+
+
+```{r}
+#| echo: false
+#| fig-height: 8
+
+
+#Set color scale
+color_scale <- colorFactor(palette = "viridis",domain = c("Qualifying","Not Qualifying"))
+
+#################
+# Create the map
+#map <- leaflet(data = slice_sample(wfsvi_j40,n=200)) %>%
+map <- wfsvi_coes %>%
+  filter(wui_flag==1) %>%
+  leaflet(data = .) %>%
+  addTiles() %>%
+  setView(lng = -105.5509, lat = 39.5501, zoom = 7)  # Set initial map view to Colorado
+
+# Add census block groups as polygons
+map <- map %>%
+  addPolygons(group = "qualifying",
+              fillColor = ~color_scale(q_indicator), 
+              fillOpacity = 0.4,
+              color = "white", 
+              weight = 1,
+              popup = ~paste0("<b>Block Group ID:</b> ", GEOID,
+                              "<br><b>WFSVI:</b> ", wfsvi,
+                              "<br><b>Qualifying Frequency:</b> ", percent(percent_qualify,accuracy=1),
+                              "<br><b>CO Disp. Imp. Comm.:</b> ", coes_DIC,
+                              "<br><b>Poverty (12%):</b> ", poverty_percent_below_1_rank,
+                              "<br><b>Unemployed (7%):</b> ", civ_labor_force_unemployed_percent_2_rank,
+                              "<br><b>Household Income (12%):</b> ", directional_median_hh_income_3_rank,
+                              "<br><b>Education (7%):</b> ", no_hs_degree_percent_4_rank,
+                              "<br><b>Over 65 (2%):</b> ", over_65_percent_5_rank,
+                              "<br><b>Under 18 (2%):</b> ", under_18_percent_6_rank,
+                              "<br><b>Disability (2%):</b> ", disabled_adult_percent_7_rank,
+                              "<br><b>Single-parent Family (2%):</b> ", single_householder_percent_8_rank,
+                              "<br><b>Minority (12%):</b> ", percent_minority_9_rank,
+                              "<br><b>English-speaking (5%):</b> ", eng_proficiency_rank,
+                              "<br><b>Mobile Housing (5%):</b> ", mobile_units_rank,
+                              "<br><b>No Vehicle (2%):</b> ", no_vehicle_percent_14_rank,
+                              "<br><b>Income Inequality (12%):</b> ", Gini_income_rank,
+                              "<br><b>Education Inequality (12%):</b> ", Gini_education_rank))
+
+map <- map %>%
+  addLegend("bottomright", pal = color_scale, values = c("Qualifying","Not Qualifying"),
+            title = NULL) %>%
+  addLayersControl(
+    overlayGroups = c("qualifying"),
+    options = layersControlOptions(collapsed = TRUE)
+  )
+
+#print map
+map
+
+```
+
+The interactive map shows census block groups that qualify for reduced match in yellow. The user can zoom into any location and click on block groups for more information.  The popup contains the block group identifying number, the WFSVI value, the qualifying frequency (described in the [2023 report](https://jbayham.github.io/CSFS_WSVI/update_2023.html#analysis)), whether it qualifies because of its "disproportionately impacted community" designation, and the value of each WFSVI component. The index is described in more detail in the [original report](report.html). The WFSVI and its components are all displayed in percentiles of the distribution of all values in Colorado block groups. The higher the value, the more likely the block group is to qualify for the reduced match. The percentage reported for each index component represents the weight of the component in the overall WFSVI. Note that the percentages are rounded and may not add to 100%.
+
+You can download spatial and non-spatial version of the layer containing the reduced match qualifying indicator here:
+
+- [reduced_qualify_2024_shp.zip](reduced_qualify_2024_shp.zip) 
+
+- [reduced_qualify_2024.gpkg](reduced_qualify_2024.gpkg) 
+
+- [reduced_qualify_2024.csv](reduced_qualify_2024.csv)
+
+
+The following files include the indicator for reduced match and the underlying data:
+
+- [wfsvi_wui_2024_shp.zip](wfsvi_wui_2024_shp.zip) 
+
+- [wfsvi_wui_2024.gpkg](wfsvi_wui_2024.gpkg) 
+
+- [wfsvi_wui_2024.csv](wfsvi_wui_2024.csv)
+
+- [codebook.csv](codebook.csv)
+
+### Full Colorado WFSVI layer
+
+This version contains the WFSVI and all of its components for all populated census block groups in Colorado.
+
+```{r}
+#| echo: false
+#| fig-height: 8
+
+
+#Set color scale
+color_scale <- colorQuantile(palette = "viridis",domain = wfsvi_coes$wfsvi,n=10)
+
+#################
+# Create the map
+#map <- leaflet(data = slice_sample(wfsvi_j40,n=200)) %>%
+map <- wfsvi_coes %>%
+  #filter(wui_flag==1) %>%
+  leaflet(data = .) %>%
+  addTiles() %>%
+  setView(lng = -105.5509, lat = 39.5501, zoom = 7)  # Set initial map view to Colorado
+
+# Add census block groups as polygons
+map <- map %>%
+  addPolygons(group = "wfsvi",
+              fillColor = ~color_scale(wfsvi), 
+              fillOpacity = 0.4,
+              color = "white", 
+              weight = 1,
+              popup = ~paste0("<b>Block Group ID:</b> ", GEOID,
+                              "<br><b>WFSVI:</b> ", wfsvi,
+                              "<br><b>Qualifying Frequency:</b> ", percent(percent_qualify,accuracy=1),
+                              "<br><b>CO Disp. Imp. Comm.:</b> ", coes_DIC,
+                              "<br><b>Poverty (12%):</b> ", poverty_percent_below_1_rank,
+                              "<br><b>Unemployed (7%):</b> ", civ_labor_force_unemployed_percent_2_rank,
+                              "<br><b>Household Income (12%):</b> ", directional_median_hh_income_3_rank,
+                              "<br><b>Education (7%):</b> ", no_hs_degree_percent_4_rank,
+                              "<br><b>Over 65 (2%):</b> ", over_65_percent_5_rank,
+                              "<br><b>Under 18 (2%):</b> ", under_18_percent_6_rank,
+                              "<br><b>Disability (2%):</b> ", disabled_adult_percent_7_rank,
+                              "<br><b>Single-parent Family (2%):</b> ", single_householder_percent_8_rank,
+                              "<br><b>Minority (12%):</b> ", percent_minority_9_rank,
+                              "<br><b>English-speaking (5%):</b> ", eng_proficiency_rank,
+                              "<br><b>Mobile Housing (5%):</b> ", mobile_units_rank,
+                              "<br><b>No Vehicle (2%):</b> ", no_vehicle_percent_14_rank,
+                              "<br><b>Income Inequality (12%):</b> ", Gini_income_rank,
+                              "<br><b>Education Inequality (12%):</b> ", Gini_education_rank))
+
+map <- map %>%
+  addLegend("bottomright", pal = color_scale, values = wfsvi_coes$wfsvi,
+            title = "WFSVI") %>%
+  addLayersControl(
+    overlayGroups = c("wfsvi"),
+    options = layersControlOptions(collapsed = TRUE)
+  )
+
+#print map
+map
+
+```
+
+The interactive map displays the census block groups by WFSVI index value. The colors correspond to deciles of the WFSVI index values.
+
+The following files include the indicator for reduced match and the underlying data:
+
+- [wfsvi_2024_shp.zip](wfsvi_2024_shp.zip) 
+
+- [wfsvi_2024.gpkg](wfsvi_2024.gpkg) 
+
+- [wfsvi_2024.csv](wfsvi_2024.csv)
+
+- [codebook.csv](codebook.csv)
+
+
+## Limitations
+
+American Community Survey data is based on a sample with a reported margin of error. The COVID-19 pandemic impacted trends and affected the ability to collect data due to sampling challenges. The [U.S. Census Bureau reported](https://www.census.gov/newsroom/blogs/random-samplings/2021/10/pandemic-impact-on-2020-acs-1-year-data.html) that, due to the difficulties of fielding a household survey during the COVID-19 pandemic, household nonresponse increased substantially in the ACS, with evidence of increased nonresponse bias in many statistics. These challenges largely apply to the 1-year ACS estimates and are less of a concern for the 5-year estimates. However, these inaccuracies and high margins of errors may lead to inaccurate classifications. It may take some time before the full impact of the pandemic on census data accuracy is fully understood. It is also important to note that the margin of error may be significant in small census block groups. We acknowledge the potential that the data may be inaccurate. However, the ACS is the most reliable data to calculate the WFSVI. 
+
+## References
+
+Steven Manson, Jonathan Schroeder, David Van Riper, Tracy Kugler, and Steven Ruggles.
+IPUMS National Historical Geographic Information System: Version 16.0 [dataset].
+Minneapolis, MN: IPUMS. 2021. http://doi.org/10.18128/D050.V16.0
+
+## Technical Appendix
+
+### Missing Values
+
+In some cases, the American Community Survey does not report data (e.g., not enough people reporting to adequately protect privacy). In cases where data is not reported for a Census Block Group (CBG), we fill in the missing value with Census Tract data because tracts are comprised of multiple CBGs. In select cases where the data is not reported at the CBG or tract level (11 in 2024), we use random forest imputation leveraging information from all of the other variables to impute missing values.
