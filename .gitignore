@@ -12,3 +12,7 @@ TESTS
 
 
 *.DS_Store
+*.prj
+*.shp
+*.shx
+*.dbf

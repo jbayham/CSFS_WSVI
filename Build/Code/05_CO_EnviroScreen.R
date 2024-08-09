@@ -18,6 +18,13 @@ co_enviro_screen <- read_csv("Build/Data/Colorado_EnviroScreen_v1_BlockGroup.csv
 
 summary(co_enviro_screen$D_I_C)
 
+#J40 (not needed because included in CO ES, and needs to be crosswalked)
+# j40 <- read_csv("Build/Data/1.0-communities.csv") %>%
+#   janitor::clean_names() %>%
+#   filter(str_sub(census_tract_2010_id,1,2)=="08") %>%
+#   select(GEOID=census_tract_2010_id,dis=identified_as_disadvantaged)
+
+
 #Collapse on 2020 block groups
 coes_collapsed <- co_enviro_screen %>%
   group_by(bg2020ge) %>%
@@ -29,17 +36,19 @@ coes_collapsed <- co_enviro_screen %>%
             j40 = stats::weighted.mean(Jst40,w=wt_pop),
             old_dic_avg = stats::weighted.mean(D_I_C,w=wt_pop)) %>%
   mutate(new_dic=0,
+         j40=round(j40),
          new_dic = case_when(
     low_income > 0.40 ~ 1,
     housing_burden > 0.50 ~ 1,
     poc > 0.40 ~ 1,
     ling_isolate > 0.20 ~ 1,
     es_score/100 > 0.80 ~ 1,
+    j40==1 ~ 1,
     new_dic==0 ~ 0
   ),
-  j40=round(j40),
   new_dic = ifelse(is.na(low_income),NA,new_dic)) %>%
   filter(str_sub(bg2020ge,1,2)=="08") 
+
 
 summary(coes_collapsed$new_dic)
 #39.8% of cbgs are DIC vs 41.7% of the 2010 vintage

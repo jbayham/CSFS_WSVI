@@ -540,8 +540,12 @@ SVI_var_all_CBG<-var_1%>%
   left_join(.,var_17)
 
 #Identify CBGs with zero population
-tot_pop <- tidycensus::get_acs(geography = request_geo1, variables = 	'B01001_001', state = "08", year = request_year)%>%
+tot_pop <- tidycensus::get_acs(geography = request_geo1, variables = 	'B01001_001', state = "08", year = request_year)
+
+pop_gt_zero <- tot_pop %>%
   filter(estimate==0)
+
+saveRDS(SVI_var,file='Build/Cache/SVI_var.rds')
 
 zero_GEOIDs <- c(tot_pop$GEOID)
 new_svi_var <- filter(SVI_var_all_CBG, !(GEOID %in% zero_GEOIDs))#Remove CBGs with zero population

@@ -21,7 +21,7 @@ In 2020, our research team at Colorado State University developed the [Wildfire 
 The original WFSVI was built using 5-year (2016 - 2020) [American Community Survey](https://data.census.gov/) (ACS) estimates. We have updated the WFSVI using the most current 5-year (2018-2022) ACS data. In some cases, no data is reported for a census block group because of poor response to the ACS or insufficient sample size to meet data disclosure requirements.  We use two methods to impute missing values.  First, if the data is reported at the census tract^[Multiple block groups are [nested within tracts](https://www2.census.gov/geo/pdfs/reference/geodiagram.pdf).], we use the census tract data to fill any missing records. While these data may be less spatially accurate, they represent the next best estimate of the block group value.  Second, we use a machine learning imputation model to complete missing records when tract level information is unavailable. The machine learning method is known as random forest and is implemented via [missForest](https://github.com/stekhoven/missForest) package in R. The random forest method uses nonmissing data for one variable to train a model based on other nonmissing variables from other block groups around the state and uses that model to estimate missing values. It applies this procedure to each variable and iteratively updates until the model converges on its best estimate (see the [package documentation](https://github.com/stekhoven/missForest) for more information).  
 
 
-## Colorado EnviroScreen Data
+## Colorado EnviroScreen Data {#sec-coes}
 
 Colorado’s Environmental Justice Act ([HB21-1266](https://leg.colorado.gov/sites/default/files/2021a_1266_signed.pdf)) prompted the development of the [EnviroScreen](https://teeo-cdphe.shinyapps.io/COEnviroScreen_English/) mapping tool to identify "disproportionately impacted communities". We consider any disproportionately impacted community to automatically qualify for the FRWRM reduced match requirement. According to the EnviroScreen documentation, a disproportionately impacted community is defined as
 
@@ -50,6 +50,8 @@ suppressPackageStartupMessages(library(tidyverse))
 suppressPackageStartupMessages(library(sf,quietly = T))
 suppressPackageStartupMessages(library(leaflet,quietly = T))
 suppressPackageStartupMessages(library(scales,quietly = T))
+suppressPackageStartupMessages(library(kableExtra))
+suppressPackageStartupMessages(library(knitr))
 
 #Read data
 sim_results <- readRDS("../Build/Cache/final_simulated_results.rds") 
@@ -157,9 +159,10 @@ map <- map %>%
   )
 
 #print map
+mapview::mapshot(map,url = "qualify_or_not.html")
 map
-
 ```
+
 
 The interactive map shows census block groups that qualify for reduced match in yellow. The user can zoom into any location and click on block groups for more information.  The popup contains the block group identifying number, the WFSVI value, the qualifying frequency (described in the [2023 report](https://jbayham.github.io/CSFS_WSVI/update_2023.html#analysis)), whether it qualifies because of its "disproportionately impacted community" designation, and the value of each WFSVI component. The index is described in more detail in the [original report](report.html). The WFSVI and its components are all displayed in percentiles of the distribution of all values in Colorado block groups. The higher the value, the more likely the block group is to qualify for the reduced match. The percentage reported for each index component represents the weight of the component in the overall WFSVI. Note that the percentages are rounded and may not add to 100%.
 
@@ -238,11 +241,11 @@ map <- map %>%
   )
 
 #print map
-map
+mapview::mapshot(map,url = "wfsvi_all_co.html")
 
 ```
 
-The interactive map displays the census block groups by WFSVI index value. The colors correspond to deciles of the WFSVI index values.
+The interactive map accessible [here](wfsvi_all_co.html) displays the census block groups by WFSVI index value and all of their components for all populated census block groups in Colorado. The colors correspond to deciles of the WFSVI index distribution
 
 The following files include the indicator for reduced match and the underlying data:
 
@@ -252,8 +255,117 @@ The following files include the indicator for reduced match and the underlying d
 
 - [wfsvi_2024.csv](wfsvi_2024.csv)
 
-- [codebook.csv](codebook.csv)
 
+## Comparing WFSVI, CO EnviroScreen, and Justice 40
+
+We compare the WFSVI with the [Colorado EnviroScreen](https://cdphe.colorado.gov/enviroscreen) and [Federal Climate and Economic Justice (J40)](https://screeningtool.geoplatform.gov/en/) layers. CO Enviroscreen and J40 layers were both designed to identify disadvantaged communities. While they are distict data products, their criteria overlap. The Justice40 layer is defined at the census tract and was created by the Council on Environmental Quality to identify communities experiencing eight categories of burden: climate change, energy, health, housing, legacy pollution, transportation, water and wastewater, and workforce development. CO EnviroScreen is defined at the Census Block Group and is designed to identify dispropotionately impacted communities (described in @sec-coes). Notably, CO EnviroScreen definition of disproportionately impacted communities includes any census tract identified as disadvantaged by the J40 layer.
+
+The following tables show the number of census block groups that qualify under each of the three criteria: WFSVI, CO EnviroScreen, and Justice 40. Table A compares the WFSVI with CO EnviroScreen. Table B compares the WFSVI with J40. Table C compares CO EnviroScreen with J40. @Fig-bar compares the number of CBGs designated as disporportionately impacted communities (CO EnviroScreen), disadvantaged communities (J40), and the upper 75th percentile of WFSVI. 
+
+Table A shows the correspondents between WFSVI and CO EnviroScreen. The upper left cell (2,176) and lower right cell (851) show the agreement between the two metrics, whereas the lower left cell (153) and upper right (842) show disagreement. The WFSVI and CO EnviroScreen designate 75% of CBGs similarly. This overlap is relatively high given that the intent of each designation, and their criteria, differ. The high overlap suggests that many of the criteria used to designate communities are correlated. 
+
+Table B shows correspondents between the WFSVI and the J40 designation. These two designations also exhibit substantial overlap (80%).
+
+Table C shows that the J40 and CO EnviroScreen designations correspond for 77% of CBGs in Colorado. Notably, there are no CBGs designated under J40 that do not meet the CO EnviroScreen criteria because J40 CBGs automatically qualify as CO EnviroScreen disproportionately impacted communities.    
+
+We reiterate that a CBG qualifies for reduced match in the FRWRM program if it meets any of these three designations. 
+```{r}
+#| echo: false
+#| layout-ncol: 3
+
+
+#COES vs WFSVI
+tab1 <- wfsvi_coes %>%
+  mutate(wfsvi_qualify = as.logical(wfsvi_qualify)) %>%
+  with(.,table(wfsvi_qualify,coes_DIC)) 
+
+attr(tab1,"dimnames")[[2]] <- c("Not","DIC")
+attr(tab1,"dimnames")[[1]] <- c("Not","WFSVI Qualify")
+
+kable(tab1,caption = "A. CO EnviroScreen | WFSVI Alignment") %>%
+  add_header_above(c(" "=1, "CO EnviroScreen"=2),align = "c",line=FALSE) %>%
+  row_spec(0, extra_css = "border-bottom: 1px solid;") %>%
+  column_spec(1,bold = TRUE, extra_css = "border-right: 1px solid;")
+
+#J40 vs WFSVI
+tab2 <- wfsvi_coes %>%
+  mutate(wfsvi_qualify = as.logical(wfsvi_qualify)) %>%
+  with(.,table(wfsvi_qualify,j40)) 
+
+attr(tab2,"dimnames")[[2]] <- c("Not","J40")
+attr(tab2,"dimnames")[[1]] <- c("Not","WFSVI Qualify")
+
+kable(tab2,caption = "B. J40 | WFSVI Alignment") %>%
+  add_header_above(c(" "=1, "J40"=2),align = "c",line=FALSE) %>%
+  row_spec(0, extra_css = "border-bottom: 1px solid;") %>%
+  column_spec(1,bold = TRUE, extra_css = "border-right: 1px solid;")
+
+#J40 vs COES
+tab3 <- wfsvi_coes %>%
+  mutate(wfsvi_qualify = as.logical(wfsvi_qualify)) %>%
+  with(.,table(coes_DIC,j40)) 
+
+attr(tab3,"dimnames")[[2]] <- c("Not","J40")
+attr(tab3,"dimnames")[[1]] <- c("Not","DIC")
+
+kable(tab3,caption = "C. J40 | CO EnviroScreen Alignment") %>%
+  add_header_above(c(" "=1, "J40"=2),align = "c",line=FALSE) %>%
+  row_spec(0, extra_css = "border-bottom: 1px solid;") %>%
+  column_spec(1,bold = TRUE, extra_css = "border-right: 1px solid;")
+
+
+# 
+# summary(wfsvi_coes %>% select(wfsvi_qualify:j40))
+
+```
+
+
+```{r}
+#| echo: false
+#| fig-height: 10
+#| fig-width: 8
+#| label: fig-bar
+#| fig-cap: "Fraction of county CBGs deemed disadvantaged or impacted by WFSVI, CO EnviroScreen, or J40. Note that number of CBGs in each county varies substantially. The bar opacity is proportional to the number of CBGs in the county (darker = more CBGs)."
+
+
+# wfsvi_coes %>%
+#   mutate(wfsvi_qualify = as.logical(wfsvi_qualify)) %>%
+#   with(.,table(wfsvi_qualify,coes_DIC))
+# 
+# wfsvi_coes %>%
+#   mutate(wfsvi_qualify = as.logical(wfsvi_qualify)) %>%
+#   with(.,table(wfsvi_qualify,j40))
+# 
+# wfsvi_coes %>%
+#   mutate(wfsvi_qualify = as.logical(wfsvi_qualify)) %>%
+#   with(.,table(j40,coes_DIC)) 
+# 
+# summary(wfsvi_coes %>% select(wfsvi_qualify:j40))
+
+county_names <- tigris::fips_codes %>%
+  filter(state_code=="08") %>%
+  transmute(fips = paste0(state_code,county_code),
+         county = str_remove(county,"County"))
+
+
+wfsvi_coes %>%
+  st_drop_geometry() %>%
+  group_by(fips = str_sub(GEOID,1,5)) %>%
+  summarize(across(c(wfsvi_qualify:j40),~mean(.,na.rm = TRUE)),
+            nc=n()) %>%
+  rename(WFSVI=wfsvi_qualify,`Federal J40`=j40,`CO EnviroScreen`=coes_DIC) %>%
+  pivot_longer(-c(fips,nc)) %>%
+  inner_join(county_names,by="fips") %>% #View()
+  ggplot(aes(x=value,y=reorder(county,value),fill = name,alpha = log(nc))) +
+  geom_col(position = "dodge",show.legend = FALSE) +
+  scale_x_continuous(labels = scales::percent) +
+  facet_wrap(~name) +
+  labs(x="% of County CBGs Designated",y=NULL) +
+  theme_gray(base_size = 12)
+```
+
+
+@Fig-bar shows how these three designations are distributed across counties in Colorado. All of the CBGs qualify for at least one designation in several rural counties in Colorado. While these counties may span a large area, they are not very populated and have relatively few census block groups.
 
 ## Limitations
 
@@ -265,8 +377,3 @@ Steven Manson, Jonathan Schroeder, David Van Riper, Tracy Kugler, and Steven Rug
 IPUMS National Historical Geographic Information System: Version 16.0 [dataset].
 Minneapolis, MN: IPUMS. 2021. http://doi.org/10.18128/D050.V16.0
 
-## Technical Appendix
-
-### Missing Values
-
-In some cases, the American Community Survey does not report data (e.g., not enough people reporting to adequately protect privacy). In cases where data is not reported for a Census Block Group (CBG), we fill in the missing value with Census Tract data because tracts are comprised of multiple CBGs. In select cases where the data is not reported at the CBG or tract level (11 in 2024), we use random forest imputation leveraging information from all of the other variables to impute missing values.
