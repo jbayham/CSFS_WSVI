@@ -1,12 +1,25 @@
 block_group,reduced_match_qualify
+080010078011,Qualifying
+080010078012,Qualifying
+080010078021,Qualifying
+080010078022,Qualifying
+080010078023,Qualifying
+080010079001,Qualifying
+080010079002,Qualifying
+080010079003,Qualifying
+080010079004,Qualifying
 080010080001,Qualifying
 080010080002,Qualifying
+080010080003,Qualifying
 080010080004,Qualifying
+080010080005,Qualifying
+080010080006,Qualifying
 080010081001,Qualifying
 080010082001,Qualifying
 080010082002,Qualifying
 080010082003,Qualifying
 080010083081,Qualifying
+080010083082,Qualifying
 080010083083,Qualifying
 080010083091,Qualifying
 080010083092,Qualifying
@@ -22,17 +35,35 @@ block_group,reduced_match_qualify
 080010084021,Not Qualifying
 080010084022,Not Qualifying
 080010084023,Not Qualifying
+080010085051,Qualifying
+080010085052,Qualifying
+080010085053,Not Qualifying
 080010085054,Qualifying
 080010085055,Not Qualifying
+080010085056,Qualifying
+080010085061,Qualifying
+080010085062,Qualifying
+080010085063,Qualifying
+080010085064,Qualifying
+080010085065,Qualifying
 080010085071,Qualifying
+080010085072,Qualifying
+080010085073,Qualifying
+080010085074,Qualifying
 080010085075,Qualifying
 080010085081,Qualifying
 080010085082,Not Qualifying
+080010085083,Not Qualifying
+080010085241,Not Qualifying
+080010085242,Not Qualifying
 080010085243,Qualifying
+080010085244,Not Qualifying
 080010085245,Not Qualifying
 080010085246,Not Qualifying
 080010085261,Qualifying
 080010085262,Not Qualifying
+080010085263,Qualifying
+080010085264,Not Qualifying
 080010085265,Not Qualifying
 080010085331,Qualifying
 080010085332,Qualifying
@@ -40,6 +71,8 @@ block_group,reduced_match_qualify
 080010085334,Qualifying
 080010085335,Qualifying
 080010085341,Qualifying
+080010085342,Qualifying
+080010085343,Not Qualifying
 080010085351,Qualifying
 080010085352,Qualifying
 080010085361,Qualifying
@@ -50,6 +83,8 @@ block_group,reduced_match_qualify
 080010085384,Not Qualifying
 080010085401,Not Qualifying
 080010085402,Not Qualifying
+080010085403,Qualifying
+080010085404,Not Qualifying
 080010085405,Not Qualifying
 080010085406,Not Qualifying
 080010085441,Not Qualifying
@@ -60,8 +95,17 @@ block_group,reduced_match_qualify
 080010085453,Not Qualifying
 080010085454,Not Qualifying
 080010085455,Qualifying
+080010085461,Not Qualifying
+080010085462,Not Qualifying
+080010085471,Not Qualifying
+080010085472,Not Qualifying
+080010085481,Not Qualifying
 080010085491,Not Qualifying
+080010085492,Not Qualifying
+080010085501,Qualifying
+080010085502,Not Qualifying
 080010085503,Not Qualifying
+080010085504,Not Qualifying
 080010085505,Not Qualifying
 080010085511,Not Qualifying
 080010085521,Qualifying
@@ -97,38 +141,88 @@ block_group,reduced_match_qualify
 080010085655,Qualifying
 080010086031,Qualifying
 080010086041,Qualifying
+080010086042,Qualifying
+080010086043,Qualifying
 080010086051,Qualifying
+080010086052,Not Qualifying
+080010086061,Qualifying
+080010086062,Qualifying
 080010086063,Qualifying
 080010086064,Qualifying
+080010087051,Qualifying
+080010087052,Qualifying
+080010087053,Qualifying
+080010087054,Qualifying
 080010087061,Qualifying
 080010087062,Qualifying
 080010087063,Qualifying
+080010087091,Qualifying
+080010087092,Qualifying
 080010087093,Qualifying
+080010087094,Qualifying
 080010087095,Qualifying
 080010087096,Qualifying
 080010088011,Qualifying
 080010088012,Qualifying
+080010088013,Qualifying
 080010088021,Qualifying
 080010088022,Qualifying
 080010088023,Qualifying
 080010089011,Qualifying
+080010089012,Qualifying
+080010090011,Qualifying
+080010090012,Qualifying
+080010090031,Qualifying
+080010090032,Qualifying
+080010090033,Qualifying
 080010090041,Qualifying
 080010090042,Qualifying
 080010090043,Qualifying
 080010091011,Qualifying
+080010091012,Qualifying
+080010091013,Qualifying
 080010091031,Qualifying
 080010091032,Qualifying
 080010091041,Qualifying
 080010091042,Qualifying
+080010092021,Qualifying
+080010092022,Qualifying
+080010092023,Qualifying
+080010092031,Qualifying
 080010092032,Qualifying
+080010092033,Qualifying
 080010092041,Qualifying
+080010092042,Qualifying
+080010092043,Qualifying
 080010092044,Qualifying
 080010092061,Qualifying
+080010092071,Qualifying
+080010092072,Qualifying
 080010093041,Qualifying
+080010093042,Qualifying
 080010093043,Qualifying
 080010093044,Not Qualifying
+080010093045,Qualifying
+080010093061,Qualifying
+080010093062,Qualifying
+080010093071,Qualifying
+080010093072,Qualifying
+080010093081,Qualifying
+080010093082,Qualifying
+080010093083,Qualifying
+080010093084,Qualifying
+080010093091,Qualifying
+080010093092,Qualifying
 080010093093,Qualifying
+080010093101,Qualifying
+080010093102,Qualifying
+080010093103,Qualifying
+080010093104,Qualifying
 080010093161,Qualifying
+080010093162,Qualifying
+080010093163,Qualifying
+080010093164,Qualifying
+080010093165,Qualifying
 080010093181,Qualifying
 080010093182,Qualifying
 080010093183,Qualifying
@@ -137,32 +231,69 @@ block_group,reduced_match_qualify
 080010093193,Qualifying
 080010093201,Qualifying
 080010093202,Qualifying
+080010093211,Qualifying
+080010093212,Qualifying
+080010093213,Qualifying
+080010093221,Qualifying
+080010093222,Qualifying
 080010093231,Qualifying
 080010093232,Qualifying
+080010093233,Qualifying
+080010093234,Qualifying
 080010093251,Qualifying
 080010093252,Not Qualifying
 080010093253,Not Qualifying
 080010093261,Qualifying
 080010093262,Not Qualifying
 080010093271,Not Qualifying
+080010093272,Qualifying
 080010093273,Qualifying
 080010093274,Not Qualifying
 080010094011,Qualifying
 080010094012,Qualifying
 080010094013,Qualifying
+080010094061,Qualifying
+080010094062,Qualifying
 080010094071,Qualifying
 080010094072,Qualifying
+080010094073,Qualifying
 080010094081,Not Qualifying
 080010094082,Not Qualifying
+080010094091,Not Qualifying
 080010094092,Not Qualifying
 080010094093,Not Qualifying
+080010094101,Not Qualifying
 080010094102,Not Qualifying
+080010094111,Not Qualifying
+080010094112,Not Qualifying
+080010095011,Qualifying
+080010095012,Qualifying
+080010095021,Qualifying
+080010095022,Qualifying
+080010095023,Qualifying
+080010095024,Qualifying
+080010095531,Qualifying
 080010095532,Qualifying
+080010096031,Qualifying
+080010096032,Not Qualifying
+080010096033,Not Qualifying
+080010096034,Qualifying
+080010096035,Qualifying
+080010096041,Qualifying
+080010096042,Qualifying
+080010096043,Qualifying
+080010096044,Qualifying
+080010096061,Qualifying
+080010096062,Qualifying
 080010096071,Qualifying
 080010096072,Qualifying
+080010096073,Qualifying
 080010096081,Not Qualifying
+080010096082,Qualifying
 080010097511,Qualifying
 080010097512,Qualifying
+080010097521,Qualifying
+080010097522,Qualifying
 080010150001,Qualifying
 080010150002,Qualifying
 080010150003,Qualifying
@@ -176,6 +307,7 @@ block_group,reduced_match_qualify
 080010601003,Qualifying
 080010602001,Qualifying
 080010602002,Not Qualifying
+080010602003,Qualifying
 080010612001,Not Qualifying
 080010612002,Not Qualifying
 080039600001,Qualifying
@@ -193,13 +325,24 @@ block_group,reduced_match_qualify
 080039603002,Qualifying
 080039603003,Qualifying
 080039603004,Qualifying
+080050049511,Qualifying
+080050049521,Qualifying
+080050049522,Qualifying
+080050055511,Qualifying
+080050055512,Qualifying
 080050055513,Qualifying
 080050055521,Qualifying
+080050055522,Qualifying
 080050055523,Qualifying
+080050055531,Not Qualifying
+080050055532,Qualifying
 080050055533,Qualifying
 080050056111,Not Qualifying
 080050056112,Not Qualifying
+080050056113,Not Qualifying
+080050056114,Not Qualifying
 080050056121,Not Qualifying
+080050056122,Not Qualifying
 080050056141,Not Qualifying
 080050056142,Not Qualifying
 080050056143,Not Qualifying
@@ -207,38 +350,92 @@ block_group,reduced_match_qualify
 080050056192,Not Qualifying
 080050056193,Not Qualifying
 080050056194,Not Qualifying
+080050056201,Qualifying
+080050056202,Not Qualifying
 080050056211,Not Qualifying
 080050056212,Not Qualifying
 080050056221,Not Qualifying
 080050056222,Not Qualifying
 080050056231,Not Qualifying
+080050056232,Not Qualifying
 080050056233,Not Qualifying
+080050056241,Not Qualifying
+080050056251,Not Qualifying
+080050056252,Not Qualifying
 080050056261,Not Qualifying
+080050056262,Not Qualifying
 080050056271,Not Qualifying
 080050056272,Not Qualifying
+080050056273,Not Qualifying
 080050056281,Not Qualifying
+080050056282,Not Qualifying
 080050056283,Not Qualifying
 080050056284,Not Qualifying
 080050056291,Not Qualifying
 080050056292,Not Qualifying
+080050056301,Not Qualifying
 080050056302,Not Qualifying
+080050056303,Not Qualifying
+080050056304,Not Qualifying
+080050056311,Not Qualifying
 080050056312,Not Qualifying
 080050056313,Not Qualifying
 080050056321,Not Qualifying
 080050056322,Not Qualifying
 080050056331,Not Qualifying
+080050056332,Not Qualifying
 080050056341,Not Qualifying
 080050056342,Not Qualifying
+080050056351,Not Qualifying
+080050056352,Not Qualifying
+080050056353,Not Qualifying
 080050056354,Not Qualifying
 080050056361,Not Qualifying
 080050056362,Not Qualifying
+080050057011,Not Qualifying
+080050057012,Qualifying
+080050057021,Not Qualifying
+080050057022,Not Qualifying
+080050058001,Not Qualifying
+080050058002,Not Qualifying
+080050059511,Not Qualifying
 080050059512,Qualifying
 080050059513,Qualifying
 080050059514,Qualifying
+080050059521,Not Qualifying
 080050059522,Qualifying
+080050060001,Qualifying
+080050060002,Not Qualifying
+080050060003,Qualifying
 080050061001,Qualifying
 080050061002,Qualifying
+080050061003,Not Qualifying
+080050062001,Not Qualifying
+080050062002,Qualifying
+080050062003,Not Qualifying
+080050062004,Qualifying
+080050063001,Not Qualifying
+080050063002,Not Qualifying
+080050063003,Not Qualifying
+080050063004,Not Qualifying
+080050064001,Qualifying
+080050064002,Qualifying
+080050064003,Qualifying
 080050065011,Not Qualifying
+080050065012,Not Qualifying
+080050065021,Not Qualifying
+080050065022,Not Qualifying
+080050065023,Qualifying
+080050066011,Qualifying
+080050066012,Qualifying
+080050066013,Qualifying
+080050066014,Qualifying
+080050066031,Not Qualifying
+080050066032,Not Qualifying
+080050066033,Not Qualifying
+080050066041,Qualifying
+080050066042,Qualifying
+080050066043,Qualifying
 080050067041,Not Qualifying
 080050067042,Not Qualifying
 080050067043,Not Qualifying
@@ -247,17 +444,40 @@ block_group,reduced_match_qualify
 080050067061,Not Qualifying
 080050067062,Not Qualifying
 080050067063,Not Qualifying
+080050067071,Not Qualifying
+080050067072,Not Qualifying
+080050067073,Not Qualifying
+080050067074,Not Qualifying
 080050067081,Not Qualifying
 080050067082,Not Qualifying
+080050067083,Not Qualifying
+080050067091,Not Qualifying
+080050067092,Not Qualifying
+080050067093,Not Qualifying
 080050067094,Not Qualifying
+080050067095,Not Qualifying
+080050067111,Not Qualifying
+080050067112,Not Qualifying
 080050067113,Not Qualifying
 080050067114,Not Qualifying
 080050067121,Not Qualifying
+080050067122,Not Qualifying
+080050067131,Qualifying
 080050068081,Not Qualifying
 080050068082,Not Qualifying
 080050068083,Not Qualifying
+080050068151,Not Qualifying
+080050068152,Not Qualifying
+080050068153,Qualifying
+080050068154,Qualifying
 080050068541,Qualifying
 080050068542,Not Qualifying
+080050068571,Not Qualifying
+080050068572,Not Qualifying
+080050068591,Qualifying
+080050068592,Qualifying
+080050068593,Not Qualifying
+080050068601,Qualifying
 080050068611,Not Qualifying
 080050068612,Not Qualifying
 080050068613,Not Qualifying
@@ -286,34 +506,96 @@ block_group,reduced_match_qualify
 080050071122,Not Qualifying
 080050071131,Not Qualifying
 080050071132,Not Qualifying
+080050072011,Qualifying
 080050072012,Qualifying
 080050072013,Qualifying
+080050072021,Qualifying
+080050072022,Qualifying
+080050072023,Qualifying
 080050073011,Qualifying
+080050073012,Qualifying
 080050073021,Qualifying
+080050073022,Qualifying
+080050073023,Qualifying
+080050073024,Qualifying
 080050074001,Qualifying
 080050074002,Qualifying
 080050074003,Qualifying
+080050074004,Qualifying
 080050075001,Qualifying
 080050075002,Qualifying
+080050076001,Qualifying
+080050076002,Qualifying
+080050076003,Qualifying
+080050076004,Qualifying
+080050077021,Qualifying
+080050077022,Qualifying
 080050077023,Qualifying
+080050077031,Not Qualifying
+080050077032,Qualifying
 080050077033,Qualifying
+080050077041,Qualifying
+080050077042,Qualifying
+080050077043,Qualifying
+080050151001,Not Qualifying
+080050151002,Not Qualifying
 080050800001,Qualifying
+080050800002,Qualifying
+080050801001,Qualifying
+080050801002,Qualifying
+080050801003,Qualifying
+080050802001,Qualifying
+080050802002,Qualifying
+080050802003,Qualifying
+080050802004,Not Qualifying
+080050803001,Qualifying
+080050803002,Not Qualifying
+080050803003,Qualifying
+080050803004,Qualifying
+080050804001,Qualifying
 080050804002,Qualifying
+080050804003,Qualifying
+080050804004,Not Qualifying
+080050805001,Not Qualifying
+080050805002,Not Qualifying
+080050806001,Qualifying
+080050806002,Qualifying
+080050806003,Qualifying
+080050807001,Qualifying
+080050807002,Qualifying
+080050807003,Qualifying
+080050807004,Qualifying
+080050808001,Qualifying
+080050808002,Qualifying
 080050809001,Qualifying
+080050809002,Qualifying
 080050810011,Qualifying
 080050810021,Qualifying
 080050810022,Qualifying
 080050810023,Qualifying
 080050811011,Qualifying
 080050811012,Qualifying
+080050811013,Qualifying
+080050811021,Qualifying
+080050811022,Qualifying
+080050812001,Qualifying
+080050812002,Qualifying
+080050812003,Qualifying
+080050813001,Not Qualifying
+080050813002,Qualifying
+080050814001,Qualifying
 080050814002,Qualifying
+080050814003,Qualifying
 080050814004,Qualifying
 080050815001,Not Qualifying
 080050815002,Not Qualifying
 080050815003,Not Qualifying
 080050816001,Qualifying
 080050816002,Qualifying
+080050816003,Qualifying
 080050816004,Not Qualifying
+080050817001,Not Qualifying
+080050817002,Not Qualifying
 080050818001,Qualifying
 080050818002,Qualifying
 080050818003,Qualifying
@@ -324,9 +606,11 @@ block_group,reduced_match_qualify
 080050820001,Qualifying
 080050820002,Qualifying
 080050820003,Qualifying
+080050821001,Qualifying
 080050821002,Qualifying
 080050821003,Qualifying
 080050822001,Qualifying
+080050822002,Qualifying
 080050822003,Qualifying
 080050822004,Qualifying
 080050823001,Qualifying
@@ -335,41 +619,76 @@ block_group,reduced_match_qualify
 080050824001,Qualifying
 080050824002,Qualifying
 080050824003,Qualifying
+080050825001,Not Qualifying
+080050825002,Qualifying
+080050826001,Qualifying
 080050826002,Qualifying
 080050826003,Qualifying
 080050826004,Qualifying
+080050827001,Qualifying
+080050827002,Qualifying
+080050828001,Qualifying
+080050828002,Qualifying
+080050828003,Qualifying
 080050828004,Qualifying
 080050829001,Qualifying
 080050829002,Qualifying
 080050829003,Qualifying
 080050830001,Qualifying
 080050830002,Qualifying
+080050831001,Qualifying
 080050831002,Qualifying
 080050831003,Qualifying
+080050831004,Qualifying
 080050832011,Qualifying
 080050832012,Qualifying
 080050832013,Qualifying
 080050832021,Not Qualifying
 080050832022,Not Qualifying
+080050833001,Not Qualifying
 080050833002,Not Qualifying
+080050833003,Not Qualifying
 080050834001,Not Qualifying
 080050834002,Qualifying
 080050834003,Qualifying
+080050835001,Qualifying
+080050835002,Qualifying
+080050835003,Qualifying
+080050835004,Qualifying
+080050835005,Not Qualifying
 080050836001,Qualifying
 080050836002,Not Qualifying
+080050836003,Not Qualifying
 080050837001,Not Qualifying
 080050837002,Qualifying
+080050838001,Qualifying
+080050838002,Not Qualifying
+080050838003,Qualifying
 080050839001,Not Qualifying
+080050839002,Not Qualifying
+080050840001,Not Qualifying
+080050840002,Not Qualifying
+080050840003,Not Qualifying
 080050841001,Not Qualifying
 080050841002,Qualifying
 080050841003,Qualifying
 080050842001,Not Qualifying
 080050842002,Qualifying
 080050842003,Qualifying
+080050843001,Qualifying
 080050843002,Not Qualifying
 080050844001,Qualifying
 080050844002,Not Qualifying
+080050845001,Qualifying
 080050845002,Not Qualifying
+080050846001,Qualifying
+080050846002,Not Qualifying
+080050846003,Not Qualifying
+080050846004,Qualifying
+080050847001,Not Qualifying
+080050847002,Not Qualifying
+080050847003,Not Qualifying
+080050847004,Not Qualifying
 080050848001,Not Qualifying
 080050848002,Qualifying
 080050848003,Not Qualifying
@@ -382,16 +701,31 @@ block_group,reduced_match_qualify
 080050852001,Not Qualifying
 080050852002,Not Qualifying
 080050853001,Not Qualifying
+080050854001,Qualifying
+080050854002,Not Qualifying
 080050854003,Not Qualifying
+080050855001,Not Qualifying
 080050855002,Not Qualifying
+080050855003,Not Qualifying
+080050856001,Not Qualifying
+080050856002,Not Qualifying
 080050857001,Qualifying
 080050857002,Not Qualifying
 080050857003,Qualifying
+080050857004,Qualifying
 080050858001,Not Qualifying
 080050859001,Qualifying
 080050859002,Qualifying
+080050860011,Not Qualifying
+080050860012,Not Qualifying
 080050860021,Not Qualifying
+080050860022,Qualifying
+080050861001,Qualifying
+080050861002,Not Qualifying
 080050861003,Qualifying
+080050862001,Not Qualifying
+080050862002,Not Qualifying
+080050862003,Not Qualifying
 080050863001,Not Qualifying
 080050863002,Not Qualifying
 080050863003,Not Qualifying
@@ -406,7 +740,28 @@ block_group,reduced_match_qualify
 080050866003,Not Qualifying
 080050867001,Not Qualifying
 080050867002,Not Qualifying
+080050868011,Qualifying
+080050868012,Qualifying
+080050868013,Qualifying
+080050868021,Qualifying
+080050868022,Qualifying
+080050869001,Qualifying
+080050869002,Qualifying
+080050870001,Qualifying
+080050870002,Qualifying
+080050870003,Qualifying
+080050871001,Qualifying
+080050871002,Qualifying
+080050872001,Qualifying
+080050872002,Not Qualifying
+080050872003,Qualifying
+080050872004,Qualifying
+080050873011,Qualifying
+080050873012,Qualifying
 080050873013,Qualifying
+080050873014,Qualifying
+080050873021,Qualifying
+080050873022,Not Qualifying
 080059800001,Qualifying
 080079404001,Not Qualifying
 080079404002,Not Qualifying
@@ -435,6 +790,7 @@ block_group,reduced_match_qualify
 080130121012,Not Qualifying
 080130121013,Not Qualifying
 080130121014,Not Qualifying
+080130121031,Not Qualifying
 080130121032,Not Qualifying
 080130121033,Not Qualifying
 080130121041,Not Qualifying
@@ -442,13 +798,33 @@ block_group,reduced_match_qualify
 080130121051,Not Qualifying
 080130121052,Qualifying
 080130121053,Not Qualifying
+080130121054,Not Qualifying
+080130121061,Not Qualifying
+080130121062,Not Qualifying
+080130121071,Qualifying
+080130121072,Not Qualifying
+080130121073,Not Qualifying
 080130122011,Not Qualifying
 080130122012,Qualifying
 080130122013,Not Qualifying
+080130122041,Qualifying
+080130122042,Qualifying
+080130122043,Not Qualifying
+080130122051,Qualifying
+080130122052,Qualifying
+080130122061,Qualifying
+080130122062,Qualifying
 080130122071,Qualifying
 080130122072,Qualifying
+080130122073,Not Qualifying
+080130122081,Not Qualifying
 080130122082,Not Qualifying
+080130123001,Qualifying
+080130123002,Qualifying
+080130124011,Qualifying
+080130124012,Qualifying
 080130124013,Not Qualifying
+080130124014,Qualifying
 080130125011,Not Qualifying
 080130125012,Not Qualifying
 080130125051,Not Qualifying
@@ -459,17 +835,27 @@ block_group,reduced_match_qualify
 080130125073,Not Qualifying
 080130125081,Not Qualifying
 080130125082,Not Qualifying
+080130125083,Qualifying
 080130125091,Not Qualifying
+080130125092,Not Qualifying
+080130125093,Not Qualifying
 080130125101,Not Qualifying
 080130125102,Not Qualifying
 080130125103,Not Qualifying
 080130125104,Not Qualifying
 080130125111,Qualifying
 080130125112,Not Qualifying
+080130125113,Not Qualifying
 080130126031,Not Qualifying
 080130126032,Not Qualifying
 080130126033,Not Qualifying
 080130126051,Qualifying
+080130126052,Qualifying
+080130126081,Not Qualifying
+080130126091,Qualifying
+080130126101,Qualifying
+080130126102,Qualifying
+080130126103,Qualifying
 080130127011,Not Qualifying
 080130127012,Not Qualifying
 080130127013,Not Qualifying
@@ -499,9 +885,12 @@ block_group,reduced_match_qualify
 080130128024,Not Qualifying
 080130129031,Not Qualifying
 080130129032,Not Qualifying
+080130129041,Not Qualifying
 080130129042,Not Qualifying
 080130129043,Not Qualifying
 080130129044,Not Qualifying
+080130129051,Not Qualifying
+080130129052,Not Qualifying
 080130129071,Not Qualifying
 080130129072,Not Qualifying
 080130130031,Not Qualifying
@@ -526,6 +915,7 @@ block_group,reduced_match_qualify
 080130132071,Not Qualifying
 080130132072,Qualifying
 080130132073,Not Qualifying
+080130132081,Not Qualifying
 080130132082,Not Qualifying
 080130132083,Not Qualifying
 080130132084,Not Qualifying
@@ -534,6 +924,7 @@ block_group,reduced_match_qualify
 080130132103,Not Qualifying
 080130132111,Not Qualifying
 080130132112,Not Qualifying
+080130132113,Qualifying
 080130132114,Not Qualifying
 080130132115,Not Qualifying
 080130132116,Qualifying
@@ -546,20 +937,40 @@ block_group,reduced_match_qualify
 080130132151,Not Qualifying
 080130132152,Not Qualifying
 080130132153,Not Qualifying
+080130133021,Not Qualifying
+080130133022,Qualifying
 080130133023,Qualifying
 080130133024,Not Qualifying
 080130133025,Not Qualifying
 080130133051,Not Qualifying
+080130133052,Not Qualifying
 080130133053,Qualifying
 080130133061,Not Qualifying
+080130133062,Qualifying
+080130133071,Qualifying
+080130133072,Qualifying
+080130133081,Qualifying
+080130133082,Qualifying
+080130133083,Not Qualifying
 080130134011,Qualifying
 080130134012,Qualifying
+080130134013,Qualifying
 080130134021,Qualifying
 080130134022,Not Qualifying
 080130134023,Not Qualifying
+080130134024,Not Qualifying
+080130134025,Qualifying
+080130135031,Qualifying
+080130135032,Qualifying
+080130135033,Qualifying
+080130135034,Qualifying
+080130135051,Qualifying
 080130135052,Qualifying
 080130135053,Qualifying
 080130135061,Not Qualifying
+080130135062,Not Qualifying
+080130135071,Qualifying
+080130135072,Not Qualifying
 080130135081,Not Qualifying
 080130135082,Not Qualifying
 080130135083,Not Qualifying
@@ -584,6 +995,7 @@ block_group,reduced_match_qualify
 080130137064,Not Qualifying
 080130606011,Not Qualifying
 080130606012,Not Qualifying
+080130606013,Not Qualifying
 080130606021,Not Qualifying
 080130607001,Not Qualifying
 080130607002,Not Qualifying
@@ -593,6 +1005,7 @@ block_group,reduced_match_qualify
 080130608013,Qualifying
 080130608021,Qualifying
 080130608022,Qualifying
+080130608023,Qualifying
 080130608024,Not Qualifying
 080130609001,Not Qualifying
 080130609002,Not Qualifying
@@ -601,7 +1014,9 @@ block_group,reduced_match_qualify
 080130613002,Not Qualifying
 080130614001,Not Qualifying
 080130614002,Not Qualifying
+080140300001,Not Qualifying
 080140300002,Not Qualifying
+080140301001,Not Qualifying
 080140301002,Not Qualifying
 080140302001,Not Qualifying
 080140303001,Not Qualifying
@@ -609,12 +1024,19 @@ block_group,reduced_match_qualify
 080140304001,Not Qualifying
 080140304002,Not Qualifying
 080140304003,Not Qualifying
+080140305001,Not Qualifying
+080140305002,Not Qualifying
+080140305003,Not Qualifying
 080140305004,Not Qualifying
 080140306001,Not Qualifying
+080140306002,Not Qualifying
+080140306003,Qualifying
+080140306004,Not Qualifying
 080140307001,Not Qualifying
 080140307002,Not Qualifying
 080140308001,Not Qualifying
 080140308002,Qualifying
+080140308003,Not Qualifying
 080140308004,Not Qualifying
 080140309001,Not Qualifying
 080140309002,Not Qualifying
@@ -719,59 +1141,476 @@ block_group,reduced_match_qualify
 080310001022,Not Qualifying
 080310001023,Not Qualifying
 080310002011,Qualifying
+080310002012,Qualifying
+080310002021,Qualifying
+080310002022,Qualifying
 080310002023,Qualifying
 080310002024,Qualifying
+080310003011,Qualifying
+080310003012,Not Qualifying
+080310003013,Qualifying
+080310003014,Not Qualifying
+080310003015,Not Qualifying
+080310003016,Not Qualifying
+080310003021,Not Qualifying
+080310003022,Not Qualifying
+080310003023,Not Qualifying
+080310003024,Not Qualifying
+080310003025,Not Qualifying
+080310003031,Not Qualifying
+080310003032,Qualifying
+080310003033,Not Qualifying
+080310003034,Not Qualifying
+080310003035,Not Qualifying
+080310003036,Not Qualifying
+080310004011,Qualifying
+080310004012,Qualifying
+080310004013,Not Qualifying
+080310004014,Not Qualifying
+080310004031,Qualifying
+080310004032,Not Qualifying
+080310004033,Not Qualifying
+080310004034,Not Qualifying
+080310004041,Qualifying
+080310004042,Not Qualifying
+080310004043,Not Qualifying
+080310005011,Not Qualifying
+080310005012,Not Qualifying
+080310005031,Qualifying
+080310005032,Not Qualifying
+080310005041,Not Qualifying
+080310005042,Not Qualifying
+080310005043,Qualifying
+080310006001,Not Qualifying
+080310006002,Qualifying
+080310006003,Qualifying
+080310006004,Not Qualifying
+080310006005,Qualifying
+080310007031,Qualifying
+080310007032,Qualifying
+080310007041,Qualifying
+080310007042,Qualifying
+080310007051,Qualifying
+080310007052,Qualifying
+080310007053,Qualifying
+080310007061,Qualifying
+080310007062,Qualifying
+080310008001,Qualifying
+080310009021,Qualifying
+080310009022,Qualifying
+080310009023,Qualifying
+080310009024,Qualifying
+080310009025,Qualifying
+080310009031,Qualifying
+080310009032,Qualifying
+080310009033,Qualifying
+080310009034,Qualifying
+080310009035,Qualifying
+080310009041,Qualifying
+080310009042,Qualifying
+080310009043,Qualifying
+080310009044,Qualifying
+080310009051,Qualifying
+080310009052,Qualifying
+080310009053,Qualifying
+080310009054,Qualifying
+080310010001,Qualifying
+080310010002,Qualifying
+080310010003,Qualifying
+080310011011,Qualifying
+080310011012,Qualifying
+080310011013,Qualifying
+080310011014,Qualifying
+080310011021,Qualifying
+080310011022,Qualifying
+080310011023,Not Qualifying
+080310011024,Not Qualifying
+080310013011,Qualifying
+080310013012,Qualifying
+080310013013,Qualifying
+080310013014,Qualifying
+080310013015,Qualifying
+080310013021,Qualifying
+080310013022,Qualifying
+080310013023,Qualifying
 080310014011,Qualifying
+080310014012,Qualifying
+080310014013,Qualifying
+080310014014,Qualifying
+080310014015,Qualifying
 080310014021,Qualifying
 080310014022,Qualifying
+080310014023,Qualifying
+080310014024,Qualifying
+080310014031,Qualifying
+080310014032,Qualifying
 080310014033,Qualifying
+080310015001,Qualifying
+080310015002,Qualifying
+080310015003,Qualifying
+080310015004,Qualifying
+080310016011,Qualifying
+080310016012,Not Qualifying
+080310016013,Not Qualifying
+080310016021,Not Qualifying
+080310016022,Not Qualifying
+080310016031,Qualifying
+080310016032,Not Qualifying
+080310016033,Qualifying
+080310016034,Qualifying
+080310016035,Qualifying
+080310017031,Not Qualifying
+080310017032,Not Qualifying
+080310017033,Not Qualifying
+080310017041,Qualifying
+080310017042,Not Qualifying
+080310017043,Not Qualifying
+080310017051,Not Qualifying
+080310017052,Not Qualifying
+080310017053,Not Qualifying
+080310017054,Not Qualifying
+080310017061,Not Qualifying
+080310017062,Qualifying
+080310017071,Qualifying
+080310017072,Not Qualifying
+080310018001,Qualifying
+080310018002,Qualifying
+080310018003,Qualifying
+080310019011,Qualifying
+080310019012,Qualifying
+080310019013,Qualifying
+080310020001,Qualifying
+080310020002,Not Qualifying
+080310020003,Not Qualifying
+080310021011,Not Qualifying
+080310021012,Qualifying
+080310021013,Qualifying
+080310021022,Not Qualifying
+080310021023,Not Qualifying
+080310021024,Not Qualifying
+080310023001,Qualifying
+080310023002,Qualifying
 080310023003,Not Qualifying
+080310024021,Qualifying
+080310024022,Qualifying
+080310024041,Qualifying
+080310024042,Qualifying
+080310024051,Qualifying
+080310024052,Qualifying
+080310024053,Qualifying
+080310026021,Not Qualifying
+080310026022,Not Qualifying
+080310026023,Not Qualifying
+080310026031,Not Qualifying
+080310026032,Not Qualifying
+080310026041,Qualifying
+080310026042,Qualifying
+080310027041,Qualifying
+080310027042,Not Qualifying
+080310027051,Qualifying
+080310027052,Not Qualifying
+080310027053,Not Qualifying
+080310027061,Not Qualifying
+080310027062,Not Qualifying
+080310027063,Not Qualifying
+080310027071,Not Qualifying
+080310027072,Not Qualifying
+080310027081,Qualifying
+080310027082,Not Qualifying
+080310027091,Not Qualifying
+080310027092,Not Qualifying
+080310028011,Not Qualifying
+080310028012,Not Qualifying
+080310028013,Not Qualifying
+080310028021,Not Qualifying
+080310028022,Qualifying
+080310028023,Not Qualifying
+080310028024,Qualifying
+080310028025,Not Qualifying
+080310028041,Not Qualifying
+080310028042,Not Qualifying
+080310028051,Not Qualifying
+080310028052,Not Qualifying
+080310029011,Not Qualifying
+080310029012,Not Qualifying
+080310029013,Not Qualifying
+080310029014,Not Qualifying
 080310029021,Not Qualifying
 080310029022,Not Qualifying
+080310029023,Not Qualifying
+080310030021,Not Qualifying
+080310030022,Not Qualifying
+080310030023,Not Qualifying
+080310030031,Not Qualifying
+080310030032,Qualifying
+080310030041,Not Qualifying
+080310030042,Not Qualifying
+080310030043,Not Qualifying
+080310030051,Not Qualifying
+080310030052,Not Qualifying
+080310030061,Not Qualifying
+080310030062,Not Qualifying
+080310030063,Not Qualifying
 080310031011,Qualifying
 080310031021,Qualifying
+080310031022,Qualifying
 080310031023,Qualifying
 080310031024,Qualifying
+080310032021,Qualifying
+080310032022,Not Qualifying
+080310032023,Not Qualifying
+080310032031,Not Qualifying
+080310032032,Not Qualifying
+080310032033,Not Qualifying
+080310032041,Not Qualifying
+080310032042,Not Qualifying
+080310032051,Not Qualifying
+080310032052,Not Qualifying
+080310032053,Not Qualifying
+080310033001,Not Qualifying
+080310033002,Not Qualifying
+080310033003,Not Qualifying
+080310033004,Not Qualifying
+080310034011,Not Qualifying
+080310034012,Not Qualifying
 080310034021,Not Qualifying
+080310034022,Not Qualifying
 080310034023,Not Qualifying
 080310035011,Qualifying
+080310035012,Qualifying
+080310035013,Qualifying
+080310035021,Qualifying
+080310035022,Qualifying
+080310036011,Qualifying
+080310036012,Qualifying
+080310036013,Qualifying
+080310036014,Qualifying
+080310036021,Qualifying
+080310036022,Qualifying
+080310036023,Qualifying
+080310036024,Qualifying
+080310036025,Qualifying
+080310036031,Qualifying
+080310036032,Not Qualifying
+080310036033,Qualifying
+080310036034,Not Qualifying
 080310037011,Not Qualifying
 080310037012,Not Qualifying
 080310037013,Not Qualifying
+080310037021,Not Qualifying
+080310037022,Not Qualifying
+080310037023,Not Qualifying
+080310037024,Not Qualifying
+080310037031,Not Qualifying
+080310037032,Not Qualifying
+080310038011,Not Qualifying
+080310038012,Not Qualifying
+080310038013,Qualifying
+080310038021,Not Qualifying
+080310038022,Not Qualifying
+080310038023,Not Qualifying
+080310039011,Not Qualifying
+080310039012,Not Qualifying
+080310039013,Not Qualifying
+080310039014,Not Qualifying
+080310039021,Not Qualifying
+080310039022,Not Qualifying
+080310039023,Not Qualifying
+080310040021,Not Qualifying
+080310040022,Not Qualifying
+080310040023,Not Qualifying
+080310040024,Not Qualifying
+080310040031,Not Qualifying
+080310040032,Not Qualifying
+080310040033,Not Qualifying
+080310040034,Not Qualifying
+080310040041,Not Qualifying
+080310040051,Not Qualifying
+080310040052,Qualifying
+080310040061,Not Qualifying
+080310040062,Not Qualifying
+080310040063,Qualifying
+080310040064,Not Qualifying
+080310041011,Qualifying
+080310041012,Qualifying
 080310041013,Qualifying
 080310041014,Qualifying
 080310041021,Qualifying
+080310041022,Qualifying
+080310041023,Qualifying
+080310041024,Qualifying
+080310041031,Qualifying
+080310041032,Qualifying
+080310041033,Qualifying
 080310041034,Not Qualifying
+080310041035,Not Qualifying
+080310041036,Qualifying
+080310041041,Qualifying
+080310041042,Qualifying
+080310041043,Qualifying
+080310041044,Not Qualifying
+080310041045,Qualifying
+080310041046,Qualifying
+080310041081,Not Qualifying
+080310041082,Not Qualifying
+080310041083,Not Qualifying
 080310041084,Not Qualifying
 080310041092,Not Qualifying
 080310041093,Not Qualifying
 080310041101,Qualifying
 080310041102,Not Qualifying
 080310041111,Not Qualifying
+080310041112,Not Qualifying
+080310041121,Not Qualifying
+080310041122,Not Qualifying
+080310041123,Not Qualifying
+080310041131,Not Qualifying
+080310042011,Not Qualifying
+080310042012,Not Qualifying
+080310042013,Not Qualifying
 080310042014,Not Qualifying
 080310042015,Not Qualifying
 080310042016,Not Qualifying
+080310042021,Qualifying
+080310042022,Not Qualifying
+080310042023,Not Qualifying
+080310042024,Not Qualifying
+080310042025,Not Qualifying
+080310043021,Not Qualifying
+080310043022,Not Qualifying
+080310043023,Not Qualifying
+080310043031,Not Qualifying
+080310043032,Not Qualifying
+080310043033,Not Qualifying
+080310043034,Not Qualifying
+080310043061,Not Qualifying
+080310043062,Not Qualifying
+080310043063,Not Qualifying
+080310043064,Not Qualifying
+080310043065,Not Qualifying
+080310043071,Qualifying
+080310043081,Qualifying
+080310043082,Qualifying
+080310043083,Not Qualifying
+080310043091,Not Qualifying
+080310043092,Not Qualifying
+080310043093,Not Qualifying
+080310043101,Not Qualifying
+080310043102,Not Qualifying
+080310044031,Qualifying
+080310044032,Qualifying
+080310044033,Qualifying
+080310044041,Qualifying
 080310044042,Qualifying
+080310044043,Qualifying
+080310044044,Qualifying
 080310044061,Not Qualifying
 080310044062,Not Qualifying
 080310044071,Not Qualifying
 080310044072,Qualifying
 080310044073,Qualifying
+080310045031,Qualifying
+080310045032,Qualifying
+080310045033,Qualifying
+080310045041,Qualifying
+080310045042,Qualifying
+080310045043,Qualifying
+080310045051,Qualifying
+080310045052,Qualifying
+080310045053,Qualifying
+080310045061,Qualifying
+080310045062,Qualifying
+080310045063,Qualifying
+080310046011,Qualifying
+080310046012,Qualifying
+080310046013,Qualifying
+080310046014,Qualifying
+080310046021,Qualifying
+080310046022,Qualifying
+080310046023,Qualifying
+080310046024,Qualifying
+080310046031,Qualifying
+080310046032,Qualifying
+080310046033,Qualifying
+080310046034,Qualifying
+080310046035,Qualifying
+080310047001,Qualifying
+080310047002,Qualifying
+080310047003,Qualifying
+080310047004,Qualifying
+080310047005,Qualifying
+080310047006,Qualifying
+080310048011,Qualifying
+080310048012,Qualifying
 080310048013,Qualifying
+080310050011,Qualifying
+080310050012,Qualifying
+080310050031,Qualifying
+080310050032,Qualifying
+080310050041,Qualifying
+080310050042,Qualifying
+080310050043,Qualifying
+080310051021,Not Qualifying
+080310051022,Not Qualifying
+080310051023,Not Qualifying
+080310051024,Qualifying
+080310051041,Qualifying
+080310051042,Qualifying
+080310052001,Not Qualifying
+080310052002,Not Qualifying
+080310052003,Not Qualifying
+080310052004,Not Qualifying
+080310053001,Qualifying
 080310055021,Qualifying
+080310055031,Not Qualifying
 080310055032,Qualifying
 080310055033,Qualifying
+080310055034,Qualifying
+080310067011,Not Qualifying
+080310067012,Not Qualifying
+080310067013,Not Qualifying
+080310068041,Not Qualifying
+080310068042,Not Qualifying
+080310068101,Qualifying
 080310068102,Qualifying
+080310068103,Not Qualifying
+080310068104,Not Qualifying
 080310068121,Not Qualifying
 080310068122,Not Qualifying
+080310068123,Not Qualifying
+080310068131,Not Qualifying
+080310068132,Qualifying
+080310068133,Qualifying
+080310068141,Qualifying
+080310068142,Qualifying
+080310068143,Qualifying
+080310068144,Qualifying
+080310068151,Not Qualifying
+080310068161,Not Qualifying
+080310068162,Not Qualifying
+080310068163,Not Qualifying
+080310068164,Not Qualifying
+080310068165,Not Qualifying
 080310068171,Not Qualifying
+080310068181,Qualifying
+080310068182,Qualifying
+080310068183,Qualifying
+080310068184,Not Qualifying
+080310068185,Qualifying
+080310069021,Qualifying
 080310069022,Qualifying
+080310069023,Qualifying
 080310069031,Qualifying
 080310069032,Qualifying
 080310070061,Qualifying
 080310070062,Qualifying
+080310070063,Qualifying
+080310070131,Not Qualifying
+080310070132,Not Qualifying
+080310070133,Qualifying
 080310070371,Qualifying
 080310070372,Qualifying
+080310070373,Qualifying
 080310070881,Qualifying
 080310070882,Qualifying
 080310070883,Qualifying
@@ -780,42 +1619,84 @@ block_group,reduced_match_qualify
 080310070911,Qualifying
 080310070912,Qualifying
 080310070913,Qualifying
+080310070914,Qualifying
 080310083041,Qualifying
 080310083042,Qualifying
+080310083043,Qualifying
 080310083051,Qualifying
 080310083052,Qualifying
+080310083053,Qualifying
+080310083061,Qualifying
+080310083062,Qualifying
+080310083063,Qualifying
+080310083064,Qualifying
+080310083121,Qualifying
+080310083122,Qualifying
+080310083123,Qualifying
 080310083861,Qualifying
+080310083862,Qualifying
+080310083871,Qualifying
+080310083872,Qualifying
+080310083873,Qualifying
 080310083881,Qualifying
 080310083882,Qualifying
 080310083883,Qualifying
+080310083884,Qualifying
 080310083885,Qualifying
+080310083886,Qualifying
+080310083887,Qualifying
 080310083891,Qualifying
 080310083892,Qualifying
 080310083893,Qualifying
 080310083894,Qualifying
 080310083895,Qualifying
+080310083901,Qualifying
+080310083902,Qualifying
+080310083903,Qualifying
+080310083911,Qualifying
 080310083912,Qualifying
+080310083913,Qualifying
+080310083914,Qualifying
+080310119021,Not Qualifying
 080310119022,Qualifying
 080310119023,Qualifying
+080310119024,Qualifying
 080310119031,Not Qualifying
 080310119032,Qualifying
 080310120011,Not Qualifying
 080310120012,Not Qualifying
 080310120101,Not Qualifying
+080310120102,Not Qualifying
 080310120103,Qualifying
+080310120104,Qualifying
 080310120105,Not Qualifying
+080310120151,Not Qualifying
+080310120152,Not Qualifying
 080310120153,Qualifying
+080310120161,Not Qualifying
+080310120162,Not Qualifying
+080310153001,Not Qualifying
+080310153002,Not Qualifying
+080310153003,Qualifying
 080310154001,Qualifying
 080310154002,Not Qualifying
 080310154003,Not Qualifying
 080310154004,Qualifying
 080310154005,Not Qualifying
+080310155001,Qualifying
+080310155002,Not Qualifying
+080310155003,Not Qualifying
+080310155004,Qualifying
+080310156001,Qualifying
 080310156002,Qualifying
+080310156003,Qualifying
+080310156004,Qualifying
 080310157001,Qualifying
 080310157002,Qualifying
 080310157003,Qualifying
 080310157004,Qualifying
 080310158001,Qualifying
+080319802001,Not Qualifying
 080330001001,Qualifying
 080330001002,Qualifying
 080330001003,Qualifying
@@ -910,8 +1791,12 @@ block_group,reduced_match_qualify
 080350141141,Not Qualifying
 080350141142,Not Qualifying
 080350141151,Not Qualifying
+080350141152,Not Qualifying
+080350141161,Qualifying
+080350141162,Qualifying
 080350141163,Not Qualifying
 080350141164,Qualifying
+080350141165,Qualifying
 080350141231,Not Qualifying
 080350141232,Qualifying
 080350141241,Not Qualifying
@@ -921,6 +1806,7 @@ block_group,reduced_match_qualify
 080350141252,Not Qualifying
 080350141253,Not Qualifying
 080350141254,Not Qualifying
+080350141261,Not Qualifying
 080350141271,Not Qualifying
 080350141272,Not Qualifying
 080350141273,Not Qualifying
@@ -947,6 +1833,7 @@ block_group,reduced_match_qualify
 080350141343,Not Qualifying
 080350141351,Not Qualifying
 080350141352,Not Qualifying
+080350141381,Not Qualifying
 080350141382,Not Qualifying
 080350141391,Not Qualifying
 080350141392,Not Qualifying
@@ -962,6 +1849,7 @@ block_group,reduced_match_qualify
 080350141441,Not Qualifying
 080350141442,Not Qualifying
 080350141443,Not Qualifying
+080350141451,Not Qualifying
 080350141452,Qualifying
 080350141461,Not Qualifying
 080350141462,Not Qualifying
@@ -1071,28 +1959,80 @@ block_group,reduced_match_qualify
 080410001041,Qualifying
 080410001042,Qualifying
 080410001043,Qualifying
+080410002021,Not Qualifying
 080410002022,Not Qualifying
 080410002023,Not Qualifying
 080410002024,Qualifying
 080410002031,Not Qualifying
 080410002032,Qualifying
+080410002033,Qualifying
 080410003011,Qualifying
+080410003012,Qualifying
+080410003013,Qualifying
+080410003021,Qualifying
 080410003022,Qualifying
 080410003023,Qualifying
+080410004001,Not Qualifying
+080410004002,Qualifying
+080410004003,Qualifying
+080410005001,Qualifying
+080410005002,Not Qualifying
+080410006001,Not Qualifying
+080410006002,Not Qualifying
+080410006003,Not Qualifying
+080410007001,Qualifying
+080410007002,Not Qualifying
+080410007003,Qualifying
+080410008001,Qualifying
+080410008002,Qualifying
+080410008003,Not Qualifying
+080410009001,Not Qualifying
+080410009002,Not Qualifying
+080410010001,Not Qualifying
+080410010002,Not Qualifying
 080410010003,Not Qualifying
+080410011011,Qualifying
+080410011012,Qualifying
 080410011041,Qualifying
 080410011042,Qualifying
+080410013011,Not Qualifying
+080410013012,Not Qualifying
 080410013013,Qualifying
 080410013021,Not Qualifying
 080410013022,Not Qualifying
+080410013023,Qualifying
 080410013024,Qualifying
 080410014001,Qualifying
 080410014002,Qualifying
 080410014003,Qualifying
 080410015001,Qualifying
+080410015002,Qualifying
+080410016001,Qualifying
 080410016002,Qualifying
+080410017001,Qualifying
+080410017002,Not Qualifying
+080410018001,Not Qualifying
+080410018002,Not Qualifying
+080410019011,Qualifying
+080410019012,Qualifying
+080410019021,Qualifying
+080410019022,Qualifying
+080410020001,Qualifying
+080410020002,Qualifying
+080410020003,Qualifying
+080410020004,Qualifying
+080410021011,Qualifying
+080410021012,Qualifying
+080410021013,Qualifying
 080410021021,Qualifying
+080410021022,Qualifying
 080410021023,Qualifying
+080410021024,Qualifying
+080410022001,Not Qualifying
+080410022002,Qualifying
+080410022003,Qualifying
+080410023001,Qualifying
+080410023002,Qualifying
 080410024011,Qualifying
 080410024012,Qualifying
 080410024013,Qualifying
@@ -1105,6 +2045,7 @@ block_group,reduced_match_qualify
 080410025022,Not Qualifying
 080410025023,Qualifying
 080410025024,Not Qualifying
+080410027001,Qualifying
 080410027002,Qualifying
 080410027003,Qualifying
 080410028011,Qualifying
@@ -1145,6 +2086,7 @@ block_group,reduced_match_qualify
 080410033073,Not Qualifying
 080410033081,Qualifying
 080410033082,Not Qualifying
+080410033083,Qualifying
 080410033084,Qualifying
 080410034011,Not Qualifying
 080410034012,Qualifying
@@ -1202,6 +2144,7 @@ block_group,reduced_match_qualify
 080410041001,Not Qualifying
 080410041002,Not Qualifying
 080410041003,Qualifying
+080410041004,Qualifying
 080410042001,Qualifying
 080410042002,Qualifying
 080410042003,Not Qualifying
@@ -1266,6 +2209,12 @@ block_group,reduced_match_qualify
 080410046032,Qualifying
 080410046033,Qualifying
 080410047011,Not Qualifying
+080410047012,Not Qualifying
+080410047013,Not Qualifying
+080410047021,Not Qualifying
+080410047022,Not Qualifying
+080410047031,Not Qualifying
+080410047032,Not Qualifying
 080410047033,Not Qualifying
 080410047034,Not Qualifying
 080410047035,Not Qualifying
@@ -1276,12 +2225,17 @@ block_group,reduced_match_qualify
 080410047081,Not Qualifying
 080410047082,Not Qualifying
 080410047083,Not Qualifying
+080410048001,Qualifying
 080410048002,Not Qualifying
+080410048003,Qualifying
+080410048004,Not Qualifying
+080410049011,Not Qualifying
 080410049012,Not Qualifying
 080410049021,Qualifying
 080410049022,Not Qualifying
 080410049023,Not Qualifying
 080410049024,Not Qualifying
+080410050001,Qualifying
 080410050002,Qualifying
 080410050003,Qualifying
 080410050004,Qualifying
@@ -1289,6 +2243,7 @@ block_group,reduced_match_qualify
 080410051102,Not Qualifying
 080410051103,Not Qualifying
 080410051121,Not Qualifying
+080410051122,Qualifying
 080410051123,Not Qualifying
 080410051131,Qualifying
 080410051132,Qualifying
@@ -1296,6 +2251,7 @@ block_group,reduced_match_qualify
 080410051151,Qualifying
 080410051152,Qualifying
 080410051153,Qualifying
+080410051161,Not Qualifying
 080410051162,Not Qualifying
 080410051163,Not Qualifying
 080410051171,Not Qualifying
@@ -1341,16 +2297,26 @@ block_group,reduced_match_qualify
 080410055013,Qualifying
 080410055021,Not Qualifying
 080410055022,Qualifying
+080410055023,Qualifying
+080410055024,Qualifying
 080410056011,Not Qualifying
 080410056012,Not Qualifying
 080410056021,Qualifying
+080410056022,Qualifying
+080410056023,Not Qualifying
 080410057001,Qualifying
 080410057002,Not Qualifying
 080410057003,Qualifying
+080410057004,Not Qualifying
+080410058001,Not Qualifying
+080410058002,Not Qualifying
+080410058003,Not Qualifying
 080410059001,Not Qualifying
 080410059002,Not Qualifying
 080410059003,Not Qualifying
+080410059004,Not Qualifying
 080410059005,Qualifying
+080410060001,Qualifying
 080410060002,Qualifying
 080410060003,Qualifying
 080410060004,Qualifying
@@ -1366,6 +2332,8 @@ block_group,reduced_match_qualify
 080410063022,Qualifying
 080410063023,Qualifying
 080410064001,Qualifying
+080410064002,Qualifying
+080410064003,Qualifying
 080410064004,Qualifying
 080410065011,Qualifying
 080410065012,Qualifying
@@ -1383,6 +2351,7 @@ block_group,reduced_match_qualify
 080410067022,Not Qualifying
 080410068011,Not Qualifying
 080410068012,Qualifying
+080410068021,Not Qualifying
 080410068022,Not Qualifying
 080410069011,Not Qualifying
 080410069012,Not Qualifying
@@ -1463,6 +2432,7 @@ block_group,reduced_match_qualify
 080439785002,Qualifying
 080439785003,Qualifying
 080439785004,Not Qualifying
+080439786001,Qualifying
 080439786002,Qualifying
 080439786003,Qualifying
 080439786004,Qualifying
@@ -1565,8 +2535,11 @@ block_group,reduced_match_qualify
 080559609021,Not Qualifying
 080579556001,Not Qualifying
 080579556002,Not Qualifying
+080590098061,Not Qualifying
 080590098062,Not Qualifying
 080590098063,Not Qualifying
+080590098071,Not Qualifying
+080590098072,Not Qualifying
 080590098151,Not Qualifying
 080590098152,Not Qualifying
 080590098231,Not Qualifying
@@ -1575,12 +2548,27 @@ block_group,reduced_match_qualify
 080590098241,Not Qualifying
 080590098242,Not Qualifying
 080590098271,Qualifying
+080590098272,Not Qualifying
+080590098273,Not Qualifying
 080590098274,Qualifying
 080590098281,Qualifying
 080590098282,Not Qualifying
 080590098283,Not Qualifying
+080590098284,Not Qualifying
 080590098291,Not Qualifying
 080590098301,Not Qualifying
+080590098311,Not Qualifying
+080590098312,Qualifying
+080590098321,Not Qualifying
+080590098322,Not Qualifying
+080590098331,Not Qualifying
+080590098332,Not Qualifying
+080590098333,Not Qualifying
+080590098334,Not Qualifying
+080590098335,Qualifying
+080590098341,Not Qualifying
+080590098342,Not Qualifying
+080590098343,Not Qualifying
 080590098351,Not Qualifying
 080590098352,Not Qualifying
 080590098361,Not Qualifying
@@ -1641,31 +2629,71 @@ block_group,reduced_match_qualify
 080590100011,Qualifying
 080590100012,Not Qualifying
 080590100013,Not Qualifying
+080590101001,Qualifying
 080590101002,Not Qualifying
 080590101003,Qualifying
+080590101004,Qualifying
 080590102051,Not Qualifying
 080590102052,Not Qualifying
 080590102061,Not Qualifying
 080590102062,Not Qualifying
 080590102063,Not Qualifying
 080590102081,Not Qualifying
+080590102082,Not Qualifying
+080590102083,Not Qualifying
+080590102084,Not Qualifying
+080590102091,Qualifying
+080590102092,Qualifying
 080590102093,Not Qualifying
 080590102094,Not Qualifying
 080590102101,Not Qualifying
 080590102102,Not Qualifying
 080590102111,Not Qualifying
+080590102112,Qualifying
+080590102113,Qualifying
+080590102121,Not Qualifying
+080590102122,Qualifying
+080590102123,Qualifying
+080590102124,Qualifying
+080590102125,Qualifying
 080590102131,Not Qualifying
 080590102132,Qualifying
+080590102133,Not Qualifying
+080590102134,Qualifying
 080590103031,Not Qualifying
+080590103032,Not Qualifying
+080590103033,Qualifying
 080590103034,Not Qualifying
+080590103035,Not Qualifying
+080590103041,Not Qualifying
+080590103042,Not Qualifying
+080590103043,Qualifying
+080590103051,Qualifying
+080590103052,Qualifying
+080590103053,Qualifying
+080590103054,Not Qualifying
+080590103061,Not Qualifying
 080590103062,Not Qualifying
 080590103063,Not Qualifying
+080590103071,Qualifying
+080590103072,Not Qualifying
+080590103073,Qualifying
+080590103081,Not Qualifying
+080590103082,Not Qualifying
 080590103083,Not Qualifying
+080590103084,Not Qualifying
+080590104021,Qualifying
+080590104022,Qualifying
+080590104023,Qualifying
 080590104024,Qualifying
 080590104031,Qualifying
 080590104032,Qualifying
 080590104033,Not Qualifying
 080590104034,Qualifying
+080590104051,Qualifying
+080590104052,Qualifying
+080590104061,Qualifying
+080590104062,Qualifying
 080590105021,Qualifying
 080590105022,Qualifying
 080590105023,Qualifying
@@ -1674,29 +2702,87 @@ block_group,reduced_match_qualify
 080590105032,Qualifying
 080590105033,Not Qualifying
 080590105041,Not Qualifying
+080590105042,Not Qualifying
 080590105043,Not Qualifying
+080590106031,Qualifying
+080590106032,Not Qualifying
+080590106033,Qualifying
+080590106034,Not Qualifying
 080590106041,Qualifying
+080590106042,Qualifying
+080590106043,Qualifying
+080590107011,Qualifying
 080590107012,Qualifying
 080590107013,Qualifying
+080590107021,Qualifying
+080590107022,Not Qualifying
+080590107023,Qualifying
 080590108011,Not Qualifying
+080590108012,Not Qualifying
 080590109011,Not Qualifying
 080590109012,Qualifying
 080590109013,Qualifying
 080590109014,Qualifying
 080590109015,Not Qualifying
+080590109021,Qualifying
+080590109022,Qualifying
 080590110001,Qualifying
+080590110002,Qualifying
+080590110003,Qualifying
 080590110004,Not Qualifying
 080590110005,Qualifying
+080590110006,Qualifying
+080590111011,Qualifying
+080590111012,Qualifying
+080590111013,Not Qualifying
+080590111021,Qualifying
+080590111022,Qualifying
+080590112021,Not Qualifying
 080590112022,Not Qualifying
+080590112023,Not Qualifying
 080590112024,Not Qualifying
+080590113001,Not Qualifying
+080590113002,Qualifying
+080590113003,Qualifying
+080590113004,Not Qualifying
+080590114011,Qualifying
+080590114012,Qualifying
 080590114021,Qualifying
+080590114022,Qualifying
+080590114023,Qualifying
+080590115511,Qualifying
+080590115512,Qualifying
+080590115513,Qualifying
+080590115521,Qualifying
+080590115522,Qualifying
+080590116011,Qualifying
+080590116012,Qualifying
+080590116021,Qualifying
+080590116022,Qualifying
+080590116023,Qualifying
 080590117011,Not Qualifying
 080590117012,Not Qualifying
 080590117013,Not Qualifying
 080590117014,Not Qualifying
+080590117021,Qualifying
+080590117022,Not Qualifying
+080590117023,Qualifying
+080590117024,Not Qualifying
 080590117081,Qualifying
+080590117082,Not Qualifying
+080590117083,Not Qualifying
+080590117091,Qualifying
+080590117092,Not Qualifying
+080590117093,Not Qualifying
+080590117101,Not Qualifying
+080590117102,Not Qualifying
+080590117103,Not Qualifying
+080590117111,Not Qualifying
+080590117112,Not Qualifying
 080590117113,Not Qualifying
+080590117114,Not Qualifying
 080590117121,Not Qualifying
+080590117122,Not Qualifying
 080590117123,Not Qualifying
 080590117201,Not Qualifying
 080590117202,Not Qualifying
@@ -1704,6 +2790,7 @@ block_group,reduced_match_qualify
 080590117204,Not Qualifying
 080590117211,Not Qualifying
 080590117212,Not Qualifying
+080590117231,Not Qualifying
 080590117232,Qualifying
 080590117241,Qualifying
 080590117242,Not Qualifying
@@ -1727,18 +2814,29 @@ block_group,reduced_match_qualify
 080590117312,Not Qualifying
 080590117313,Not Qualifying
 080590117321,Qualifying
+080590117322,Not Qualifying
+080590117323,Qualifying
+080590117324,Not Qualifying
 080590117331,Not Qualifying
 080590118031,Qualifying
 080590118032,Qualifying
+080590118033,Qualifying
+080590118034,Qualifying
+080590118041,Qualifying
+080590118042,Not Qualifying
+080590118043,Qualifying
 080590118061,Qualifying
 080590118062,Qualifying
 080590118063,Qualifying
+080590118064,Qualifying
+080590118071,Qualifying
 080590118072,Qualifying
 080590118081,Not Qualifying
 080590118082,Qualifying
 080590119041,Not Qualifying
 080590119042,Not Qualifying
 080590119511,Not Qualifying
+080590119512,Not Qualifying
 080590119513,Not Qualifying
 080590120221,Not Qualifying
 080590120222,Not Qualifying
@@ -1783,14 +2881,18 @@ block_group,reduced_match_qualify
 080590120373,Not Qualifying
 080590120381,Not Qualifying
 080590120382,Not Qualifying
+080590120391,Not Qualifying
+080590120392,Not Qualifying
 080590120393,Not Qualifying
 080590120394,Not Qualifying
+080590120395,Not Qualifying
 080590120411,Not Qualifying
 080590120412,Not Qualifying
 080590120413,Not Qualifying
 080590120414,Qualifying
 080590120421,Not Qualifying
 080590120422,Not Qualifying
+080590120431,Not Qualifying
 080590120432,Not Qualifying
 080590120433,Not Qualifying
 080590120441,Not Qualifying
@@ -1799,30 +2901,59 @@ block_group,reduced_match_qualify
 080590120452,Not Qualifying
 080590120453,Not Qualifying
 080590120454,Not Qualifying
+080590120461,Not Qualifying
+080590120462,Not Qualifying
 080590120471,Not Qualifying
+080590120472,Not Qualifying
 080590120473,Not Qualifying
 080590120481,Qualifying
+080590120482,Not Qualifying
+080590120483,Not Qualifying
 080590120491,Not Qualifying
 080590120492,Not Qualifying
 080590120493,Not Qualifying
+080590120501,Qualifying
 080590120502,Not Qualifying
+080590120503,Qualifying
 080590120511,Not Qualifying
+080590120512,Not Qualifying
 080590120513,Not Qualifying
+080590120521,Qualifying
 080590120522,Not Qualifying
+080590120523,Not Qualifying
+080590120524,Not Qualifying
 080590120525,Not Qualifying
+080590120531,Not Qualifying
 080590120532,Not Qualifying
 080590120533,Not Qualifying
+080590120541,Not Qualifying
 080590120542,Not Qualifying
+080590120543,Not Qualifying
+080590120551,Not Qualifying
+080590120552,Not Qualifying
 080590120553,Not Qualifying
 080590120571,Not Qualifying
+080590120572,Not Qualifying
 080590120573,Not Qualifying
+080590120574,Not Qualifying
 080590120581,Not Qualifying
 080590120582,Not Qualifying
 080590120583,Not Qualifying
 080590120584,Not Qualifying
+080590120591,Not Qualifying
+080590120592,Not Qualifying
+080590120593,Not Qualifying
 080590120601,Not Qualifying
+080590120602,Not Qualifying
+080590158001,Qualifying
+080590158002,Not Qualifying
+080590158003,Not Qualifying
 080590159001,Not Qualifying
 080590159002,Qualifying
+080590603001,Not Qualifying
+080590603002,Not Qualifying
+080590603003,Not Qualifying
+080590603004,Not Qualifying
 080590604001,Not Qualifying
 080590604002,Not Qualifying
 080590604003,Not Qualifying
@@ -1882,8 +3013,11 @@ block_group,reduced_match_qualify
 080679711001,Qualifying
 080679711002,Not Qualifying
 080679711003,Not Qualifying
+080690001001,Qualifying
 080690001002,Qualifying
 080690001003,Not Qualifying
+080690002011,Qualifying
+080690002012,Not Qualifying
 080690002021,Not Qualifying
 080690002022,Not Qualifying
 080690003001,Not Qualifying
@@ -1903,19 +3037,34 @@ block_group,reduced_match_qualify
 080690005062,Qualifying
 080690006001,Qualifying
 080690006002,Qualifying
+080690006003,Qualifying
 080690006004,Qualifying
 080690007001,Qualifying
+080690007002,Qualifying
 080690008011,Not Qualifying
 080690008021,Not Qualifying
+080690009011,Not Qualifying
+080690009012,Not Qualifying
+080690009013,Not Qualifying
+080690009014,Not Qualifying
 080690009021,Qualifying
 080690009022,Not Qualifying
 080690009023,Not Qualifying
 080690010031,Not Qualifying
+080690010032,Qualifying
 080690010033,Not Qualifying
 080690010034,Not Qualifying
 080690010035,Qualifying
+080690010041,Not Qualifying
+080690010042,Not Qualifying
+080690010043,Not Qualifying
+080690010044,Not Qualifying
+080690010071,Not Qualifying
+080690010072,Not Qualifying
 080690010073,Qualifying
 080690010074,Qualifying
+080690010081,Not Qualifying
+080690010082,Not Qualifying
 080690010091,Qualifying
 080690010092,Not Qualifying
 080690010093,Not Qualifying
@@ -1928,16 +3077,23 @@ block_group,reduced_match_qualify
 080690011043,Not Qualifying
 080690011044,Not Qualifying
 080690011045,Qualifying
+080690011061,Qualifying
+080690011062,Not Qualifying
+080690011063,Qualifying
+080690011064,Not Qualifying
 080690011071,Not Qualifying
+080690011072,Qualifying
 080690011073,Qualifying
 080690011074,Not Qualifying
 080690011075,Not Qualifying
 080690011091,Not Qualifying
+080690011092,Not Qualifying
 080690011093,Not Qualifying
 080690011094,Qualifying
 080690011101,Not Qualifying
 080690011102,Qualifying
 080690011103,Qualifying
+080690011111,Qualifying
 080690011112,Qualifying
 080690011121,Not Qualifying
 080690011122,Not Qualifying
@@ -1998,7 +3154,10 @@ block_group,reduced_match_qualify
 080690017082,Qualifying
 080690017101,Qualifying
 080690017102,Qualifying
+080690017103,Qualifying
+080690017111,Not Qualifying
 080690017112,Not Qualifying
+080690017113,Not Qualifying
 080690017121,Not Qualifying
 080690017122,Not Qualifying
 080690017123,Not Qualifying
@@ -2009,6 +3168,9 @@ block_group,reduced_match_qualify
 080690017143,Not Qualifying
 080690017151,Qualifying
 080690017152,Not Qualifying
+080690018041,Qualifying
+080690018042,Not Qualifying
+080690018043,Not Qualifying
 080690018044,Qualifying
 080690018071,Not Qualifying
 080690018072,Not Qualifying
@@ -2020,6 +3182,7 @@ block_group,reduced_match_qualify
 080690018101,Not Qualifying
 080690018102,Not Qualifying
 080690018103,Not Qualifying
+080690018111,Not Qualifying
 080690018112,Not Qualifying
 080690018121,Not Qualifying
 080690018122,Not Qualifying
@@ -2027,8 +3190,12 @@ block_group,reduced_match_qualify
 080690018124,Not Qualifying
 080690018131,Not Qualifying
 080690018132,Not Qualifying
+080690019011,Not Qualifying
 080690019012,Qualifying
 080690019013,Not Qualifying
+080690019021,Not Qualifying
+080690019022,Not Qualifying
+080690019023,Not Qualifying
 080690019024,Not Qualifying
 080690019041,Not Qualifying
 080690019042,Not Qualifying
@@ -2036,6 +3203,7 @@ block_group,reduced_match_qualify
 080690019051,Not Qualifying
 080690020051,Not Qualifying
 080690020052,Qualifying
+080690020071,Qualifying
 080690020072,Not Qualifying
 080690020073,Not Qualifying
 080690020081,Not Qualifying
@@ -2123,23 +3291,55 @@ block_group,reduced_match_qualify
 080759662002,Not Qualifying
 080759662003,Qualifying
 080759663001,Qualifying
+080759663002,Not Qualifying
+080759663003,Not Qualifying
 080759663004,Not Qualifying
 080759664001,Not Qualifying
+080770002001,Qualifying
+080770002002,Qualifying
+080770003001,Qualifying
+080770003002,Qualifying
+080770004001,Not Qualifying
+080770004002,Qualifying
+080770004003,Qualifying
+080770004004,Qualifying
+080770005001,Qualifying
+080770005002,Qualifying
+080770006011,Qualifying
+080770006012,Qualifying
 080770006013,Qualifying
+080770006014,Qualifying
+080770006021,Qualifying
+080770006022,Qualifying
+080770006023,Qualifying
+080770006024,Qualifying
+080770006025,Qualifying
+080770007001,Qualifying
+080770007002,Qualifying
+080770007003,Qualifying
 080770008011,Qualifying
 080770008012,Not Qualifying
 080770008021,Qualifying
 080770008022,Qualifying
 080770009001,Qualifying
 080770009002,Not Qualifying
+080770010011,Not Qualifying
+080770010012,Qualifying
 080770010013,Not Qualifying
 080770010021,Not Qualifying
 080770010022,Qualifying
 080770010023,Not Qualifying
 080770010024,Not Qualifying
+080770011021,Qualifying
+080770011022,Not Qualifying
+080770011023,Not Qualifying
 080770011024,Not Qualifying
 080770011031,Not Qualifying
 080770011032,Qualifying
+080770011041,Qualifying
+080770011042,Qualifying
+080770011043,Qualifying
+080770011044,Qualifying
 080770012001,Not Qualifying
 080770012002,Not Qualifying
 080770013021,Not Qualifying
@@ -2179,12 +3379,16 @@ block_group,reduced_match_qualify
 080770017023,Qualifying
 080770017024,Not Qualifying
 080770017031,Qualifying
+080770017032,Qualifying
 080770017033,Not Qualifying
 080770017051,Qualifying
 080770017052,Qualifying
 080770017053,Qualifying
+080770017061,Qualifying
 080770017062,Qualifying
+080770017063,Qualifying
 080770017064,Qualifying
+080770017071,Qualifying
 080770017072,Not Qualifying
 080770017073,Not Qualifying
 080770018001,Qualifying
@@ -2275,6 +3479,7 @@ block_group,reduced_match_qualify
 080870004003,Qualifying
 080870005001,Qualifying
 080870005002,Qualifying
+080870005003,Qualifying
 080870006001,Not Qualifying
 080870006002,Qualifying
 080870006003,Qualifying
@@ -2359,6 +3564,7 @@ block_group,reduced_match_qualify
 080990006002,Qualifying
 080990007001,Qualifying
 080990007002,Qualifying
+081010001001,Not Qualifying
 081010001002,Qualifying
 081010001003,Qualifying
 081010002001,Qualifying
@@ -2370,11 +3576,15 @@ block_group,reduced_match_qualify
 081010005001,Qualifying
 081010005002,Not Qualifying
 081010005003,Qualifying
+081010006001,Qualifying
+081010006002,Qualifying
 081010006003,Qualifying
 081010008001,Qualifying
+081010008002,Qualifying
 081010008003,Qualifying
 081010009021,Qualifying
 081010009022,Qualifying
+081010009023,Qualifying
 081010009024,Qualifying
 081010009025,Qualifying
 081010009031,Qualifying
@@ -2385,14 +3595,33 @@ block_group,reduced_match_qualify
 081010009052,Qualifying
 081010010001,Qualifying
 081010010002,Qualifying
+081010010003,Qualifying
 081010010004,Qualifying
 081010011001,Qualifying
 081010011002,Qualifying
+081010011003,Qualifying
 081010012001,Qualifying
 081010012002,Qualifying
+081010014001,Qualifying
+081010015001,Qualifying
+081010015002,Qualifying
 081010016001,Qualifying
 081010016002,Qualifying
+081010017001,Qualifying
+081010017002,Qualifying
+081010017003,Qualifying
+081010018001,Qualifying
+081010018002,Qualifying
+081010018003,Qualifying
+081010019001,Qualifying
+081010019002,Qualifying
 081010020001,Qualifying
+081010020002,Qualifying
+081010020003,Qualifying
+081010020004,Qualifying
+081010021001,Qualifying
+081010021002,Qualifying
+081010022001,Qualifying
 081010022002,Qualifying
 081010023001,Qualifying
 081010023002,Qualifying
@@ -2400,10 +3629,23 @@ block_group,reduced_match_qualify
 081010023004,Qualifying
 081010024001,Qualifying
 081010024002,Qualifying
+081010025001,Qualifying
+081010025002,Qualifying
+081010025003,Qualifying
 081010026001,Qualifying
+081010026002,Qualifying
 081010026003,Qualifying
+081010027001,Qualifying
+081010027002,Qualifying
+081010027003,Qualifying
+081010027004,Qualifying
+081010027005,Qualifying
+081010027006,Qualifying
+081010028011,Qualifying
 081010028012,Qualifying
 081010028013,Qualifying
+081010028014,Qualifying
+081010028015,Qualifying
 081010028021,Not Qualifying
 081010028022,Qualifying
 081010028023,Qualifying
@@ -2587,7 +3829,22 @@ block_group,reduced_match_qualify
 081219242002,Qualifying
 081219242003,Not Qualifying
 081230001001,Qualifying
+081230001002,Qualifying
+081230001003,Qualifying
+081230002001,Qualifying
+081230002002,Qualifying
+081230003001,Qualifying
+081230004011,Qualifying
+081230004012,Not Qualifying
+081230004013,Not Qualifying
+081230004014,Not Qualifying
+081230004021,Qualifying
+081230004022,Qualifying
+081230004023,Qualifying
 081230005011,Qualifying
+081230005012,Qualifying
+081230005021,Qualifying
+081230005022,Qualifying
 081230006001,Qualifying
 081230007011,Qualifying
 081230007012,Qualifying
@@ -2598,24 +3855,45 @@ block_group,reduced_match_qualify
 081230007041,Qualifying
 081230007051,Qualifying
 081230007052,Qualifying
+081230008001,Qualifying
 081230008002,Qualifying
 081230008003,Qualifying
+081230008004,Qualifying
+081230009001,Qualifying
+081230009002,Qualifying
+081230010031,Qualifying
+081230010032,Qualifying
+081230010033,Qualifying
 081230010041,Qualifying
 081230010042,Qualifying
 081230010043,Qualifying
 081230010051,Qualifying
 081230010052,Qualifying
+081230010053,Qualifying
 081230010054,Qualifying
 081230010055,Qualifying
 081230010056,Qualifying
 081230010061,Qualifying
 081230010062,Qualifying
+081230010063,Qualifying
+081230011001,Not Qualifying
+081230011002,Qualifying
+081230011003,Qualifying
+081230011004,Qualifying
+081230012011,Qualifying
+081230012012,Qualifying
+081230012013,Qualifying
+081230012021,Not Qualifying
+081230012022,Not Qualifying
 081230013001,Qualifying
+081230013002,Qualifying
+081230013003,Qualifying
 081230013004,Qualifying
 081230014041,Qualifying
 081230014042,Not Qualifying
 081230014051,Not Qualifying
 081230014052,Qualifying
+081230014053,Not Qualifying
 081230014061,Not Qualifying
 081230014062,Not Qualifying
 081230014063,Not Qualifying
@@ -2630,6 +3908,8 @@ block_group,reduced_match_qualify
 081230014111,Not Qualifying
 081230014121,Not Qualifying
 081230014122,Not Qualifying
+081230014131,Qualifying
+081230014132,Not Qualifying
 081230014141,Not Qualifying
 081230014151,Not Qualifying
 081230014152,Not Qualifying
@@ -2666,11 +3946,13 @@ block_group,reduced_match_qualify
 081230019141,Not Qualifying
 081230020041,Not Qualifying
 081230020042,Qualifying
+081230020043,Qualifying
 081230020051,Not Qualifying
 081230020061,Not Qualifying
 081230020071,Qualifying
 081230020072,Not Qualifying
 081230020073,Not Qualifying
+081230020081,Not Qualifying
 081230020082,Not Qualifying
 081230020083,Not Qualifying
 081230020084,Not Qualifying
